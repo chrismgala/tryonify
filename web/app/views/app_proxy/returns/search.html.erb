@@ -1,0 +1,30 @@
+<%= stylesheet_link_tag 'app_proxy' %>
+<div class="tryonify-search">
+  <h1 class="tryonify-header">Find your trial order</h1>
+  <p>
+    Look up your trial order to manage returns.
+  </p>
+  <% if @error %>
+  <div class="error">
+    Order not found
+  </div>
+  <% end %>
+  <form action="/a/trial/returns" method="GET">
+    <div class="tryonify-input-group">
+      <label for="name">Order Number</label>
+
+      <div>
+        <input id="name" class="tryonify-input" type="text" name="name" value="" required />
+      </div>
+    </div>
+    <div class="tryonify-input-group">
+      <label for="email">E-mail Address</label>
+      
+      <div>
+        <input id="email" class="tryonify-input" type="email" name="email" value="{{ customer.email }}" required>
+      </div>
+    </div>
+
+    <button type="submit" class="tryonify-button">Find Order</button>
+  </form>
+</div>

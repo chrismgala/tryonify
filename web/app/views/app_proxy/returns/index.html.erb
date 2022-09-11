@@ -1,0 +1,59 @@
+<%= stylesheet_link_tag 'app_proxy' %>
+
+<div class="tryonify-order">
+  <h1>Order <%= @order.dig('name') %></h1>
+
+  <% if @order.dig('displayFinancialStatus') == 'PENDING' %>
+    <div>Payment due {{ '<%= @order.dig('paymentTerms', 'paymentSchedules', 'nodes', 0, 'dueAt') %>' | date: '%B %d, %Y' }}</div>
+  <% end %>
+  <ul class="tryonify-line-items">
+  <% @order.dig('lineItems', 'edges').each do |line_item| %>
+    <li class="tryonify-line-item">
+      <% if line_item.dig('node', 'image', 'url') %>
+        <div class="tryonify-thumbnail">
+          <img src="<%= line_item.dig('node', 'image', 'url') %>" alt="<%= line_item.dig('node', 'title')%>" />
+        </div>
+      <% end %>
+
+      <div class="tryonify-product-details">
+        <div>
+          <h3 class="tryonify-product-title"><%= line_item.dig('node', 'title') %></h3>
+          <%= line_item.dig('node', 'variantTitle') %>
+        </div>
+
+        <div>
+          <b>{{ 'customer.order.quantity' | t }}</b> <%= line_item.dig('node', 'quantity') %>
+        </div>
+
+        <% if line_item.dig('node', 'quantity') > line_item.dig('node', 'unfulfilledQuantity') %>
+          <% if line_item.dig('node', 'sellingPlan', 'sellingPlanId') %>
+            <% existing_return = @returns.find {|x| x.shopify_id == line_item.dig('node', 'id')} %>
+            <% if existing_return %>
+              <% if existing_return.active %>
+                <div>
+                  Return initiated
+                </div>
+              <% else %>
+                <div>
+                  Return completed
+                </div>
+              <% end %>
+            <% else %>
+              <form class="tryonify-return-form" action="/a/trial/returns" method="POST">
+                <input type="hidden" name="order_id" value="<%= @order.dig('legacyResourceId') %>" />
+                <input type="hidden" name="line_item_id" value="<%= line_item.dig('node', 'id') %>" />
+                <input type="hidden" name="title" value="<%= line_item.dig('node', 'title') %> <%= line_item.dig('node', 'variantTitle') %>">
+                <button class="tryonify-button" type="submit">Return</button>
+              </form>
+            <% end %>
+          <% end %>
+        <% else %>
+          <div>
+            <b>{{ 'customer.order.fulfillment_status' | t }}</b> Pending shipment
+          </div>
+        <% end %>
+      </div>
+    </li>
+  <% end %>
+  </ul>
+</div>

@@ -1,0 +1,45 @@
+.wrapper {
+  max-width: 400px;
+  width: 90%;
+  margin: 100px auto;
+  font-size: 14px;
+}
+
+.form-wrapper {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 15px 30px;
+}
+
+.header {
+  text-align: center;
+  margin: 0 0 2rem;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input {
+  border: 1px solid #ddd;
+  width: 100%;
+  padding: 5px;
+}
+
+.error {
+  color: red;
+}
+
+.button {
+  width: 100%;
+  border: 0;
+  background: #444;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.2s linear;
+}
+
+.button:hover {
+  background: #666;
+}

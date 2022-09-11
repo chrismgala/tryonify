@@ -1,0 +1,1 @@
+json.extract! shop, :shopify_domain, :klaviyo_public_key, :klaviyo_private_key, :onboarded

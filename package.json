@@ -1,0 +1,24 @@
+{
+  "name": "tryonify-test",
+  "version": "1.0.1",
+  "license": "UNLICENSED",
+  "scripts": {
+    "shopify": "shopify",
+    "build": "shopify app build",
+    "dev": "shopify app dev",
+    "push": "shopify app push",
+    "scaffold": "shopify app scaffold",
+    "deploy": "shopify app deploy",
+    "info": "shopify app info"
+  },
+  "dependencies": {
+    "@shopify/admin-ui-extensions-react": "^1.0.1",
+    "@shopify/app": "3.10.1",
+    "@shopify/cli": "3.10.1",
+    "formik": "^2.2.9",
+    "iso8601-duration": "^2.1.1",
+    "react": "^17.0.0",
+    "yup": "^0.32.11"
+  },
+  "author": "davidw"
+}
