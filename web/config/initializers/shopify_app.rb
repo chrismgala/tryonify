@@ -11,7 +11,7 @@ ShopifyApp.configure do |config|
   config.scope = ENV.fetch("SCOPES", "write_products") # See shopify.app.toml for scopes
   # Consult this page for more scope options: https://shopify.dev/api/usage/access-scopes
   config.embedded_app = true
-  config.after_authenticate_job = false
+  config.after_authenticate_job = true
   config.api_version = ShopifyAPI::AdminVersions::LATEST_SUPPORTED_ADMIN_VERSION
   config.shop_session_repository = "Shop"
 

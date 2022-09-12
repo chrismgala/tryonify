@@ -1,0 +1,59 @@
+.tryonify-embed {
+  display: none;
+}
+
+.tryonify-selling-plan-group {
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+  margin: 15px 0;
+}
+
+.tryonify-selling-plan {
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+  display: block;
+  cursor: pointer;
+  transition: background 0.2s linear;
+}
+
+.tryonify-selling-plan:hover {
+  background: #eee;
+}
+
+.tryonify-selling-plan:last-child {
+  border-bottom: 0;
+}
+
+.tryonify-selling-plan-row {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+}
+
+.tryonify-selling-plan-option-wrapper {
+  display: flex;
+  height: 30px;
+  width: 30px;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5px;
+}
+
+.tryonify-selling-plan-option {
+  margin: 0;
+}
+
+.tryonify-selling-plan-option-charge {
+  margin-left: auto;
+}
+
+.tryonify-selling-plan-name {
+  font-weight: bold;
+  line-height: 1;
+}
+
+.tryonify-selling-plan-description {
+  font-size: 12px;
+  margin: 3px 0;
+  padding-left: 35px;
+}
