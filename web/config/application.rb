@@ -25,6 +25,9 @@ module ShopifyAppTemplateRuby
 
     config.action_controller.asset_host = ENV.fetch('HOST', '').presence
 
+    # Set ActiveJob adapter
+    config.active_job.queue_adapter = :sidekiq
+
     # Camelcasing
     excluded_routes = ->(env) { !env["PATH_INFO"].match(%r{^/api}) }
     config.middleware.use OliveBranch::Middleware,
