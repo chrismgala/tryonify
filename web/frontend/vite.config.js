@@ -58,6 +58,7 @@ export default defineConfig({
     proxy: {
       "^/(\\?.*)?$": proxyOptions,
       "^/api(/|(\\?.*)?$)": proxyOptions,
+      "^/app_proxy(/|(\\?.*)?$)": proxyOptions,
     },
   },
 });

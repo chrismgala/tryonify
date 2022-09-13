@@ -1,0 +1,69 @@
+.tryonify-order,
+.tryonify-search {
+  max-width: 400px;
+  width: 90%;
+  margin: 50px auto;
+}
+
+.tryonify-order {
+  max-width: 800px;
+}
+
+.tryonify-header {
+  margin: 0 0 15px;
+}
+
+.tryonify-return-form {
+  margin-top: 15px;
+}
+
+.tryonify-input {
+  padding: 5px;
+  border: 1px solid #ddd;
+  width: 100%;
+}
+
+.tryonify-input-group {
+  margin-bottom: 15px;
+}
+
+.tryonify-button {
+  background: #444;
+  color: #fff;
+  border: 0;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.tryonify-line-items {
+  padding: 0;
+}
+
+.tryonify-line-item {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.tryonify-product-details {
+  font-size: 14px;
+}
+
+.tryonify-product-details .tryonify-product-title {
+  margin: 0 0 10px;
+  font-size: 20px;
+}
+
+.tryonify-thumbnail {
+  width: 150px;
+  margin-right: 15px;
+  border: 1px solid #ddd;
+}
+
+.tryonify-thumbnail img {
+  width: 100%;
+  height: auto;
+  max-height: 100px;
+  display: block;
+}

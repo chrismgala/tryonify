@@ -23,6 +23,8 @@ module ShopifyAppTemplateRuby
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
+    config.action_controller.asset_host = ENV.fetch('HOST', '').presence
+
     # Camelcasing
     excluded_routes = ->(env) { !env["PATH_INFO"].match(%r{^/api}) }
     config.middleware.use OliveBranch::Middleware,
