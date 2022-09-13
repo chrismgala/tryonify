@@ -8,4 +8,4 @@ WORKDIR /app
 COPY web .
 
 RUN bundle install
-RUN bundle exec sidekiq -t 25 -q default -q mailers
+CMD bundle exec sidekiq -t 25 -q default -q mailers
