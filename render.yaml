@@ -1,0 +1,50 @@
+services:
+  - type: web
+    name: Web
+    env: docker
+    healthCheckPath: /
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: Database
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: Redis
+          property: connectionString
+      - fromGroup: TryOnify
+  - type: worker
+    name: Sidekiq
+    env: ruby
+    scaling:
+      minInstances: 1
+      maxInstances: 2
+      targetMemoryPercent: 60
+    buildCommand: bundle install
+    startCommand: bundle exec sidekiq -t 25 -q default -q mailers
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: Database
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: Redis
+          property: connectionString
+      - fromGroup: TryOnify
+  - type: redis
+    name: Redis
+    ipAllowList:
+      - source: 0.0.0.0
+        description: everywhere
+    maxmemoryPolicy: noeviction
+
+databases:
+  - name: Database
+    databaseName: tryonify_production
