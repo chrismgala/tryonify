@@ -2,7 +2,7 @@ services:
   - type: web
     name: Web
     env: docker
-    healthCheckPath: /
+    healthCheckPath: /login
     envVars:
       - key: DATABASE_URL
         fromDatabase:
