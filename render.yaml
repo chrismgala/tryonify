@@ -18,13 +18,12 @@ services:
       - fromGroup: TryOnify
   - type: worker
     name: Sidekiq
-    env: ruby
+    env: docker
+    dockerfilePath: ./sidekiq/Dockerfile
     scaling:
       minInstances: 1
       maxInstances: 2
       targetMemoryPercent: 60
-    buildCommand: bundle install
-    startCommand: bundle exec sidekiq -t 25 -q default -q mailers
     envVars:
       - key: DATABASE_URL
         fromDatabase:
