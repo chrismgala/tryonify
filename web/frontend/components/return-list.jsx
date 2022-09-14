@@ -28,11 +28,13 @@ export default function ReturnList({ title }) {
   });
 
   const saveMutation = useMutation(
-    (orderId) => api.put(`/api/v1/returns/${orderId}`)
+    (orderId) => fetch(`/api/v1/returns/${orderId}`, {
+      method: 'PUT'
+    })
       .then((response) => response.data),
     {
       onSettled: () => {
-        queryClient.invalidateQueries(['returns']);
+        queryClient.invalidateQueries(`/api/v1/returns?${createQueryString(pagination)}`);
       },
     },
   );
