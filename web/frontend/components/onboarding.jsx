@@ -78,6 +78,7 @@ export default function Onboarding() {
         Customers will be able to flag an item for return through the
         {' '}
         <Link external url={`https://${data?.shop?.shopifyDomain}/a/trial/returns/search`}>customer portal</Link>
+        {' '}
         on your store. Orders with flagged items will be listed below, and details about which line item is being returned
         can be found in the
         {' '}
