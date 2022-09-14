@@ -35,6 +35,7 @@ class CreateOrder
             id
             name
             displayFinancialStatus
+            createdAt
             customer {
               email
             }
@@ -92,6 +93,7 @@ class CreateOrder
         shopify_id: @order_id,
         name: @order.dig('name'),
         due_date: @order.dig('paymentTerms', 'paymentSchedules', 'edges', 0, 'node', 'dueAt'),
+        shopify_created_at: @order.dig('createdAt'),
         shop: @shop,
         status: @order['displayFinancialStatus'],
         email: @order.dig('customer', 'email')
