@@ -18,7 +18,7 @@ class OrdersUpdatedJob < ApplicationJob
     end
 
     shop.with_shopify_session do
-      order = Order.find_by!(shopify_id: webhook['id'])
+      order = Order.find_by(shopify_id: webhook['id'])
 
       if order
         order.update({
