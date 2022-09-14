@@ -4,5 +4,5 @@ class Return < ApplicationRecord
   validates :shopify_id, presence: true
 
   belongs_to :shop
-  belongs_to :order
+  belongs_to :order, counter_cache: true
 end
