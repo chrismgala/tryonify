@@ -59,6 +59,7 @@ export default defineConfig({
       "^/(\\?.*)?$": proxyOptions,
       "^/api(/|(\\?.*)?$)": proxyOptions,
       "^/app_proxy(/|(\\?.*)?$)": proxyOptions,
+      "^/sidekiq(/|(\\?.*)?$)": proxyOptions,
     },
   },
 });

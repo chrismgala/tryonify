@@ -4,10 +4,10 @@ ShopifyApp.configure do |config|
   config.webhooks = [
     # After a store owner uninstalls your app, Shopify invokes the APP_UNINSTALLED webhook
     # to let your app know.
-    { topic: "app/uninstalled", address: "webhooks/app_uninstalled" },
-    { topic: "orders/create", address: "webhooks/orders_create" },
-    { topic: "orders/updated", address: "webhooks/orders_updated" },
-    { topic: "shop/update", address: "webhooks/shop_update" }
+    { topic: "app/uninstalled", path: "api/webhooks/app_uninstalled" },
+    { topic: "orders/create", path: "api/webhooks/orders_create" },
+    { topic: "orders/updated", path: "api/webhooks/orders_updated" },
+    { topic: "shop/update", path: "api/webhooks/shop_update" }
   ]
   config.application_name = "TryOnify"
   config.old_secret = ""
