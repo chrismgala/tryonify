@@ -31,7 +31,7 @@ class AppProxy::ReturnsController < ApplicationController
         order: order
       )
 
-      if return_order.save!
+      if return_order.save
         UpdateReturnOrderNoteJob.perform_later(current_shop.id, return_order.id)
       end
     end

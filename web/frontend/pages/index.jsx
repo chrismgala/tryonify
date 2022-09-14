@@ -14,6 +14,7 @@ export default function Home() {
           <OrderList title="Pending trials" query="pending" />
           <ReturnList title="Pending returns" />
         </Layout.Section>
+        <Layout.Section />
       </Layout>
     </Page>
   );
