@@ -92,3 +92,6 @@ gem 'kaminari', '~> 1.2', '>= 1.2.2'
 
 # Automatically convert snakecase to camelcase
 gem 'olive_branch', '~> 4.0', '>= 4.0.1'
+
+# CORS
+gem 'rack-cors', '~> 1.1', '>= 1.1.1'

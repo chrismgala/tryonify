@@ -33,6 +33,15 @@ module ShopifyAppTemplateRuby
     config.middleware.use OliveBranch::Middleware,
       inflection:       "camel",
       exclude_params:   excluded_routes,
-      exclude_response: excluded_routes
+      exclude_response: excluded_routes  
+
+    config.middleware.insert_before(0, Rack::Cors) do
+      allow do
+        origins '*' # Allow access to this api from any domain
+        resource '*', # Allow all origins access to all resources
+          headers: ['authorization', 'content-type', 'context'], # Restrict headers to relevant keys
+          methods: [:get, :post] # Restrict the methods to only the ones expected to be used by the extension
+      end
+    end
   end
 end

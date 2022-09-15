@@ -54,6 +54,26 @@
   var __toModule = (module) => {
     return __reExport(__markAsModule(__defProp(module != null ? __create(__getProtoOf(module)) : {}, "default", module && module.__esModule && "default" in module ? { get: () => module.default, enumerable: true } : { value: module, enumerable: true })), module);
   };
+  var __async = (__this, __arguments, generator) => {
+    return new Promise((resolve, reject) => {
+      var fulfilled = (value) => {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      };
+      var rejected = (value) => {
+        try {
+          step(generator.throw(value));
+        } catch (e) {
+          reject(e);
+        }
+      };
+      var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+      step((generator = generator.apply(__this, __arguments)).next());
+    });
+  };
 
   // ../../node_modules/react/cjs/react.development.js
   var require_react_development = __commonJS({
@@ -1031,7 +1051,7 @@
             }
             return dispatcher.useContext(Context);
           }
-          function useState3(initialState) {
+          function useState4(initialState) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState);
           }
@@ -1043,7 +1063,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect3(create, deps) {
+          function useEffect4(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create, deps);
           }
@@ -1055,7 +1075,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useLayoutEffect(create, deps);
           }
-          function useCallback(callback, deps) {
+          function useCallback2(callback, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useCallback(callback, deps);
           }
@@ -1819,11 +1839,11 @@
           exports.memo = memo2;
           exports.startTransition = startTransition;
           exports.unstable_act = act;
-          exports.useCallback = useCallback;
+          exports.useCallback = useCallback2;
           exports.useContext = useContext3;
           exports.useDebugValue = useDebugValue;
           exports.useDeferredValue = useDeferredValue;
-          exports.useEffect = useEffect3;
+          exports.useEffect = useEffect4;
           exports.useId = useId;
           exports.useImperativeHandle = useImperativeHandle;
           exports.useInsertionEffect = useInsertionEffect;
@@ -1831,7 +1851,7 @@
           exports.useMemo = useMemo2;
           exports.useReducer = useReducer;
           exports.useRef = useRef2;
-          exports.useState = useState3;
+          exports.useState = useState4;
           exports.useSyncExternalStore = useSyncExternalStore;
           exports.useTransition = useTransition;
           exports.version = ReactVersion;
@@ -2872,11 +2892,11 @@
         module.exports = function $$$reconciler($$$hostConfig) {
           var exports2 = {};
           "use strict";
-          var React2 = require_react();
+          var React3 = require_react();
           var _assign = require_object_assign();
           var Scheduler = require_scheduler();
           var tracing = require_tracing();
-          var ReactSharedInternals = React2.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React3.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function warn(format) {
             {
               for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -5460,7 +5480,7 @@
           }
           var fakeInternalInstance = {};
           var isArray = Array.isArray;
-          var emptyRefsObject = new React2.Component().refs;
+          var emptyRefsObject = new React3.Component().refs;
           var didWarnAboutStateAssignmentForComponent;
           var didWarnAboutUninitializedState;
           var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -15703,7 +15723,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       if (true) {
         (function() {
           "use strict";
-          var React2 = require_react();
+          var React3 = require_react();
           var REACT_ELEMENT_TYPE = Symbol.for("react.element");
           var REACT_PORTAL_TYPE = Symbol.for("react.portal");
           var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
@@ -15729,7 +15749,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             }
             return null;
           }
-          var ReactSharedInternals = React2.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React3.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function error(format) {
             {
               {
@@ -16578,7 +16598,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   });
 
   // src/index.jsx
-  var import_react33 = __toModule(require_react());
+  var import_react34 = __toModule(require_react());
 
   // ../../node_modules/@shopify/admin-ui-extensions-react/index.mjs
   var admin_ui_extensions_react_exports = {};
@@ -17274,13 +17294,46 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   // ../../node_modules/@shopify/admin-ui-extensions-react/index.mjs
   __reExport(admin_ui_extensions_react_exports, esm_exports);
 
+  // src/Add.jsx
+  var import_react33 = __toModule(require_react());
+  function Add() {
+    const data = useData();
+    const api = useExtensionApi();
+    const { getSessionToken } = useSessionToken();
+    const [trialPlans, setTrialPlans] = (0, import_react33.useState)([]);
+    const [selected, setSelected] = (0, import_react33.useState)([]);
+    const fetchPlans = (0, import_react33.useCallback)(() => __async(this, null, function* () {
+      const token = yield getSessionToken();
+      const resp = yield fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+    }), []);
+    (0, import_react33.useEffect)(() => {
+      fetchPlans();
+    }, []);
+    return /* @__PURE__ */ import_react33.default.createElement(import_react33.default.Fragment, null, /* @__PURE__ */ import_react33.default.createElement(InlineStack2, null, trialPlans.map((trialPlan) => {
+      const { id, title } = trialPlan;
+      return /* @__PURE__ */ import_react33.default.createElement(Radio2, {
+        key: id,
+        label: title,
+        onChange: (checked) => {
+          const plans = checked ? selected.concat(id) : selected.filter((selectedId) => selectedId !== id);
+          setSelected(plans);
+        }
+      });
+    })));
+  }
+
   // src/index.jsx
-  extend("Admin::Product::SubscriptionPlan::Add", render2(() => /* @__PURE__ */ import_react33.default.createElement(App, null)));
-  extend("Admin::Product::SubscriptionPlan::Create", render2(() => /* @__PURE__ */ import_react33.default.createElement(App, null)));
-  extend("Admin::Product::SubscriptionPlan::Remove", render2(() => /* @__PURE__ */ import_react33.default.createElement(App, null)));
-  extend("Admin::Product::SubscriptionPlan::Edit", render2(() => /* @__PURE__ */ import_react33.default.createElement(App, null)));
+  extend("Admin::Product::SubscriptionPlan::Add", render2(() => /* @__PURE__ */ import_react34.default.createElement(Add, null)));
+  extend("Admin::Product::SubscriptionPlan::Create", render2(() => /* @__PURE__ */ import_react34.default.createElement(App, null)));
+  extend("Admin::Product::SubscriptionPlan::Remove", render2(() => /* @__PURE__ */ import_react34.default.createElement(App, null)));
+  extend("Admin::Product::SubscriptionPlan::Edit", render2(() => /* @__PURE__ */ import_react34.default.createElement(App, null)));
   function App() {
     const { extensionPoint } = useExtensionApi();
-    return /* @__PURE__ */ import_react33.default.createElement(Text2, null, "Welcome to the ", extensionPoint, " extension!");
+    return /* @__PURE__ */ import_react34.default.createElement(Text2, null, "Welcome to the ", extensionPoint, " extension!");
   }
 })();
