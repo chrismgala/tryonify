@@ -51,7 +51,7 @@ export default function ReturnList({ title }) {
   const rowMarkup = data?.map(
     (order, index) => {
       const {
-        id, shopifyId, name, createdAt, status, dueDate,
+        id, shopifyId, name, createdAt, financialStatus, dueDate,
       } = order;
       const overdue = new Date(dueDate).getTime() < new Date().getTime();
 
@@ -81,7 +81,7 @@ export default function ReturnList({ title }) {
           </IndexTable.Cell>
           <IndexTable.Cell>
             <Stack spacing="extraTight">
-              <PaymentStatus status={status} />
+              <PaymentStatus status={financialStatus} />
               {overdue && <PaymentStatus status="OVERDUE" />}
             </Stack>
           </IndexTable.Cell>
