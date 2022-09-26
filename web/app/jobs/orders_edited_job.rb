@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class OrdersUpdatedJob < ApplicationJob
+class OrdersEditedJob < ApplicationJob
   extend ShopifyAPI::Webhooks::Handler
 
   class << self

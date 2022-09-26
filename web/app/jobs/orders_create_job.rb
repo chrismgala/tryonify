@@ -5,7 +5,7 @@ class OrdersCreateJob < ApplicationJob
 
   class << self
     def handle(topic:, shop:, body:)
-      perform_later(topic: topic, shop_domain: shop, webhook: body)
+      perform_later(topic:, shop_domain: shop, webhook: body)
     end
   end
 
@@ -18,8 +18,8 @@ class OrdersCreateJob < ApplicationJob
     end
 
     shop.with_shopify_session do
-      service = CreateOrder.new(
-        shop: shop,
+      service = CreateOrUpdateOrder.new(
+        shop_id: shop.id,
         order_id: webhook['id']
       )
       service.call

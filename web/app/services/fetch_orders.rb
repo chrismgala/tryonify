@@ -23,9 +23,12 @@ class FetchOrders
       query: @pagination[:query]
     }
 
-    response = @client.query(query: query, variables: variables)
+    response = @client.query(query:, variables:)
 
-    raise FetchOrders::InvalidRequest, response.body.dig('errors', 0, 'message') and return unless response.body['errors'].nil?
+    unless response.body['errors'].nil?
+      raise FetchOrders::InvalidRequest,
+            response.body.dig('errors', 0, 'message') and return
+    end
 
     @orders = response.body.dig('data', 'orders')
   rescue ActiveRecord::RecordInvalid, StandardError => e
@@ -43,6 +46,7 @@ class FetchOrders
               legacyResourceId
               name
               createdAt
+              updatedAt
               displayFinancialStatus
               customer {
                 email

@@ -100,7 +100,7 @@ class FetchSellingPlanGroups
     query = @pagination[:last] ? PREVIOUS_SELLING_PLAN_GROUPS_QUERY : NEXT_SELLING_PLAN_GROUPS_QUERY
 
     variables = {
-      first: @pagination[:first].to_i,
+      first: @pagination[:first] ? @pagination[:first].to_i : 20,
       last: @pagination[:last].to_i,
       before: @pagination[:before],
       after: @pagination[:after]

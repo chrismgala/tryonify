@@ -53,7 +53,7 @@ module Api
         if selling_plan_group.valid?
           service = UpdateSellingPlanGroup.new(selling_plan_group)
           service.call
-          
+
           if service.selling_plan_group
             render json: service.selling_plan_group
           else
@@ -62,8 +62,6 @@ module Api
         else
           render_errors selling_plan_group
         end
-      rescue => e
-        render_errors e
       end
 
       def destroy

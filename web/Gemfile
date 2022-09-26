@@ -95,3 +95,6 @@ gem 'olive_branch', '~> 4.0', '>= 4.0.1'
 
 # CORS
 gem 'rack-cors', '~> 1.1', '>= 1.1.1'
+
+# Email
+gem 'postmark-rails', '~> 0.22.1'

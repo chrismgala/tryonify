@@ -32,7 +32,7 @@ export default function OrderList({ title, query }) {
   const rowMarkup = data?.map(
     (order, index) => {
       const {
-        id, shopifyId, name, shopifyCreatedAt, status, dueDate,
+        id, shopifyId, name, shopifyCreatedAt, financialStatus, dueDate,
       } = order;
       const overdue = new Date(dueDate).getTime() < new Date().getTime();
 
@@ -63,7 +63,7 @@ export default function OrderList({ title, query }) {
           </IndexTable.Cell>
           <IndexTable.Cell>
             <Stack spacing="extraTight">
-              <PaymentStatus status={status} />
+              <PaymentStatus status={financialStatus} />
               {overdue && <PaymentStatus status="OVERDUE" />}
             </Stack>
           </IndexTable.Cell>

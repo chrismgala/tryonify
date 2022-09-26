@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_14_043407) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_26_054811) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,12 +21,27 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_14_043407) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name", null: false
-    t.string "status", null: false
+    t.string "financial_status", null: false
     t.string "email", null: false
     t.datetime "shopify_created_at"
     t.integer "returns_count"
+    t.string "mandate_id"
+    t.string "fulfillment_status", default: "UNFULFILLED"
+    t.datetime "closed_at"
     t.index ["shop_id"], name: "index_orders_on_shop_id"
     t.index ["shopify_id"], name: "unique_shopify_ids", unique: true
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.string "idempotency_key", null: false
+    t.string "payment_reference_id"
+    t.string "error"
+    t.string "status", default: "PENDING"
+    t.bigint "order_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["idempotency_key"], name: "index_payments_on_idempotency_key", unique: true
+    t.index ["order_id"], name: "index_payments_on_order_id"
   end
 
   create_table "plans", force: :cascade do |t|
@@ -98,11 +113,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_14_043407) do
     t.string "order_number_format_suffix"
     t.string "email"
     t.boolean "onboarded", default: false
+    t.integer "return_period", default: 14
     t.index ["plan_id"], name: "index_shops_on_plan_id"
     t.index ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
   end
 
   add_foreign_key "orders", "shops", on_delete: :cascade
+  add_foreign_key "payments", "orders"
   add_foreign_key "products", "shops", on_delete: :cascade
   add_foreign_key "returns", "orders", on_delete: :cascade
   add_foreign_key "selling_plan_groups", "shops", on_delete: :cascade

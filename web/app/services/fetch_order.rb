@@ -60,9 +60,12 @@ class FetchOrder
       id: @id
     }
 
-    response = @client.query(query: query, variables: variables)
+    response = @client.query(query:, variables:)
 
-    raise FetchOrder::InvalidRequest, response.body.dig('errors', 0, 'message') and return unless response.body['errors'].nil?
+    unless response.body['errors'].nil?
+      raise FetchOrder::InvalidRequest,
+            response.body.dig('errors', 0, 'message') and return
+    end
 
     @order = response.body.dig('data', 'order')
   rescue ActiveRecord::RecordInvalid, StandardError => e

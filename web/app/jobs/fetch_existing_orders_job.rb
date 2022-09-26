@@ -10,18 +10,18 @@ class FetchExistingOrdersJob < ActiveJob::Base
     end
 
     shop.with_shopify_session do
-      if shop.orders_updated_at
-        query = "(financial_status:PENDING) AND (updated_at:>#{shop.orders_updated_at})"
-      else
-        query = "financial_status:PENDING"
-      end
-      
+      query = if shop.orders_updated_at
+                "financial_status:PENDING AND updated_at:>'#{shop.orders_updated_at}'"
+              else
+                'financial_status:PENDING'
+              end
+
       # Fetch pending orders since last check was done
       service = FetchOrders.new({
-        first: 20,
-        after: cursor,
-        query: query
-      })
+                                  first: 20,
+                                  after: cursor,
+                                  query:
+                                })
       service.call
 
       order_edges = service.orders.dig('edges')
@@ -32,17 +32,17 @@ class FetchExistingOrdersJob < ActiveJob::Base
       # Create an array of orders with selling plans
       order_array = []
       order_edges.each do |order|
-        if has_selling_plan(order['node'])
-          order_array.push({
-            shopify_id: order.dig('node', 'legacyResourceId'),
-            name: order.dig('node', 'name'),
-            due_date: order.dig('node', 'paymentTerms', 'paymentSchedules', 'nodes', 0, 'dueAt'),
-            shopify_created_at: order.dig('node', 'createdAt'),
-            shop_id: shop.id,
-            status: order.dig('node', 'displayFinancialStatus'),
-            email: order.dig('node', 'customer', 'email')
-          })
-        end
+        next unless has_selling_plan(order['node'])
+
+        order_array.push({
+                           shopify_id: order.dig('node', 'legacyResourceId'),
+                           name: order.dig('node', 'name'),
+                           due_date: order.dig('node', 'paymentTerms', 'paymentSchedules', 'nodes', 0, 'dueAt'),
+                           shopify_created_at: order.dig('node', 'createdAt'),
+                           shop_id: shop.id,
+                           financial_status: order.dig('node', 'displayFinancialStatus'),
+                           email: order.dig('node', 'customer', 'email')
+                         })
       end
 
       if order_array.length > 0
@@ -63,6 +63,7 @@ class FetchExistingOrdersJob < ActiveJob::Base
 
   def has_selling_plan(order)
     return false if order.blank?
+
     order.dig('paymentTerms', 'paymentSchedules', 'nodes', 0, 'dueAt')
   end
 end

@@ -1,6 +1,6 @@
-desc "Fetch orders from Shopify to persist on local DB"
-task :fetch_orders => :environment do |task, args|
-  puts "Fetching orders..."
+desc 'Fetch orders from Shopify to persist on local DB'
+task fetch_orders: :environment do |_task, _args|
+  puts 'Fetching orders...'
 
   shops = Shop.all
 
@@ -9,5 +9,5 @@ task :fetch_orders => :environment do |task, args|
     FetchExistingOrdersJob.perform_later(shop.id, nil)
   end
 
-  puts "done."
+  puts 'done.'
 end
