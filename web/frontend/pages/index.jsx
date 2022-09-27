@@ -11,6 +11,7 @@ export default function Home() {
         <Layout.Section>
           <Onboarding />
           <OrderList title="Ready to charge" query="overdue" />
+          <OrderList title="Failed payments" query="failed_payments" />
           <OrderList title="Pending trials" query="pending" />
           <ReturnList title="Pending returns" />
         </Layout.Section>

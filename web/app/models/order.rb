@@ -9,8 +9,18 @@ class Order < ApplicationRecord
   has_one :payment
 
   scope :payment_due, lambda {
-                        where(['due_date < ? and financial_status = ? and closed_at = ', Date.today, 'PENDING', nil])
+                        where('DATE(due_date) < DATE(?)', Date.today)
+                          .where(financial_status: 'PENDING')
+                          .where(closed_at: nil)
                       }
-  scope :pending, -> { where(['due_date > ? and financial_status = ? and closed_at = ', Date.today, 'PENDING', nil]) }
-  scope :pending_returns, -> { joins(:returns).where('returns.active = true') }
+  scope :pending, lambda {
+                    where('DATE(due_date) > DATE(?)', Date.today)
+                      .where(financial_status: 'PENDING').where(closed_at: nil)
+                  }
+  scope :pending_returns, -> { joins(:returns).where(returns: { active: true }) }
+  scope :failed_payments, lambda {
+                            where(financial_status: 'PENDING')
+                              .where(closed_at: nil)
+                              .joins(:payment).where(payment: { status: 'ERROR' })
+                          }
 end
