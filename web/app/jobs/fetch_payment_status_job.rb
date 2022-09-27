@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FetchPaymentStatusJob < ApplicationJob
+  sidekiq_options retry: false
+
   def perform(payment_id)
     payment = Payment.find(payment_id)
 
