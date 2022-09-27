@@ -82,7 +82,18 @@ class CreateOrUpdateOrder
       existing_order.update(order_attributes)
     elsif selling_plan?(@order)
       order_attributes.shop_id = @shop_id
-      Order.create!(order_attributes)
+      new_order = Order.create!(order_attributes)
+
+      if new_order
+        KlaviyoEvent.new(@shop).call(
+          event: 'TryOnify Order Created',
+          email: @order.dig('customer', 'email'),
+          properties: {
+            'order_id': @order.dig('name'),
+            'amount': @order.dig('totalPriceSet', 'shopMoney', 'amount')
+          }
+        )
+      end
     end
   rescue StandardError => e
     Rails.logger.error("[CreateOrUpdateOrder Failed]: #{e}")
