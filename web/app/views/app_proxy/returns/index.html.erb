@@ -3,6 +3,10 @@
 <div class="tryonify-order">
   <h1>Order <%= @order.dig('name') %></h1>
 
+  <% if @shop.return_explainer %>
+    <p class="tryonify-return-instructions"><%= @shop.return_explainer %></p>
+  <% end %>
+
   <% if @order.dig('displayFinancialStatus') == 'PENDING' %>
     <div>Payment due {{ '<%= @order.dig('paymentTerms', 'paymentSchedules', 'nodes', 0, 'dueAt') %>' | date: '%B %d, %Y' }}</div>
   <% end %>

@@ -1,21 +1,28 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
+  Card,
   Form,
   Page,
   Layout,
 } from '@shopify/polaris';
-import { Formik } from 'formik';
+import { useToast } from '@shopify/app-bridge-react';
+import { Formik, Field } from 'formik';
 import { useMutation, useQueryClient } from 'react-query';
 import { useAppQuery, useAuthenticatedFetch } from '../../hooks';
 import SaveBar from '../../components/save-bar';
 import Klaviyo from '../../components/klaviyo';
+import TextField from '../../components/text-field';
+import CheckboxField from '../../components/checkbox-field';
 
 const initialValues = {
   klaviyoPublicKey: '',
   klaviyoPrivateKey: '',
+  returnExplainer: '',
+  allowAutomaticPayments: true,
 };
 
 export default function Settings() {
+  const toast = useToast();
   const fetch = useAuthenticatedFetch();
   const queryClient = useQueryClient();
   const { isLoading, error, data } = useAppQuery({
@@ -29,7 +36,7 @@ export default function Settings() {
     body: JSON.stringify(shop)
   }).then((response) => response.data), {
     onSuccess: (response) => {
-      queryClient.setQueryData(['shop', response.id], response);
+      queryClient.setQueryData("/api/v1/shop", response);
     },
   });
 
@@ -37,6 +44,14 @@ export default function Settings() {
     await saveMutation.mutate(values);
     resetForm({ values });
   }, [saveMutation]);
+
+  useEffect(() => {
+    if (saveMutation.isSuccess) toast.show('Save successful!', { duration: 2000 })
+  }, [saveMutation.isSuccess])
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <Page title="Settings">
@@ -46,7 +61,6 @@ export default function Settings() {
           ...data?.shop,
         }}
         onSubmit={onSubmit}
-        enableReinitialize
       >
         {({
           handleSubmit, resetForm, submitForm, dirty,
@@ -54,6 +68,29 @@ export default function Settings() {
           <Form onSubmit={handleSubmit}>
             <SaveBar dirty={dirty} submitForm={submitForm} resetForm={resetForm} />
             <Layout>
+              <Layout.AnnotatedSection
+                title="General"
+              >
+                <Card sectioned>
+                  <Field
+                    label="Allow automatic payments"
+                    name="allowAutomaticPayments"
+                    component={CheckboxField}
+                  />
+                </Card>
+              </Layout.AnnotatedSection>
+              <Layout.AnnotatedSection
+                title="Returns"
+              >
+                <Card sectioned>
+                  <Field
+                    label="Instructions"
+                    name="returnExplainer"
+                    component={TextField}
+                    multiline={3}
+                  />
+                </Card>
+              </Layout.AnnotatedSection>
               <Layout.AnnotatedSection
                 title="Integrations"
               >

@@ -8,7 +8,6 @@ module Api
       end
 
       def update
-        puts params.inspect
         @shop = current_user
         render_errors @shop and return unless @shop.update(shop_params)
       end
@@ -19,7 +18,9 @@ module Api
         params.permit(
           :klaviyo_public_key,
           :klaviyo_private_key,
-          :onboarded
+          :onboarded,
+          :return_explainer,
+          :allow_automatic_payments
         )
       end
     end

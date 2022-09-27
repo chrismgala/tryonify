@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_26_054811) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_26_233037) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -114,6 +114,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_26_054811) do
     t.string "email"
     t.boolean "onboarded", default: false
     t.integer "return_period", default: 14
+    t.text "return_explainer"
+    t.boolean "allow_automatic_payments", default: true
     t.index ["plan_id"], name: "index_shops_on_plan_id"
     t.index ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
   end

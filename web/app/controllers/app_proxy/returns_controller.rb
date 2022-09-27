@@ -4,7 +4,7 @@ class AppProxy::ReturnsController < ApplicationController
   before_action :current_shop
 
   def index
-    current_shop.with_shopify_session do
+    @shop.with_shopify_session do
       service = SearchOrder.new("(name:#{order_params[:name]}) AND (email:#{order_params[:email]}")
       service.call
 
@@ -13,7 +13,7 @@ class AppProxy::ReturnsController < ApplicationController
         existing_order = Order.find_by!(shopify_id: @order.dig('legacyResourceId'))
         @returns = existing_order.returns
 
-        render(layout: false, content_type: "application/liquid")
+        render(layout: false, content_type: 'application/liquid')
       else
         redirect_to '/a/trial/returns/search?err=not_found', allow_other_hosts: true
       end
@@ -23,17 +23,15 @@ class AppProxy::ReturnsController < ApplicationController
   def create
     order = Order.find_by(shopify_id: return_params[:order_id])
 
-    if order.shop_id == current_shop.id
+    if order.shop_id == @shop.id
       return_order = Return.new(
         shopify_id: return_params[:line_item_id],
         title: return_params[:title],
-        shop: current_shop,
-        order: order
+        shop: @shop,
+        order:
       )
 
-      if return_order.save
-        UpdateReturnOrderNoteJob.perform_later(current_shop.id, return_order.id)
-      end
+      UpdateReturnOrderNoteJob.perform_later(@shop.id, return_order.id) if return_order.save
     end
 
     redirect_to "/a/trial/returns?name=#{CGI.escape(order.name)}&email=#{CGI.escape(order.email)}"
@@ -41,7 +39,7 @@ class AppProxy::ReturnsController < ApplicationController
 
   def search
     @error = params[:err]
-    render(layout: false, content_type: "application/liquid")
+    render(layout: false, content_type: 'application/liquid')
   end
 
   private
