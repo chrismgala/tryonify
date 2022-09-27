@@ -98,6 +98,7 @@ class CreateOrUpdateOrder
   rescue StandardError => e
     Rails.logger.error("[CreateOrUpdateOrder Failed]: #{e}")
     @error = e
+    raise @error
   end
 
   def fetch_order(after = nil)
@@ -111,7 +112,7 @@ class CreateOrUpdateOrder
     response = @client.query(query:, variables:)
 
     unless response.body['errors'].nil?
-      raise UpdateOrder::InvalidRequest,
+      raise CreateOrUpdateOrder::InvalidRequest,
             response.body.dig('errors', 0, 'message') and return
     end
 
