@@ -15,7 +15,15 @@
     "@shopify/admin-ui-extensions-react": "^1.0.1",
     "@shopify/app": "3.10.1",
     "@shopify/cli": "^3.10.1",
+    "iso8601-duration": "^2.1.1",
     "react": "^18.2.0"
   },
-  "author": "davidw"
+  "author": "davidw",
+  "devDependencies": {
+    "eslint": "^8.23.1",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-react": "^7.31.8",
+    "eslint-plugin-react-hooks": "^4.6.0"
+  }
 }

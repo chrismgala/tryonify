@@ -1,6 +1,9 @@
 import React from 'react';
 import { render, extend, Text, useExtensionApi } from '@shopify/admin-ui-extensions-react';
 import Add from './Add.jsx';
+import Create from './Create.jsx'
+import Edit from './Edit.jsx'
+import Remove from './Remove.jsx'
 
 // Your extension must render all four modes
 extend(
@@ -9,15 +12,15 @@ extend(
 )
 extend(
   'Admin::Product::SubscriptionPlan::Create',
-  render(() => <App />),
+  render(() => <Create />),
 )
 extend(
   'Admin::Product::SubscriptionPlan::Remove',
-  render(() => <App />),
+  render(() => <Remove />),
 )
 extend(
   'Admin::Product::SubscriptionPlan::Edit',
-  render(() => <App />),
+  render(() => <Edit />),
 )
 
 function App() {

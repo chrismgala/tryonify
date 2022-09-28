@@ -1051,7 +1051,7 @@
             }
             return dispatcher.useContext(Context);
           }
-          function useState4(initialState) {
+          function useState6(initialState) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState);
           }
@@ -1063,7 +1063,7 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect4(create, deps) {
+          function useEffect7(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create, deps);
           }
@@ -1075,11 +1075,11 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useLayoutEffect(create, deps);
           }
-          function useCallback2(callback, deps) {
+          function useCallback4(callback, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useCallback(callback, deps);
           }
-          function useMemo2(create, deps) {
+          function useMemo4(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useMemo(create, deps);
           }
@@ -1839,19 +1839,19 @@
           exports.memo = memo2;
           exports.startTransition = startTransition;
           exports.unstable_act = act;
-          exports.useCallback = useCallback2;
+          exports.useCallback = useCallback4;
           exports.useContext = useContext3;
           exports.useDebugValue = useDebugValue;
           exports.useDeferredValue = useDeferredValue;
-          exports.useEffect = useEffect4;
+          exports.useEffect = useEffect7;
           exports.useId = useId;
           exports.useImperativeHandle = useImperativeHandle;
           exports.useInsertionEffect = useInsertionEffect;
           exports.useLayoutEffect = useLayoutEffect;
-          exports.useMemo = useMemo2;
+          exports.useMemo = useMemo4;
           exports.useReducer = useReducer;
           exports.useRef = useRef2;
-          exports.useState = useState4;
+          exports.useState = useState6;
           exports.useSyncExternalStore = useSyncExternalStore;
           exports.useTransition = useTransition;
           exports.version = ReactVersion;
@@ -2892,11 +2892,11 @@
         module.exports = function $$$reconciler($$$hostConfig) {
           var exports2 = {};
           "use strict";
-          var React3 = require_react();
+          var React6 = require_react();
           var _assign = require_object_assign();
           var Scheduler = require_scheduler();
           var tracing = require_tracing();
-          var ReactSharedInternals = React3.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React6.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function warn(format) {
             {
               for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -5480,7 +5480,7 @@
           }
           var fakeInternalInstance = {};
           var isArray = Array.isArray;
-          var emptyRefsObject = new React3.Component().refs;
+          var emptyRefsObject = new React6.Component().refs;
           var didWarnAboutStateAssignmentForComponent;
           var didWarnAboutUninitializedState;
           var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -15723,7 +15723,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       if (true) {
         (function() {
           "use strict";
-          var React3 = require_react();
+          var React6 = require_react();
           var REACT_ELEMENT_TYPE = Symbol.for("react.element");
           var REACT_PORTAL_TYPE = Symbol.for("react.portal");
           var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
@@ -15749,7 +15749,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             }
             return null;
           }
-          var ReactSharedInternals = React3.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+          var ReactSharedInternals = React6.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function error(format) {
             {
               {
@@ -16597,8 +16597,98 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }
   });
 
+  // ../../node_modules/iso8601-duration/lib/index.js
+  var require_lib = __commonJS({
+    "../../node_modules/iso8601-duration/lib/index.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      exports.toSeconds = exports.end = exports.parse = exports.pattern = void 0;
+      var numbers = "\\d+";
+      var fractionalNumbers = "".concat(numbers, "(?:[\\.,]").concat(numbers, ")?");
+      var datePattern = "(".concat(numbers, "Y)?(").concat(numbers, "M)?(").concat(numbers, "W)?(").concat(numbers, "D)?");
+      var timePattern = "T(".concat(fractionalNumbers, "H)?(").concat(fractionalNumbers, "M)?(").concat(fractionalNumbers, "S)?");
+      var iso8601 = "P(?:".concat(datePattern, "(?:").concat(timePattern, ")?)");
+      var objMap = [
+        "years",
+        "months",
+        "weeks",
+        "days",
+        "hours",
+        "minutes",
+        "seconds"
+      ];
+      var defaultDuration = Object.freeze({
+        years: 0,
+        months: 0,
+        weeks: 0,
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0
+      });
+      exports.pattern = new RegExp(iso8601);
+      var parse2 = function(durationString) {
+        var matches = durationString.replace(/,/g, ".").match(exports.pattern);
+        if (!matches) {
+          throw new RangeError("invalid duration: ".concat(durationString));
+        }
+        var slicedMatches = matches.slice(1);
+        if (slicedMatches.filter(function(v) {
+          return v != null;
+        }).length === 0) {
+          throw new RangeError("invalid duration: ".concat(durationString));
+        }
+        if (slicedMatches.filter(function(v) {
+          return /\./.test(v || "");
+        }).length > 1) {
+          throw new RangeError("only the smallest unit can be fractional");
+        }
+        return slicedMatches.reduce(function(prev, next, idx) {
+          prev[objMap[idx]] = parseFloat(next || "0") || 0;
+          return prev;
+        }, {});
+      };
+      exports.parse = parse2;
+      var end = function(durationInput, startDate) {
+        if (startDate === void 0) {
+          startDate = new Date();
+        }
+        var duration = Object.assign({}, defaultDuration, durationInput);
+        var timestamp = startDate.getTime();
+        var then = new Date(timestamp);
+        then.setFullYear(then.getFullYear() + duration.years);
+        then.setMonth(then.getMonth() + duration.months);
+        then.setDate(then.getDate() + duration.days);
+        var hoursInMs = duration.hours * 3600 * 1e3;
+        var minutesInMs = duration.minutes * 60 * 1e3;
+        then.setMilliseconds(then.getMilliseconds() + duration.seconds * 1e3 + hoursInMs + minutesInMs);
+        then.setDate(then.getDate() + duration.weeks * 7);
+        return then;
+      };
+      exports.end = end;
+      var toSeconds = function(durationInput, startDate) {
+        if (startDate === void 0) {
+          startDate = new Date();
+        }
+        var duration = Object.assign({}, defaultDuration, durationInput);
+        var timestamp = startDate.getTime();
+        var now = new Date(timestamp);
+        var then = (0, exports.end)(duration, now);
+        var seconds = (then.getTime() - now.getTime()) / 1e3;
+        return seconds;
+      };
+      exports.toSeconds = toSeconds;
+      exports.default = {
+        end: exports.end,
+        toSeconds: exports.toSeconds,
+        pattern: exports.pattern,
+        parse: exports.parse
+      };
+    }
+  });
+
   // src/index.jsx
-  var import_react34 = __toModule(require_react());
+  var import_react37 = __toModule(require_react());
 
   // ../../node_modules/@shopify/admin-ui-extensions-react/index.mjs
   var admin_ui_extensions_react_exports = {};
@@ -17298,42 +17388,425 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
   var import_react33 = __toModule(require_react());
   function Add() {
     const data = useData();
-    const api = useExtensionApi();
+    const { close, done, setPrimaryAction, setSecondaryAction } = useContainer();
     const { getSessionToken } = useSessionToken();
     const [trialPlans, setTrialPlans] = (0, import_react33.useState)([]);
-    const [selected, setSelected] = (0, import_react33.useState)([]);
+    const [selected, setSelected] = (0, import_react33.useState)(null);
     const fetchPlans = (0, import_react33.useCallback)(() => __async(this, null, function* () {
       const token = yield getSessionToken();
-      const resp = yield fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups`, {
+      const resp = yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups`, {
         headers: {
-          "Authorization": `Bearer ${token}`,
+          "authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
         }
       });
+      const { edges } = yield resp.json();
+      if (edges && edges.length > 0) {
+        setTrialPlans(edges.map(({ node }) => node));
+      }
     }), []);
+    const handleSubmit = () => __async(this, null, function* () {
+      if (selected) {
+        const token = yield getSessionToken();
+        yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(selected)}/products`, {
+          method: "POST",
+          headers: {
+            "authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            addProducts: [data.productId],
+            removeProducts: []
+          })
+        });
+        done();
+      }
+    });
     (0, import_react33.useEffect)(() => {
       fetchPlans();
     }, []);
-    return /* @__PURE__ */ import_react33.default.createElement(import_react33.default.Fragment, null, /* @__PURE__ */ import_react33.default.createElement(InlineStack2, null, trialPlans.map((trialPlan) => {
-      const { id, title } = trialPlan;
-      return /* @__PURE__ */ import_react33.default.createElement(Radio2, {
-        key: id,
-        label: title,
-        onChange: (checked) => {
-          const plans = checked ? selected.concat(id) : selected.filter((selectedId) => selectedId !== id);
-          setSelected(plans);
+    (0, import_react33.useEffect)(() => {
+      setPrimaryAction({
+        content: "Add to plan",
+        onAction: handleSubmit
+      });
+      setSecondaryAction({
+        content: "Cancel",
+        onAction: () => close()
+      });
+    }, [getSessionToken, close, done, setPrimaryAction, setSecondaryAction, selected]);
+    const options = trialPlans.map(({ id, name }) => ({
+      label: name,
+      value: id
+    }));
+    return /* @__PURE__ */ import_react33.default.createElement(import_react33.default.Fragment, null, /* @__PURE__ */ import_react33.default.createElement(Select2, {
+      label: "Select a trial plan",
+      options,
+      onChange: setSelected,
+      value: selected
+    }));
+  }
+
+  // src/Create.jsx
+  var import_react34 = __toModule(require_react());
+  var validate = (values) => {
+    const errors = {};
+    if (!values.name) {
+      errors.name = "Required";
+    }
+    if (!values.sellingPlanName) {
+      errors.sellingPlanName = "Required";
+    }
+    if (!values.trialDays) {
+      errors.trialDays = "Required";
+    }
+    return errors;
+  };
+  function Actions({ onPrimary, onClose, title }) {
+    return /* @__PURE__ */ import_react34.default.createElement(InlineStack2, {
+      inlineAlignment: "trailing"
+    }, /* @__PURE__ */ import_react34.default.createElement(Button2, {
+      title: "Cancel",
+      onPress: onClose
+    }), /* @__PURE__ */ import_react34.default.createElement(Button2, {
+      title,
+      onPress: onPrimary,
+      kind: "primary"
+    }));
+  }
+  function Create() {
+    const data = useData();
+    const { close, done } = useContainer();
+    const toast = useToast();
+    const { getSessionToken } = useSessionToken();
+    const [errors, setErrors] = (0, import_react34.useState)({});
+    const [name, setName] = (0, import_react34.useState)("");
+    const [description, setDescription] = (0, import_react34.useState)("");
+    const [sellingPlanName, setSellingPlanName] = (0, import_react34.useState)("");
+    const [sellingPlanDescription, setSellingPlanDescription] = (0, import_react34.useState)("");
+    const [prepay, setPrepay] = (0, import_react34.useState)(0);
+    const [trialDays, setTrialDays] = (0, import_react34.useState)(14);
+    const createPlan = () => __async(this, null, function* () {
+      try {
+        const token = yield getSessionToken();
+        const resp = yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups`, {
+          method: "POST",
+          headers: {
+            "authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name,
+            description,
+            sellingPlan: {
+              name: sellingPlanName,
+              description: sellingPlanDescription,
+              prepay,
+              trialDays
+            }
+          })
+        });
+        return resp.json();
+      } catch (err) {
+        console.err(err);
+        toast.show("Trial plan could not be created");
+      }
+    });
+    const addProductToPlan = (id) => __async(this, null, function* () {
+      try {
+        const token = yield getSessionToken();
+        const resp = yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(id)}/products`, {
+          method: "POST",
+          headers: {
+            "authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            addProducts: [data.productId],
+            removeProducts: []
+          })
+        });
+        return resp.json();
+      } catch (err) {
+        console.err(err);
+        toast.show("Product could not be added to trial plan");
+      }
+    });
+    const onPrimaryAction = () => __async(this, null, function* () {
+      const validation = validate({
+        name,
+        sellingPlanName,
+        trialDays
+      });
+      if (Object.keys(validation).length > 0) {
+        setErrors(validation);
+      } else {
+        const trialPlan = yield createPlan();
+        yield addProductToPlan(trialPlan.id);
+        done();
+      }
+    });
+    const cachedActions = (0, import_react34.useMemo)(() => /* @__PURE__ */ import_react34.default.createElement(Actions, {
+      onPrimary: onPrimaryAction,
+      onClose: close,
+      title: "Create trial plan"
+    }), [onPrimaryAction, close]);
+    return /* @__PURE__ */ import_react34.default.createElement(import_react34.default.Fragment, null, /* @__PURE__ */ import_react34.default.createElement(BlockStack2, {
+      spacing: "none"
+    }, /* @__PURE__ */ import_react34.default.createElement(TextBlock2, {
+      size: "extraLarge"
+    }, "Create trial plan")), /* @__PURE__ */ import_react34.default.createElement(Card2, {
+      title: "Admin Details",
+      sectioned: true
+    }, /* @__PURE__ */ import_react34.default.createElement(BlockStack2, null, /* @__PURE__ */ import_react34.default.createElement(TextField2, {
+      label: "Name",
+      name: "name",
+      onChange: setName,
+      value: name,
+      error: errors.name
+    }), /* @__PURE__ */ import_react34.default.createElement(TextField2, {
+      label: "Description",
+      name: "description",
+      multiline: 4,
+      onChange: setDescription,
+      value: description
+    }))), /* @__PURE__ */ import_react34.default.createElement(Card2, {
+      title: "Customer Details",
+      sectioned: true
+    }, /* @__PURE__ */ import_react34.default.createElement(BlockStack2, null, /* @__PURE__ */ import_react34.default.createElement(TextField2, {
+      label: "Name",
+      name: "sellingPlan[name]",
+      onChange: setSellingPlanName,
+      value: sellingPlanName,
+      error: errors.sellingPlanName
+    }), /* @__PURE__ */ import_react34.default.createElement(TextField2, {
+      label: "Description",
+      name: "sellingPlan[description]",
+      multiline: 4,
+      onChange: setSellingPlanDescription,
+      value: sellingPlanDescription
+    }))), /* @__PURE__ */ import_react34.default.createElement(Card2, {
+      title: "Payment Terms",
+      sectioned: true
+    }, /* @__PURE__ */ import_react34.default.createElement(InlineStack2, {
+      inlineAlignment: "fill"
+    }, /* @__PURE__ */ import_react34.default.createElement(TextField2, {
+      label: "Pre-paid Amount",
+      name: "sellingPlan[prepay]",
+      type: "number",
+      onChange: setPrepay,
+      value: prepay
+    }), /* @__PURE__ */ import_react34.default.createElement(TextField2, {
+      label: "Trial Length (Days)",
+      name: "sellingPlan[trialDays]",
+      type: "number",
+      onChange: setTrialDays,
+      value: trialDays,
+      error: errors.trialDays
+    }))), cachedActions);
+  }
+
+  // src/Edit.jsx
+  var import_react35 = __toModule(require_react());
+  var import_iso8601_duration = __toModule(require_lib());
+  var validate2 = (values) => {
+    const errors = {};
+    if (!values.name) {
+      errors.name = "Required";
+    }
+    if (!values.sellingPlanName) {
+      errors.sellingPlanName = "Required";
+    }
+    if (!values.trialDays) {
+      errors.trialDays = "Required";
+    }
+    return errors;
+  };
+  function Actions2({ onPrimary, onClose, title }) {
+    return /* @__PURE__ */ import_react35.default.createElement(InlineStack2, {
+      inlineAlignment: "trailing"
+    }, /* @__PURE__ */ import_react35.default.createElement(Button2, {
+      title: "Cancel",
+      onPress: onClose
+    }), /* @__PURE__ */ import_react35.default.createElement(Button2, {
+      title,
+      onPress: onPrimary,
+      kind: "primary"
+    }));
+  }
+  function Edit() {
+    const data = useData();
+    const { close, done } = useContainer();
+    const toast = useToast();
+    const { getSessionToken } = useSessionToken();
+    const [errors, setErrors] = (0, import_react35.useState)({});
+    const [name, setName] = (0, import_react35.useState)("");
+    const [description, setDescription] = (0, import_react35.useState)("");
+    const [sellingPlanId, setSellingPlanId] = (0, import_react35.useState)("");
+    const [sellingPlanName, setSellingPlanName] = (0, import_react35.useState)("");
+    const [sellingPlanDescription, setSellingPlanDescription] = (0, import_react35.useState)("");
+    const [prepay, setPrepay] = (0, import_react35.useState)(0);
+    const [trialDays, setTrialDays] = (0, import_react35.useState)(14);
+    const fetchPlan = (0, import_react35.useCallback)(() => __async(this, null, function* () {
+      var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u;
+      const token = yield getSessionToken();
+      const resp = yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}`, {
+        headers: {
+          "authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
         }
       });
-    })));
+      const json = yield resp.json();
+      setName(json.name);
+      setDescription(json.description);
+      if (((_b = (_a = json == null ? void 0 : json.sellingPlans) == null ? void 0 : _a.edges) == null ? void 0 : _b.length) > 0) {
+        setSellingPlanId((_e = (_d = (_c = json.sellingPlans) == null ? void 0 : _c.edges[0]) == null ? void 0 : _d.node) == null ? void 0 : _e.id);
+        setSellingPlanName((_h = (_g = (_f = json.sellingPlans) == null ? void 0 : _f.edges[0]) == null ? void 0 : _g.node) == null ? void 0 : _h.name);
+        setSellingPlanDescription((_k = (_j = (_i = json.sellingPlans) == null ? void 0 : _i.edges[0]) == null ? void 0 : _j.node) == null ? void 0 : _k.description);
+        setPrepay(parseInt((_q = (_p = (_o = (_n = (_m = (_l = json.sellingPlans) == null ? void 0 : _l.edges[0]) == null ? void 0 : _m.node) == null ? void 0 : _n.billingPolicy) == null ? void 0 : _o.checkoutCharge) == null ? void 0 : _p.value) == null ? void 0 : _q.amount));
+        setTrialDays((0, import_iso8601_duration.parse)((_u = (_t = (_s = (_r = json.sellingPlans) == null ? void 0 : _r.edges[0]) == null ? void 0 : _s.node) == null ? void 0 : _t.billingPolicy) == null ? void 0 : _u.remainingBalanceChargeTimeAfterCheckout).days);
+      }
+    }), []);
+    const updatePlan = () => __async(this, null, function* () {
+      try {
+        const token = yield getSessionToken();
+        const resp = yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}`, {
+          method: "PUT",
+          headers: {
+            "authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name,
+            description,
+            sellingPlan: {
+              shopifyId: sellingPlanId,
+              name: sellingPlanName,
+              description: sellingPlanDescription,
+              prepay,
+              trialDays
+            }
+          })
+        });
+        return resp.json();
+      } catch (err) {
+        console.err(err);
+        toast.show("Trial plan could not be created");
+      }
+    });
+    const onPrimaryAction = () => __async(this, null, function* () {
+      const validation = validate2({
+        name,
+        sellingPlanName,
+        trialDays
+      });
+      if (Object.keys(validation).length > 0) {
+        setErrors(validation);
+      } else {
+        yield updatePlan();
+        done();
+      }
+    });
+    const cachedActions = (0, import_react35.useMemo)(() => /* @__PURE__ */ import_react35.default.createElement(Actions2, {
+      onPrimary: onPrimaryAction,
+      onClose: close,
+      title: "Update trial plan"
+    }), [onPrimaryAction, close]);
+    (0, import_react35.useEffect)(() => {
+      fetchPlan();
+    }, []);
+    return /* @__PURE__ */ import_react35.default.createElement(import_react35.default.Fragment, null, /* @__PURE__ */ import_react35.default.createElement(BlockStack2, {
+      spacing: "none"
+    }, /* @__PURE__ */ import_react35.default.createElement(TextBlock2, {
+      size: "extraLarge"
+    }, "Update trial plan")), /* @__PURE__ */ import_react35.default.createElement(Card2, {
+      title: "Admin Details",
+      sectioned: true
+    }, /* @__PURE__ */ import_react35.default.createElement(BlockStack2, null, /* @__PURE__ */ import_react35.default.createElement(TextField2, {
+      label: "Name",
+      name: "name",
+      onChange: setName,
+      value: name,
+      error: errors.name
+    }), /* @__PURE__ */ import_react35.default.createElement(TextField2, {
+      label: "Description",
+      name: "description",
+      multiline: 4,
+      onChange: setDescription,
+      value: description
+    }))), /* @__PURE__ */ import_react35.default.createElement(Card2, {
+      title: "Customer Details",
+      sectioned: true
+    }, /* @__PURE__ */ import_react35.default.createElement(BlockStack2, null, /* @__PURE__ */ import_react35.default.createElement(TextField2, {
+      label: "Name",
+      name: "sellingPlan[name]",
+      onChange: setSellingPlanName,
+      value: sellingPlanName,
+      error: errors.sellingPlanName
+    }), /* @__PURE__ */ import_react35.default.createElement(TextField2, {
+      label: "Description",
+      name: "sellingPlan[description]",
+      multiline: 4,
+      onChange: setSellingPlanDescription,
+      value: sellingPlanDescription
+    }))), /* @__PURE__ */ import_react35.default.createElement(Card2, {
+      title: "Payment Terms",
+      sectioned: true
+    }, /* @__PURE__ */ import_react35.default.createElement(InlineStack2, {
+      inlineAlignment: "fill"
+    }, /* @__PURE__ */ import_react35.default.createElement(TextField2, {
+      label: "Pre-paid Amount",
+      name: "sellingPlan[prepay]",
+      type: "number",
+      onChange: setPrepay,
+      value: prepay
+    }), /* @__PURE__ */ import_react35.default.createElement(TextField2, {
+      label: "Trial Length (Days)",
+      name: "sellingPlan[trialDays]",
+      type: "number",
+      onChange: setTrialDays,
+      value: trialDays,
+      error: errors.trialDays
+    }))), cachedActions);
+  }
+
+  // src/Remove.jsx
+  var import_react36 = __toModule(require_react());
+  function Remove() {
+    const data = useData();
+    const { close, done, setPrimaryAction, setSecondaryAction } = useContainer();
+    const { getSessionToken } = useSessionToken();
+    const handleSubmit = () => __async(this, null, function* () {
+      const token = yield getSessionToken();
+      yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}/products`, {
+        method: "POST",
+        headers: {
+          "authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          addProducts: [],
+          removeProducts: [data.productId]
+        })
+      });
+      done();
+    });
+    (0, import_react36.useEffect)(() => {
+      setPrimaryAction({
+        content: "Remove from plan",
+        onAction: handleSubmit
+      });
+      setSecondaryAction({
+        content: "Cancel",
+        onAction: () => close()
+      });
+    }, [getSessionToken, close, done, setPrimaryAction, setSecondaryAction]);
+    return /* @__PURE__ */ import_react36.default.createElement(Text2, null, "Remove this product from the selling plan group?");
   }
 
   // src/index.jsx
-  extend("Admin::Product::SubscriptionPlan::Add", render2(() => /* @__PURE__ */ import_react34.default.createElement(Add, null)));
-  extend("Admin::Product::SubscriptionPlan::Create", render2(() => /* @__PURE__ */ import_react34.default.createElement(App, null)));
-  extend("Admin::Product::SubscriptionPlan::Remove", render2(() => /* @__PURE__ */ import_react34.default.createElement(App, null)));
-  extend("Admin::Product::SubscriptionPlan::Edit", render2(() => /* @__PURE__ */ import_react34.default.createElement(App, null)));
-  function App() {
-    const { extensionPoint } = useExtensionApi();
-    return /* @__PURE__ */ import_react34.default.createElement(Text2, null, "Welcome to the ", extensionPoint, " extension!");
-  }
+  extend("Admin::Product::SubscriptionPlan::Add", render2(() => /* @__PURE__ */ import_react37.default.createElement(Add, null)));
+  extend("Admin::Product::SubscriptionPlan::Create", render2(() => /* @__PURE__ */ import_react37.default.createElement(Create, null)));
+  extend("Admin::Product::SubscriptionPlan::Remove", render2(() => /* @__PURE__ */ import_react37.default.createElement(Remove, null)));
+  extend("Admin::Product::SubscriptionPlan::Edit", render2(() => /* @__PURE__ */ import_react37.default.createElement(Edit, null)));
 })();
