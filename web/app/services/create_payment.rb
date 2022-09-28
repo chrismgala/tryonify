@@ -31,7 +31,7 @@ class CreatePayment
 
     # Update order to make sure it has the latest details
     update_order
-
+    puts can_charge?
     # Check whether the charge should be made
     if can_charge?
       # Charge the remaining balance
@@ -47,7 +47,7 @@ class CreatePayment
 
   def can_charge?
     # Check that the due date has passed
-    return false if @order.due_date.before? DateTime.current
+    return false if @order.due_date.after? DateTime.current
 
     # Make sure there are no returns that haven't been processed
     return false if @order.returns.where(active: true).length.positive?

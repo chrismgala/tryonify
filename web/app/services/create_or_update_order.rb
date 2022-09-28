@@ -11,6 +11,7 @@ class CreateOrUpdateOrder
       order(id: $id) {
         ...on Order {
           id
+          legacyResourceId
           name
           closedAt
           displayFinancialStatus
@@ -69,7 +70,7 @@ class CreateOrUpdateOrder
     existing_order = Order.find_by(shopify_id: @order_id)
 
     order_attributes = {
-      shopify_id: @order.dig('id'),
+      shopify_id: @order.dig('legacyResourceId'),
       name: @order.dig('name'),
       due_date: @order.dig('paymentTerms', 'paymentSchedules', 'edges', 0, 'node', 'dueAt'),
       closed_at: @order.dig('closedAt'),
