@@ -40,7 +40,7 @@ services:
   - type: cron
     name: FetchOrders
     env: docker
-    schedule: 0 0 * * *
+    schedule: 0 */12 * * *
     dockerCommand: rake fetch_orders
     envVars:
       - key: DATABASE_URL
@@ -58,7 +58,7 @@ services:
   - type: cron
     name: CreatePayments
     env: docker
-    schedule: 0 0 * * *
+    schedule: 30 */6 * * *
     dockerCommand: rake create_payments
     envVars:
       - key: DATABASE_URL
