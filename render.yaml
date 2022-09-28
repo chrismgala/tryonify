@@ -42,6 +42,19 @@ services:
     env: docker
     schedule: 0 0 * * *
     dockerCommand: rake fetch_orders
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: Database
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: Redis
+          property: connectionString
+      - fromGroup: TryOnify
   - type: redis
     name: Redis
     ipAllowList:
