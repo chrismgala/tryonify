@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Order < ApplicationRecord
-  validates :email, :financial_status, presence: true
+  validates :shopify_id, :email, :financial_status, presence: true
   validates :shopify_id, uniqueness: true
 
   belongs_to :shop

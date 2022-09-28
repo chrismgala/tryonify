@@ -69,6 +69,7 @@ class CreateOrUpdateOrder
     existing_order = Order.find_by(shopify_id: @order_id)
 
     order_attributes = {
+      shopify_id: @order.dig('id'),
       name: @order.dig('name'),
       due_date: @order.dig('paymentTerms', 'paymentSchedules', 'edges', 0, 'node', 'dueAt'),
       closed_at: @order.dig('closedAt'),
@@ -81,11 +82,12 @@ class CreateOrUpdateOrder
     if existing_order
       existing_order.update(order_attributes)
     elsif selling_plan?(@order)
-      order_attributes.shop_id = @shop_id
+      order_attributes[:shop_id] = @shop_id
       new_order = Order.create!(order_attributes)
 
       if new_order
-        KlaviyoEvent.new(@shop).call(
+        shop = Shop.find(@shop_id)
+        KlaviyoEvent.new(shop).call(
           event: 'TryOnify Order Created',
           email: @order.dig('customer', 'email'),
           properties: {
