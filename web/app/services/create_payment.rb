@@ -47,7 +47,7 @@ class CreatePayment
 
   def can_charge?
     # Check that the due date has passed
-    return false if @order.due_date.before? DateTime.now
+    return false if @order.due_date.before? DateTime.current
 
     # Make sure there are no returns that haven't been processed
     return false if @order.returns.where(active: true).length.positive?
