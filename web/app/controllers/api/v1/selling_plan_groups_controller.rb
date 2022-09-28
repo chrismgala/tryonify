@@ -8,6 +8,7 @@ module Api
         service.call
 
         render_errors service.error and return if service.error
+
         render json: service.selling_plan_groups, status: :ok
       end
 
@@ -38,6 +39,7 @@ module Api
         service.call
 
         render_errors service.error and return if service.error
+
         render json: service.selling_plan_group
       end
 
@@ -54,11 +56,9 @@ module Api
           service = UpdateSellingPlanGroup.new(selling_plan_group)
           service.call
 
-          if service.selling_plan_group
-            render json: service.selling_plan_group
-          else
-            render_errors service.error
-          end
+          render_errors service.error and return if service.error
+
+          render json: service.selling_plan_group
         else
           render_errors selling_plan_group
         end
@@ -77,6 +77,7 @@ module Api
         service.call
 
         render_errors service.error and return if service.error
+
         render json: service.selling_plan_group['products']
       end
 
@@ -87,12 +88,12 @@ module Api
           :id,
           :name,
           :description,
-          selling_plan: [
-            :shopify_id,
-            :name,
-            :description,
-            :prepay,
-            :trial_days
+          selling_plan: %i[
+            shopify_id
+            name
+            description
+            prepay
+            trial_days
           ]
         )
       end
