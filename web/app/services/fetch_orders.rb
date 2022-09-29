@@ -47,6 +47,7 @@ class FetchOrders
               name
               createdAt
               updatedAt
+              closedAt
               displayFinancialStatus
               customer {
                 email

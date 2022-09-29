@@ -8,7 +8,8 @@ ShopifyApp.configure do |config|
     { topic: 'orders/create', path: 'api/webhooks/orders_create' },
     { topic: 'orders/updated', path: 'api/webhooks/orders_updated' },
     { topic: 'orders/edited', path: 'api/webhooks/orders_edited' },
-    { topic: 'shop/update', path: 'api/webhooks/shop_update' }
+    { topic: 'shop/update', path: 'api/webhooks/shop_update' },
+    { topic: 'subscription_contracts/update', path: 'api/webhooks/subscription_contracts_update' }
   ]
   config.application_name = 'TryOnify'
   config.old_secret = ''

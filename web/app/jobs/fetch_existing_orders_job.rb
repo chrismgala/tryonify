@@ -11,9 +11,9 @@ class FetchExistingOrdersJob < ActiveJob::Base
 
     shop.with_shopify_session do
       query = if shop.orders_updated_at
-                "financial_status:PENDING AND updated_at:>'#{shop.orders_updated_at}'"
+                "(financial_status:PENDING OR financial_status:PARTIALLY_PAID) AND updated_at:>'#{shop.orders_updated_at}'"
               else
-                'financial_status:PENDING'
+                'financial_status:PENDING OR financial_status:PARTIALLY_PAID'
               end
 
       # Fetch pending orders since last check was done
@@ -41,7 +41,8 @@ class FetchExistingOrdersJob < ActiveJob::Base
                            shopify_created_at: order.dig('node', 'createdAt'),
                            shop_id: shop.id,
                            financial_status: order.dig('node', 'displayFinancialStatus'),
-                           email: order.dig('node', 'customer', 'email')
+                           email: order.dig('node', 'customer', 'email'),
+                           closed_at: order.dig('node', 'closedAt')
                          })
       end
 
