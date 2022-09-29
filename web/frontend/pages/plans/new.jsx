@@ -15,6 +15,8 @@ const initialValues = {
   name: '',
   description: '',
   sellingPlan: {
+    name: '',
+    description: '',
     prepay: 0,
     trialDays: 14,
   },

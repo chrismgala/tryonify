@@ -29,7 +29,7 @@ export default function SaveBar({ dirty, submitForm, resetForm }) {
     return () => {
       hide();
     };
-  }, [dirty, show, hide]);
+  });
 
   return null;
 }

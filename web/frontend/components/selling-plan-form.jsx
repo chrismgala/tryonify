@@ -62,14 +62,14 @@ export default function SellingPlanForm({
                 <FormLayout>
                   <Field
                     label="Name"
-                    name="sellingPlan[name]"
+                    name="sellingPlan.name"
                     component={TextField}
                     helpText="Name customers will see."
                   />
 
                   <Field
                     label="Description"
-                    name="sellingPlan[description]"
+                    name="sellingPlan.description"
                     multiline={4}
                     component={TextField}
                     helpText="Description customers will see."
@@ -82,14 +82,14 @@ export default function SellingPlanForm({
                 <FormLayout>
                   <Field
                     label="Pre-paid Amount"
-                    name="sellingPlan[prepay]"
+                    name="sellingPlan.prepay"
                     type="number"
                     component={TextField}
                   />
 
                   <Field
                     label="Trial Length (Days)"
-                    name="sellingPlan[trialDays]"
+                    name="sellingPlan.trialDays"
                     type="number"
                     component={TextField}
                   />
