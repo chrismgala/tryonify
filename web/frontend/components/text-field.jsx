@@ -5,7 +5,6 @@ import { TextField as Input } from '@shopify/polaris';
 export default function TextField({ label, field, form: { touched, errors, setFieldValue }, ...rest }) {
   const handleChange = useCallback((newValue) => setFieldValue(field.name, newValue), []);
 
-  console.log(touched)
   return (
     <Input
       label={label}

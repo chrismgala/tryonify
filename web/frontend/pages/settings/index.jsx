@@ -70,6 +70,7 @@ export default function Settings() {
             <Layout>
               <Layout.AnnotatedSection
                 title="General"
+                description="Settings for general behavior of the application."
               >
                 <Card sectioned>
                   <Field
@@ -81,6 +82,7 @@ export default function Settings() {
               </Layout.AnnotatedSection>
               <Layout.AnnotatedSection
                 title="Returns"
+                description="Customize the customer-facing portal for handling trial returns."
               >
                 <Card sectioned>
                   <Field
@@ -88,11 +90,13 @@ export default function Settings() {
                     name="returnExplainer"
                     component={TextField}
                     multiline={3}
+                    helpText="This text will appear above the return form when customers find their order."
                   />
                 </Card>
               </Layout.AnnotatedSection>
               <Layout.AnnotatedSection
                 title="Integrations"
+                description="Connect TryOnify with other applications you use."
               >
                 <Klaviyo />
               </Layout.AnnotatedSection>
