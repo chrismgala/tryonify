@@ -50,7 +50,18 @@ class CreatePayment
     return false if @order.due_date.after? DateTime.current
 
     # Make sure there are no returns that haven't been processed
-    return false if @order.returns.where(active: true).length.positive?
+    returns = @order.returns.where(active: true)
+    if returns.length.positive?
+      # Check if the return grace period has passed
+      grace_period_elapsed = false
+      grace_period = @order.shop.return_period
+      returns.each do |item|
+        deadline = item.created_at + grace_period.days
+        grace_period_elapsed = true if deadline.before? DateTime.current
+      end
+
+      return false unless grace_period_elapsed
+    end
 
     # Make sure order has actually been fulfilled
     # return false if @order.fulfillment_status != 'FULFILLED'

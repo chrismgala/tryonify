@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_26_233037) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_30_045503) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -113,7 +113,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_26_233037) do
     t.string "order_number_format_suffix"
     t.string "email"
     t.boolean "onboarded", default: false
-    t.integer "return_period", default: 14
+    t.integer "return_period", default: 14, null: false
     t.text "return_explainer"
     t.boolean "allow_automatic_payments", default: true
     t.index ["plan_id"], name: "index_shops_on_plan_id"

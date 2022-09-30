@@ -1,24 +1,18 @@
-desc "Update webhooks"
-task :update_webhooks => :environment do |task, args|
-  puts "Updating webhooks..."
+desc 'Update webhooks'
+task update_webhooks: :environment do |_task, _args|
+  puts 'Updating webhooks...'
 
   shops = Shop.all
 
   shops.each do |shop|
-    shop.with_shopify_session do
-      session = ShopifyAPI::Context.active_session
-      return unless ShopifyApp.configuration.has_webhooks?
+    return unless ShopifyApp.configuration.has_webhooks?
 
-      ShopifyApp.configuration.webhooks.each do |attributes|
-        ShopifyAPI::Webhooks::Registry.unregister(topic: attributes[:topic], session: session)
-      end
-
+    ShopifyAPI::Auth::Session.temp(shop: shop.shopify_domain, access_token: shop.shopify_token) do |session|
       ShopifyApp::WebhooksManager.add_registrations
-
-      resp = ShopifyAPI::Webhooks::Registry.register_all(session: session)
-      puts resp.inspect
+      result = ShopifyAPI::Webhooks::Registry.register_all(session:)
+      puts result.inspect
     end
   end
 
-  puts "done."
+  puts 'done.'
 end

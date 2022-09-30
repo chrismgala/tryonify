@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import {
   Card,
   Form,
+  FormLayout,
   Page,
   Layout,
 } from '@shopify/polaris';
@@ -73,25 +74,35 @@ export default function Settings() {
                 description="Settings for general behavior of the application."
               >
                 <Card sectioned>
-                  <Field
-                    label="Allow automatic payments"
-                    name="allowAutomaticPayments"
-                    component={CheckboxField}
-                  />
+                  <FormLayout>
+                    <Field
+                      label="Allow automatic payments"
+                      name="allowAutomaticPayments"
+                      component={CheckboxField}
+                    />
+                  </FormLayout>
                 </Card>
               </Layout.AnnotatedSection>
               <Layout.AnnotatedSection
                 title="Returns"
-                description="Customize the customer-facing portal for handling trial returns."
+                description="Customize how returns are handled for trial orders."
               >
                 <Card sectioned>
-                  <Field
-                    label="Instructions"
-                    name="returnExplainer"
-                    component={TextField}
-                    multiline={3}
-                    helpText="This text will appear above the return form when customers find their order."
-                  />
+                  <FormLayout>
+                    <Field
+                      label="Return Period (Days)"
+                      name="returnPeriod"
+                      component={TextField}
+                      helpText="How many days customers have to complete a return before they are charged."
+                    />
+                    <Field
+                      label="Instructions"
+                      name="returnExplainer"
+                      component={TextField}
+                      multiline={3}
+                      helpText="This text will appear above the return form when customers find their order."
+                    />
+                  </FormLayout>
                 </Card>
               </Layout.AnnotatedSection>
               <Layout.AnnotatedSection

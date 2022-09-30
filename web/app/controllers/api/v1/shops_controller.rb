@@ -20,7 +20,8 @@ module Api
           :klaviyo_private_key,
           :onboarded,
           :return_explainer,
-          :allow_automatic_payments
+          :allow_automatic_payments,
+          :return_period
         )
       end
     end
