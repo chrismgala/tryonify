@@ -69,13 +69,10 @@ export default function ProductPicker({ id, onSubmit, open, onClose }) {
   const handleSelection = useCallback((selection) => {
     const checked = difference(selection, selectedItems);
     const unchecked = difference(selectedItems, selection);
-    addedProducts.current = [];
-    removedProducts.current = [];
 
     // Process newly checked products
     checked.forEach(selected => {
       const { node: foundProduct } = data.edges.find(product => product.node.id === selected);
-
       if (!foundProduct?.sellingPlanGroups?.edges.find(({ node }) => node.id === id)) {
         addedProducts.current = [...addedProducts.current, selected];
       } else {
@@ -109,6 +106,56 @@ export default function ProductPicker({ id, onSubmit, open, onClose }) {
     onClose()
   }, [addedProducts, removedProducts])
 
+  // Reset data on close
+  useEffect(() => {
+    if (!open) {
+      setSelectedItems([]);
+      setQueryValue([]);
+      setPagination({
+        query: '',
+        first: 20
+      });
+    }
+  }, [open])
+
+  // Paginate
+  useEffect(() => {
+    if (data?.pageInfo?.hasNextPage) {
+      const url = `/api/v1/products?${createQueryString({
+        first: 20,
+        after: data?.pageInfo?.endCursor,
+      })}`
+      queryClient.prefetchQuery(url, async () => await fetch(url))
+    }
+  }, [data, queryClient])
+
+  // Trigger filter when query changes
+  useEffect(() => {
+    updateQuery.current(queryValue);
+  }, [queryValue])
+
+  // Set selected products
+  useEffect(() => {
+    const products = get(data, 'edges')
+    if (products) {
+      const selected = products.reduce((acc, value) => {
+        const newAcc = acc;
+        const sellingPlanGroups = get(value, 'node.sellingPlanGroups.edges');
+
+        if (!sellingPlanGroups) return newAcc;
+
+        const hasPlan = sellingPlanGroups.find(plan => plan.node.id === id);
+
+        if (hasPlan) {
+          newAcc.push(value.node.id);
+        }
+
+        return newAcc;
+      }, []);
+      setSelectedItems(selected);
+    }
+  }, [data, pagination]);
+
   const resourceName = {
     singular: 'product',
     plural: 'products'
@@ -136,41 +183,6 @@ export default function ProductPicker({ id, onSubmit, open, onClose }) {
       onNext={handleNext}
     />
   )
-
-  useEffect(() => {
-    if (data?.pageInfo?.hasNextPage) {
-      const url = `/api/v1/products?${createQueryString({
-        first: 20,
-        after: data?.pageInfo?.endCursor,
-      })}`
-      queryClient.prefetchQuery(url, async () => await fetch(url))
-    }
-  }, [data, queryClient])
-
-  useEffect(() => {
-    updateQuery.current(queryValue);
-  }, [queryValue])
-
-  useEffect(() => {
-    const products = get(data, 'edges')
-    if (products) {
-      const selected = products.reduce((acc, value) => {
-        const newAcc = acc;
-        const sellingPlanGroups = get(value, 'node.sellingPlanGroups.edges');
-
-        if (!sellingPlanGroups) return newAcc;
-
-        const hasPlan = sellingPlanGroups.find(plan => plan.node.id === id);
-
-        if (hasPlan) {
-          newAcc.push(value.node.id);
-        }
-
-        return newAcc;
-      }, []);
-      setSelectedItems(selected);
-    }
-  }, [data, pagination]);
 
   return (
     <Modal
