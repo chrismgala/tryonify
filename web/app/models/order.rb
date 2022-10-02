@@ -9,7 +9,7 @@ class Order < ApplicationRecord
   has_one :payment
 
   scope :payment_due, lambda {
-                        where('DATE(due_date) < DATE(?)', DateTime.current)
+                        where('due_date < ?', DateTime.current)
                           .where(financial_status: %w[PARTIALLY_PAID PENDING])
                           .where(closed_at: nil)
                       }

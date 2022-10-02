@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Card,
   Link,
   IndexTable,
   Stack,
@@ -8,11 +7,12 @@ import {
 } from '@shopify/polaris';
 import { useNavigate } from '@shopify/app-bridge-react';
 import { useQueryClient } from 'react-query';
+import { DateTime } from 'luxon';
 import createQueryString from '../lib/utils';
 import { useAppQuery, useAuthenticatedFetch } from '../hooks';
 import PaymentStatus from './payment-status';
 
-export default function OrderList({ title, query }) {
+export default function OrderList({ query }) {
   const navigate = useNavigate();
   const fetch = useAuthenticatedFetch();
   const queryClient = useQueryClient();
@@ -34,7 +34,9 @@ export default function OrderList({ title, query }) {
       const {
         id, shopifyId, name, shopifyCreatedAt, financialStatus, dueDate,
       } = order;
-      const overdue = new Date(dueDate).getTime() < new Date().getTime();
+      const dt = DateTime.fromISO(dueDate);
+      const tz = dt.zoneName;
+      const overdue = dt <= DateTime.now().setZone(tz);
 
       return (
         <IndexTable.Row
@@ -73,21 +75,19 @@ export default function OrderList({ title, query }) {
   );
 
   return (
-    <Card title={title}>
-      <IndexTable
-        resourceName={resourceName}
-        loading={isLoading}
-        headings={[
-          { title: 'Order' },
-          { title: 'Created at' },
-          { title: 'Due date' },
-          { title: 'Payment status' },
-        ]}
-        itemCount={data?.length || 0}
-        selectable={false}
-      >
-        {rowMarkup}
-      </IndexTable>
-    </Card>
+    <IndexTable
+      resourceName={resourceName}
+      loading={isLoading}
+      headings={[
+        { title: 'Order' },
+        { title: 'Created at' },
+        { title: 'Due date' },
+        { title: 'Payment status' },
+      ]}
+      itemCount={data?.length || 0}
+      selectable={false}
+    >
+      {rowMarkup}
+    </IndexTable>
   );
 }

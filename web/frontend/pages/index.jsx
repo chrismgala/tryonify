@@ -1,19 +1,56 @@
-import React from 'react';
-import { Page, Layout } from '@shopify/polaris';
+import React, { useState, useCallback } from 'react';
+import { Card, Page, Layout, Tabs } from '@shopify/polaris';
 import Onboarding from '../components/onboarding';
 import OrderList from '../components/order-list';
-import ReturnList from '../components/return-list';
 
 export default function Home() {
+  const [selected, setSelected] = useState(0);
+
+  const handleTabChange = useCallback((selectedTabIndex) => setSelected(selectedTabIndex), []);
+
+  const tabs = [
+    {
+      id: 'all',
+      content: 'All',
+      accessibilityLabel: 'All orders',
+      panelID: 'all-content',
+    },
+    {
+      id: 'overdue',
+      content: 'Payment Due',
+      accessibilityLabel: 'Payment due',
+      panelID: 'overdue-content'
+    },
+    {
+      id: 'pending',
+      content: 'Pending',
+      accessibilityLabel: 'Pending',
+      panelID: 'pending-content'
+    },
+    {
+      id: 'returns',
+      content: 'Returns',
+      accessibilityLabel: 'Returns',
+      panelID: 'returns-content'
+    },
+    {
+      id: 'failed_payments',
+      content: 'Failed Payments',
+      accessibilityLabel: 'Failed payments',
+      panelID: 'failed-payments-content'
+    }
+  ]
+
   return (
-    <Page title="Overview">
+    <Page title="Orders">
       <Layout>
         <Layout.Section>
           <Onboarding />
-          <OrderList title="Ready to charge" query="overdue" />
-          <OrderList title="Failed payments" query="failed_payments" />
-          <OrderList title="Pending trials" query="pending" />
-          <ReturnList title="Pending returns" />
+          <Card>
+            <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange}>
+              <OrderList query={tabs[selected].id} />
+            </Tabs>
+          </Card>
         </Layout.Section>
         <Layout.Section />
       </Layout>

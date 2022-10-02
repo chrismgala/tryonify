@@ -5,12 +5,13 @@ task update_webhooks: :environment do |_task, _args|
   shops = Shop.all
 
   shops.each do |shop|
-    return unless ShopifyApp.configuration.has_webhooks?
+    shop.with_shopify_session do
+      webhook = ShopifyAPI::Webhook.new
+      webhook.topic = 'returns/approve'
+      webhook.address = 'https://tryonify.ngrok.io/api/webhooks/returns_approve'
+      webhook.format = 'json'
 
-    ShopifyAPI::Auth::Session.temp(shop: shop.shopify_domain, access_token: shop.shopify_token) do |session|
-      ShopifyApp::WebhooksManager.add_registrations
-      result = ShopifyAPI::Webhooks::Registry.register_all(session:)
-      puts result.inspect
+      webhook.save!
     end
   end
 

@@ -11,6 +11,8 @@ module Api
                    current_user.orders.pending.order(shopify_created_at: :desc)
                  when 'failed_payments'
                    current_user.orders.failed_payments.order(shopify_created_at: :desc)
+                 when 'returns'
+                   current_user.orders.pending_returns.order(shopify_created_at: :desc)
                  else
                    current_user.orders.order(shopify_created_at: :desc)
                  end
