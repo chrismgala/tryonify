@@ -19,9 +19,7 @@ module EnsureBilling
       subscriptions = service.call
 
       # Redirect to billing if no active subscription
-      unless subscriptions.length > 0
-        request_payment
-      end
+      request_payment unless subscriptions.length > 0
     end
   end
 
@@ -34,7 +32,9 @@ module EnsureBilling
     plan = Plan.where(active: true).first
     confirmation_url = service.create_charge(plan)
 
-    render("shopify_app/shared/redirect", layout: false,
-      locals: { url: confirmation_url, current_shopify_domain: current_shopify_domain })
+    if confirmation_url
+      render('shopify_app/shared/redirect', layout: false,
+                                            locals: { url: confirmation_url, current_shopify_domain: })
+    end
   end
 end
