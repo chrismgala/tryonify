@@ -2,6 +2,11 @@ import React, { useState, useCallback } from 'react';
 import { Button, Card, Page, Layout, Link, Listbox, MediaCard, TextContainer } from '@shopify/polaris';
 import { useNavigate } from '@shopify/app-bridge-react';
 import { useAppQuery } from '../../hooks';
+import {
+  addAppBlock,
+  removeAppBlock,
+  reorderAppBlock
+} from '../../assets';
 
 const GettingStarted = () => (
   <Card title='Getting started' sectioned>
@@ -59,7 +64,7 @@ const ThemeCustomizations = ({ shopDomain }) => {
             objectFit: 'cover',
             objectPosition: 'center',
           }}
-          src='/assets/add-app-block.gif'
+          src={addAppBlock}
         />
       </MediaCard>
 
@@ -75,7 +80,7 @@ const ThemeCustomizations = ({ shopDomain }) => {
             objectFit: 'cover',
             objectPosition: 'center',
           }}
-          src='/assets/reorder-app-block.gif'
+          src={reorderAppBlock}
         />
       </MediaCard>
 
@@ -91,7 +96,7 @@ const ThemeCustomizations = ({ shopDomain }) => {
             objectFit: 'cover',
             objectPosition: 'center',
           }}
-          src='/assets/remove-app-block.gif'
+          src={removeAppBlock}
         />
       </MediaCard>
     </>
