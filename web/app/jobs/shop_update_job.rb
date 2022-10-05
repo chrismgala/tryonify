@@ -5,7 +5,7 @@ class ShopUpdateJob < ActiveJob::Base
 
   class << self
     def handle(topic:, shop:, body:)
-      perform_later(topic: topic, shop_domain: shop, webhook: body)
+      perform_later(topic:, shop_domain: shop, webhook: body)
     end
   end
 
@@ -18,9 +18,7 @@ class ShopUpdateJob < ActiveJob::Base
     end
 
     shop.update({
-      order_number_format_prefix: body.dig('order_number_format_prefix'),
-      order_number_format_suffix: body.dig('order_number_format_suffix'),
-      email: body.dig('email')
-    })
+                  email: webhook.dig('email')
+                })
   end
 end
