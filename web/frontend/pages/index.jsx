@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import { Card, Page, Layout, Tabs } from '@shopify/polaris';
-import Onboarding from '../components/onboarding';
 import OrderList from '../components/order-list';
 
 export default function Home() {
@@ -45,7 +44,6 @@ export default function Home() {
     <Page title="Orders">
       <Layout>
         <Layout.Section>
-          <Onboarding />
           <Card>
             <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange}>
               <OrderList query={tabs[selected].id} />
