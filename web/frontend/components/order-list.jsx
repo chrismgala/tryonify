@@ -36,7 +36,11 @@ export default function OrderList({ query }) {
       } = order;
       const dt = DateTime.fromISO(dueDate);
       const tz = dt.zoneName;
-      const overdue = dt <= DateTime.now().setZone(tz);
+      let overdue = false;
+
+      if ((dt <= DateTime.now().setZone(tz)) && financialStatus !== 'PAID') {
+        let overdue = true;
+      }
 
       return (
         <IndexTable.Row
