@@ -5,14 +5,19 @@ module EnsureBilling
 
   extend ActiveSupport::Concern
 
+  # List of shops that get app for free
+  EXCLUDED_FROM_BILLING = ['paskho.myshopify.com'].freeze
+
   included do
     before_action :check_billing
     rescue_from BillingError, with: :handle_billing_error
   end
 
   def check_billing
+    return if EXCLUDED_FROM_BILLING.include? current_shopify_domain
+
     @shop = Shop.find_by!(shopify_domain: current_shopify_domain)
-    return true unless @shop
+    return unless @shop
 
     @shop.with_shopify_session do
       service = FetchAppSubscription.new
