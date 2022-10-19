@@ -40,6 +40,8 @@ module Api
 
         render_errors service.error and return if service.error
 
+        render json: { error: 'not found' }, status: :not_found and return unless service.selling_plan_group
+
         render json: service.selling_plan_group
       end
 

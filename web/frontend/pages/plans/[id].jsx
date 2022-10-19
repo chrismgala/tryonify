@@ -23,7 +23,14 @@ export default function EditSellingPlan() {
   const toast = useToast();
   const navigate = useNavigate();
   const { isLoading, error, data } = useAppQuery({
-    url: `/api/v1/selling_plan_groups/${encodeURIComponent(params.id)}`
+    url: `/api/v1/selling_plan_groups/${encodeURIComponent(params.id)}`,
+    reactQueryOptions: {
+      retry: false,
+      onError: (err) => {
+        navigate('/plans');
+        toast.show('Trial plan not found', { duration: 2000, isError: true });
+      }
+    }
   });
 
   let initialValues = {};

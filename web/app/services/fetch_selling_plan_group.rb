@@ -25,9 +25,12 @@ class FetchSellingPlanGroup
       after: @pagination[:after]
     }
 
-    response = @client.query(query: query, variables: variables)
+    response = @client.query(query:, variables:)
 
-    raise FetchSellingPlanGroup::InvalidRequest, response.body.dig('errors', 0, 'message') and return unless response.body['errors'].nil?
+    unless response.body['errors'].nil?
+      raise FetchSellingPlanGroup::InvalidRequest,
+            response.body.dig('errors', 0, 'message') and return
+    end
 
     @selling_plan_group = response.body.dig('data', 'sellingPlanGroup')
   rescue ActiveRecord::RecordInvalid, StandardError => e

@@ -31,7 +31,6 @@ class CreatePayment
 
     # Update order to make sure it has the latest details
     update_order
-    puts can_charge?
     # Check whether the charge should be made
     if can_charge?
       # Charge the remaining balance
