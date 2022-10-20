@@ -50,6 +50,7 @@ class FetchOrders
               updatedAt
               closedAt
               displayFinancialStatus
+              displayFulfillmentStatus
               customer {
                 email
               }

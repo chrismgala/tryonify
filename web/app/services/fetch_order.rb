@@ -21,8 +21,10 @@ class FetchOrder
             id
             legacyResourceId
             createdAt
+            closedAt
             name
             displayFinancialStatus
+            displayFulfillmentStatus
             customer {
               email
             }
@@ -34,6 +36,11 @@ class FetchOrder
                     dueAt
                   }
                 }
+              }
+            }
+            paymentCollectionDetails {
+              vaultedPaymentMethods {
+                id
               }
             }
             lineItems(first: 10, after: $after) {
