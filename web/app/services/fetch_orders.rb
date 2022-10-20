@@ -34,6 +34,7 @@ class FetchOrders
   rescue ActiveRecord::RecordInvalid, StandardError => e
     Rails.logger.error("[FetchOrders Failed]: #{e.message}")
     @error = e.message
+    raise e
   end
 
   def next_query
@@ -58,6 +59,19 @@ class FetchOrders
                   nodes {
                     dueAt
                   }
+                }
+              }
+              lineItems(first: 10) {
+                edges {
+                  node {
+                    sellingPlan {
+                      sellingPlanId
+                    }
+                  }
+                }
+                pageInfo {
+                  hasNextPage
+                  endCursor
                 }
               }
             }

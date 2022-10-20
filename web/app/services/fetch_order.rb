@@ -5,8 +5,9 @@ class FetchOrder
 
   attr_accessor :order, :error
 
-  def initialize(id)
+  def initialize(id, after = nil)
     @id = id
+    @after = after
     @order = nil
     @session = ShopifyAPI::Context.active_session
     @client = ShopifyAPI::Clients::Graphql::Admin.new(session: @session)
@@ -14,10 +15,11 @@ class FetchOrder
 
   def call
     query = <<~QUERY
-      query fetchOrder($id: ID!) {
+      query fetchOrder($id: ID!, $after: String) {
         order(id: $id) {
           ...on Order {
             id
+            legacyResourceId
             name
             displayFinancialStatus
             customer {
@@ -33,7 +35,7 @@ class FetchOrder
                 }
               }
             }
-            lineItems(first: 20) {
+            lineItems(first: 10, after: $after) {
               edges {
                 node {
                   sellingPlan {
@@ -57,7 +59,8 @@ class FetchOrder
     QUERY
 
     variables = {
-      id: @id
+      id: @id,
+      after: @after
     }
 
     response = @client.query(query:, variables:)
@@ -71,5 +74,6 @@ class FetchOrder
   rescue ActiveRecord::RecordInvalid, StandardError => e
     Rails.logger.error("[FetchOrder Failed]: #{e.message}")
     @error = e.message
+    raise e
   end
 end
