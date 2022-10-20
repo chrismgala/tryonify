@@ -20,6 +20,7 @@ class FetchOrder
           ...on Order {
             id
             legacyResourceId
+            createdAt
             name
             displayFinancialStatus
             customer {
