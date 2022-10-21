@@ -54,6 +54,8 @@ class FetchOrders
               customer {
                 email
               }
+              note
+              tags
               paymentTerms {
                 overdue
                 paymentSchedules(first: 1) {

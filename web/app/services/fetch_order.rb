@@ -29,6 +29,7 @@ class FetchOrder
               email
             }
             note
+            tags
             paymentTerms {
               paymentSchedules(first: 1) {
                 edges {

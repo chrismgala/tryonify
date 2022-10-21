@@ -41,6 +41,9 @@ class CreateOrUpdateOrder
     if existing_order
       existing_order.update(order_attributes)
     elsif has_selling_plan?(@order)
+      # Tag order as TryOnify
+      tag_order
+
       order_attributes[:shop_id] = @shop_id
       new_order = Order.create!(order_attributes)
 
@@ -82,5 +85,10 @@ class CreateOrUpdateOrder
     else
       false
     end
+  end
+
+  def tag_order
+    service = UpdateOrderTag.new(@shop_id, @order)
+    service.call
   end
 end
