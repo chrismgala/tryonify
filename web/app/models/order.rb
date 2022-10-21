@@ -17,7 +17,7 @@ class Order < ApplicationRecord
                     where('DATE(due_date) > DATE(?)', DateTime.current)
                       .where(financial_status: %w[PARTIALLY_PAID PENDING]).where(closed_at: nil)
                   }
-  scope :pending_returns, -> { joins(:returns).where(returns: { active: true }) }
+  scope :pending_returns, -> { includes(:returns).where(returns: { active: true }) }
   scope :failed_payments, lambda {
                             where(financial_status: %w[PARTIALLY_PAID PENDING])
                               .where(closed_at: nil)

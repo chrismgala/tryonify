@@ -16,7 +16,7 @@ module Api
                  else
                    current_user.orders.order(shopify_created_at: :desc)
                  end
-
+        puts orders.inspect
         render json: orders
       end
 
