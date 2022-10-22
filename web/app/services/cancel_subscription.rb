@@ -19,11 +19,12 @@ class CancelSubscription
   end
 
   def call
+    query = CANCEL_QUERY
     variables = {
       id: "gid://shopify/AppSubscription/#{@subscription_id}"
     }
 
-    response = @client.query(CANCEL_QUERY, variables)
+    response = @client.query(query:, variables:)
 
     puts response
   end
