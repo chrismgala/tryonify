@@ -3,34 +3,37 @@
 class FetchAppSubscription
   class InvalidRequest < StandardError; end
 
-  attr_accessor :error
+  attr_accessor :app, :error
 
   def initialize
     session = ShopifyAPI::Context.active_session
-    @client = ShopifyAPI::Clients::Graphql::Admin.new(session: session)
+    @client = ShopifyAPI::Clients::Graphql::Admin.new(session:)
+    @app = nil
     @error = nil
   end
 
   def call
-    begin
-      query = <<~QUERY
-        query appSubscription {
-          currentAppInstallation {
-            activeSubscriptions {
-              name, test
-            }
+    query = <<~QUERY
+      query appSubscription {
+        currentAppInstallation {
+          id
+          activeSubscriptions {
+            name, test
           }
         }
-      QUERY
+      }
+    QUERY
 
-      response = @client.query(query: query)
+    response = @client.query(query:)
 
-      raise FetchAppSubscription::InvalidRequest, response.body.dig('errors', 0, 'message') and return unless response.body['errors'].nil?
-
-      return response.body.dig('data', 'currentAppInstallation', 'activeSubscriptions')
-    rescue StandardError => e
-      Rails.logger.error("[FetchAppSubscription Failed]: #{e.message}")
-      @error = e.message
+    unless response.body['errors'].nil?
+      raise FetchAppSubscription::InvalidRequest,
+            response.body.dig('errors', 0, 'message') and return
     end
+
+    @app = response.body.dig('data', 'currentAppInstallation')
+  rescue StandardError => e
+    Rails.logger.error("[FetchAppSubscription Failed]: #{e.message}")
+    @error = e.message
   end
 end

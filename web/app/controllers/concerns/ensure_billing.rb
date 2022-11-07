@@ -16,10 +16,10 @@ module EnsureBilling
 
     @shop.with_shopify_session do
       service = FetchAppSubscription.new
-      subscriptions = service.call
+      app = service.call
 
       # Redirect to billing if no active subscription
-      request_payment unless subscriptions.length > 0
+      request_payment unless app.dig('activeSubscriptions').length > 0
     end
   end
 
