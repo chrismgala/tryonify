@@ -25,6 +25,7 @@ class OrdersUpdatedJob < ApplicationJob
                         name: webhook.dig('name'),
                         email: webhook.dig('customer', 'email'),
                         due_date: webhook.dig('payment_terms', 'payment_schedules', 0, 'due_at'),
+                        shopify_updated_at: webhook.dig('updated_at'),
                         closed_at: webhook.dig('closed_at'),
                         financial_status: webhook.dig('financial_status')&.upcase,
                         fulfillment_status: webhook.dig('fulfillment_status')&.upcase

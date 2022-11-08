@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Badge,
   Link,
   IndexTable,
   Stack,
@@ -32,7 +33,7 @@ export default function OrderList({ query }) {
   const rowMarkup = data?.map(
     (order, index) => {
       const {
-        id, shopifyId, name, shopifyCreatedAt, financialStatus, dueDate,
+        id, shopifyId, name, shopifyCreatedAt, financialStatus, dueDate, returns,
       } = order;
       const dt = DateTime.fromISO(dueDate);
       const tz = dt.zoneName;
@@ -41,6 +42,8 @@ export default function OrderList({ query }) {
       if ((dt <= DateTime.now().setZone(tz)) && financialStatus !== 'PAID') {
         let overdue = true;
       }
+      console.log(order)
+      const activeReturns = returns.filter(returnItem => returnItem.active).length
 
       return (
         <IndexTable.Row
@@ -51,12 +54,7 @@ export default function OrderList({ query }) {
           <IndexTable.Cell>
             <Link
               dataPrimaryLink
-              onClick={() => {
-                navigate({
-                  name: 'Order',
-                  resource: { id: shopifyId },
-                });
-              }}
+              url={`/orders/${shopifyId}`}
             >
               <TextStyle variation="strong">{name}</TextStyle>
             </Link>
@@ -71,6 +69,7 @@ export default function OrderList({ query }) {
             <Stack spacing="extraTight">
               <PaymentStatus status={financialStatus} />
               {overdue && <PaymentStatus status="OVERDUE" />}
+              {activeReturns > 0 && <Badge status='critical'>Returns</Badge>}
             </Stack>
           </IndexTable.Cell>
         </IndexTable.Row>
@@ -86,7 +85,7 @@ export default function OrderList({ query }) {
         { title: 'Order' },
         { title: 'Created at' },
         { title: 'Due date' },
-        { title: 'Payment status' },
+        { title: 'Status' },
       ]}
       itemCount={data?.length || 0}
       selectable={false}

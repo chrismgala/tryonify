@@ -31,7 +31,7 @@ Rails.application.routes.draw do
         resources :products, controller: 'selling_plan_products', only: %i[index create]
       end
       resources :products, only: [:index]
-      resources :orders, only: [:index]
+      resources :orders, only: %i[index show]
       resources :returns, only: %i[index update destroy]
 
       get '/chart', to: 'chart#index'

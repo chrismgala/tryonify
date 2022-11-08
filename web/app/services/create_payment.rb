@@ -42,6 +42,7 @@ class CreatePayment
   rescue CreatePayment::InvalidRequest => e
     Rails.logger.error("[CreatePayment Failed]: Order #{@order.id} - #{e}")
     @error = e
+    raise e
   end
 
   def can_charge?
@@ -49,17 +50,12 @@ class CreatePayment
     return false if @order.due_date.after? DateTime.current
 
     # Make sure there are no returns that haven't been processed
-    returns = @order.returns.where(active: true)
-    if returns.length.positive?
+    returnItem = @order.returns.where(active: true).order(created_at: :desc).first
+    if returnItem
       # Check if the return grace period has passed
-      grace_period_elapsed = false
       grace_period = @order.shop.return_period
-      returns.each do |item|
-        deadline = item.created_at + grace_period.days
-        grace_period_elapsed = true if deadline.before? DateTime.current
-      end
-
-      return false unless grace_period_elapsed
+      deadline = returnItem.created_at + grace_period.days
+      return false unless deadline.before? DateTime.current
     end
 
     # Make sure order has actually been fulfilled
@@ -99,6 +95,7 @@ class CreatePayment
 
     payment_reference_id = response.body.dig('data', 'orderCreateMandatePayment', 'paymentReferenceId')
     @payment.payment_reference_id = payment_reference_id
+    @payment.save!
   end
 
   def update_order

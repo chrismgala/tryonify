@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_30_045503) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_07_210313) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -28,6 +28,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_30_045503) do
     t.string "mandate_id"
     t.string "fulfillment_status", default: "UNFULFILLED"
     t.datetime "closed_at"
+    t.datetime "shopify_updated_at"
     t.index ["shop_id"], name: "index_orders_on_shop_id"
     t.index ["shopify_id"], name: "unique_shopify_ids", unique: true
   end
@@ -116,6 +117,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_30_045503) do
     t.integer "return_period", default: 14, null: false
     t.text "return_explainer"
     t.boolean "allow_automatic_payments", default: true
+    t.integer "max_trial_items", default: 3
     t.index ["plan_id"], name: "index_shops_on_plan_id"
     t.index ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
   end

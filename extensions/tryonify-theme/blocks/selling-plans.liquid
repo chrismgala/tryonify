@@ -7,13 +7,13 @@
           {% if selling_plan.selected %}
             {%- assign hasSelection = true -%}
           {% endif %}
-          <label class="tryonify-selling-plan" for="tryonify-{{selling_plan.id}}">
+          <label class="tryonify-selling-plan" for="tryonify-{{ selling_plan.id }}">
             <div class="tryonify-selling-plan-row">
               <div class="tryonify-selling-plan-option-wrapper">
-                <input id="tryonify-{{selling_plan.id}}" class="tryonify-selling-plan-option" type="radio" name="selling_plan_{{selling_plan_group.id}}" value="{{selling_plan.id}}" {% if selling_plan.selected %}checked{% endif %} />
+                <input id="tryonify-{{ selling_plan.id }}" class="tryonify-selling-plan-option" type="radio" name="selling_plan_{{ selling_plan_group.id }}" value="{{ selling_plan.id }}" {% if selling_plan.selected %}checked{% endif %} />
               </div>
               <div class="tryonify-selling-plan-name">
-                {{ selling_plan.name}}
+                {{ selling_plan.name }}
               </div>
               {% if selling_plan.checkout_charge.value > 0 %}
                 <div class="tryonify-selling-plan-option-charge">{{ selling_plan.checkout_charge.value | money }}</div>

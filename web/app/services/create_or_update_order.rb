@@ -29,6 +29,7 @@ class CreateOrUpdateOrder
     order_attributes = {
       shopify_id: @order.dig('legacyResourceId'),
       shopify_created_at: @order.dig('createdAt'),
+      shopify_updated_at: @order.dig('updatedAt'),
       name: @order.dig('name'),
       due_date: @order.dig('paymentTerms', 'paymentSchedules', 'edges', 0, 'node', 'dueAt'),
       closed_at: @order.dig('closedAt'),

@@ -6,28 +6,21 @@ class ProcessReturnFromWebhook
   end
 
   def call
-    begin
-      return unless has_return
+    return unless has_return
 
-      @body.dig('refunds').each do |refund|
-        refund.dig('refund_line_items').each do |refund_line_item|
-          existing_return = Return.where(shopify_id: "gid://shopify/LineItem/#{refund_line_item.dig('line_item_id')}", active: true).first
+    @body.dig('refunds').each do |refund|
+      refund.dig('refund_line_items').each do |refund_line_item|
+        existing_return = Return.where(shopify_id: "gid://shopify/LineItem/#{refund_line_item.dig('line_item_id')}",
+                                       active: true).first
 
-          if existing_return and has_restock(refund)
-            existing_return.update(active: false)
-          end
-        end
+        existing_return.update(active: false) if existing_return
       end
-    rescue StandardError => e
-      Rails.logger.error("[ProcessReturnFromWebhook Failed]: Order ID - #{@body.dig('id')} #{e.message}")
     end
+  rescue StandardError => e
+    Rails.logger.error("[ProcessReturnFromWebhook Failed]: Order ID - #{@body.dig('id')} #{e.message}")
   end
 
   def has_return
     @body.dig('refunds').length > 0
-  end
-
-  def has_restock(refund)
-    refund.dig('restock')
   end
 end

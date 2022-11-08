@@ -11,7 +11,7 @@ class FetchExistingOrdersJob < ActiveJob::Base
 
     shop.with_shopify_session do
       query = if shop.orders_updated_at
-                "(financial_status:pending OR financial_status:partially_paid) AND updated_at:>'#{shop.orders_updated_at}'"
+                "(financial_status:pending OR financial_status:partially_paid) AND created_at:>'#{shop.orders_updated_at}'"
               else
                 'financial_status:pending OR financial_status:partially_paid'
               end
@@ -20,7 +20,8 @@ class FetchExistingOrdersJob < ActiveJob::Base
       service = FetchOrders.new({
                                   first: 20,
                                   after: cursor,
-                                  query:
+                                  query:,
+                                  sortKey: 'UPDATED_AT'
                                 })
       service.call
 
@@ -39,6 +40,7 @@ class FetchExistingOrdersJob < ActiveJob::Base
                            name: order.dig('node', 'name'),
                            due_date: order.dig('node', 'paymentTerms', 'paymentSchedules', 'nodes', 0, 'dueAt'),
                            shopify_created_at: order.dig('node', 'createdAt'),
+                           shopify_updated_at: order.dig('node', 'updatedAt'),
                            shop_id: shop.id,
                            financial_status: order.dig('node', 'displayFinancialStatus'),
                            email: order.dig('node', 'customer', 'email'),
@@ -57,7 +59,8 @@ class FetchExistingOrdersJob < ActiveJob::Base
       if service.orders.dig('pageInfo', 'hasNextPage')
         FetchExistingOrdersJob.perform_later(shop.id, service.orders.dig('pageInfo', 'endCursor'))
       else
-        shop.update(orders_updated_at: DateTime.now)
+        latest_order = shop.orders.order(shopify_created_at: :desc).first
+        shop.update(orders_updated_at: latest_order.shopify_created_at)
       end
     end
   end
