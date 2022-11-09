@@ -20,7 +20,8 @@ class FetchOrders
       last: @pagination[:last].to_i,
       before: @pagination[:before],
       after: @pagination[:after],
-      query: @pagination[:query]
+      query: @pagination[:query],
+      sortKey: @pagination[:sortKey] || 'CREATED_AT'
     }
 
     response = @client.query(query:, variables:)
@@ -39,8 +40,8 @@ class FetchOrders
 
   def next_query
     <<~QUERY
-      query fetchOrders($first: Int, $after: String, $query: String) {
-        orders(first: $first, after: $after, query: $query, sortKey: CREATED_AT, reverse: true) {
+      query fetchOrders($first: Int, $after: String, $query: String, $sortKey: OrderSortKeys!) {
+        orders(first: $first, after: $after, query: $query, sortKey: $sortKey, reverse: true) {
           edges {
             node {
               id

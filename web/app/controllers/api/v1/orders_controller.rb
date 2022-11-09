@@ -16,8 +16,20 @@ module Api
                  else
                    current_user.orders.order(shopify_created_at: :desc)
                  end
-        puts orders.inspect
-        render json: orders
+
+        render json: orders, include: ['returns']
+      end
+
+      def show
+        order = Order.find_by!(shopify_id: params[:id])
+
+        render_errors :unauthorized unless current_user.id == order.shop_id
+
+        service = FetchOrder.new("gid://shopify/Order/#{params[:id]}")
+        service.call
+
+        render_errors service.error if service.error
+        render json: { order:, graphql_order: service.order, returns: order.returns }
       end
 
       private

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Badge,
   Link,
   IndexTable,
   Stack,
@@ -32,15 +33,17 @@ export default function OrderList({ query }) {
   const rowMarkup = data?.map(
     (order, index) => {
       const {
-        id, shopifyId, name, shopifyCreatedAt, financialStatus, dueDate,
+        id, shopifyId, name, shopifyCreatedAt, financialStatus, dueDate, calculatedDueDate, returns,
       } = order;
-      const dt = DateTime.fromISO(dueDate);
+      const dt = DateTime.fromISO(calculatedDueDate);
       const tz = dt.zoneName;
       let overdue = false;
 
       if ((dt <= DateTime.now().setZone(tz)) && financialStatus !== 'PAID') {
-        let overdue = true;
+        overdue = true;
       }
+
+      const activeReturns = returns.filter(returnItem => returnItem.active).length
 
       return (
         <IndexTable.Row
@@ -51,12 +54,7 @@ export default function OrderList({ query }) {
           <IndexTable.Cell>
             <Link
               dataPrimaryLink
-              onClick={() => {
-                navigate({
-                  name: 'Order',
-                  resource: { id: shopifyId },
-                });
-              }}
+              url={`/orders/${shopifyId}`}
             >
               <TextStyle variation="strong">{name}</TextStyle>
             </Link>
@@ -65,12 +63,13 @@ export default function OrderList({ query }) {
             {new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(shopifyCreatedAt))}
           </IndexTable.Cell>
           <IndexTable.Cell>
-            {dueDate && new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(dueDate))}
+            {calculatedDueDate && new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(calculatedDueDate))}
           </IndexTable.Cell>
           <IndexTable.Cell>
             <Stack spacing="extraTight">
               <PaymentStatus status={financialStatus} />
               {overdue && <PaymentStatus status="OVERDUE" />}
+              {activeReturns > 0 && <Badge status='critical'>Returns</Badge>}
             </Stack>
           </IndexTable.Cell>
         </IndexTable.Row>
@@ -86,7 +85,7 @@ export default function OrderList({ query }) {
         { title: 'Order' },
         { title: 'Created at' },
         { title: 'Due date' },
-        { title: 'Payment status' },
+        { title: 'Status' },
       ]}
       itemCount={data?.length || 0}
       selectable={false}

@@ -22,7 +22,6 @@
     return a;
   };
   var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
-  var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
   var __objRest = (source, exclude) => {
     var target = {};
     for (var prop in source)
@@ -36,24 +35,20 @@
     return target;
   };
   var __commonJS = (cb, mod) => function __require() {
-    return mod || (0, cb[Object.keys(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
-  var __export = (target, all) => {
-    __markAsModule(target);
-    for (var name in all)
-      __defProp(target, name, { get: all[name], enumerable: true });
-  };
-  var __reExport = (target, module, desc) => {
-    if (module && typeof module === "object" || typeof module === "function") {
-      for (let key of __getOwnPropNames(module))
-        if (!__hasOwnProp.call(target, key) && key !== "default")
-          __defProp(target, key, { get: () => module[key], enumerable: !(desc = __getOwnPropDesc(module, key)) || desc.enumerable });
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
     }
-    return target;
+    return to;
   };
-  var __toModule = (module) => {
-    return __reExport(__markAsModule(__defProp(module != null ? __create(__getProtoOf(module)) : {}, "default", module && module.__esModule && "default" in module ? { get: () => module.default, enumerable: true } : { value: module, enumerable: true })), module);
-  };
+  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+    mod
+  ));
   var __async = (__this, __arguments, generator) => {
     return new Promise((resolve, reject) => {
       var fulfilled = (value) => {
@@ -75,31 +70,129 @@
     });
   };
 
-  // ../../node_modules/react/cjs/react.development.js
+  // node_modules/object-assign/index.js
+  var require_object_assign = __commonJS({
+    "node_modules/object-assign/index.js"(exports, module) {
+      "use strict";
+      var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+      var hasOwnProperty2 = Object.prototype.hasOwnProperty;
+      var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+      function toObject(val) {
+        if (val === null || val === void 0) {
+          throw new TypeError("Object.assign cannot be called with null or undefined");
+        }
+        return Object(val);
+      }
+      function shouldUseNative() {
+        try {
+          if (!Object.assign) {
+            return false;
+          }
+          var test1 = new String("abc");
+          test1[5] = "de";
+          if (Object.getOwnPropertyNames(test1)[0] === "5") {
+            return false;
+          }
+          var test2 = {};
+          for (var i = 0; i < 10; i++) {
+            test2["_" + String.fromCharCode(i)] = i;
+          }
+          var order2 = Object.getOwnPropertyNames(test2).map(function(n) {
+            return test2[n];
+          });
+          if (order2.join("") !== "0123456789") {
+            return false;
+          }
+          var test3 = {};
+          "abcdefghijklmnopqrst".split("").forEach(function(letter) {
+            test3[letter] = letter;
+          });
+          if (Object.keys(Object.assign({}, test3)).join("") !== "abcdefghijklmnopqrst") {
+            return false;
+          }
+          return true;
+        } catch (err) {
+          return false;
+        }
+      }
+      module.exports = shouldUseNative() ? Object.assign : function(target, source) {
+        var from;
+        var to = toObject(target);
+        var symbols;
+        for (var s = 1; s < arguments.length; s++) {
+          from = Object(arguments[s]);
+          for (var key in from) {
+            if (hasOwnProperty2.call(from, key)) {
+              to[key] = from[key];
+            }
+          }
+          if (getOwnPropertySymbols) {
+            symbols = getOwnPropertySymbols(from);
+            for (var i = 0; i < symbols.length; i++) {
+              if (propIsEnumerable.call(from, symbols[i])) {
+                to[symbols[i]] = from[symbols[i]];
+              }
+            }
+          }
+        }
+        return to;
+      };
+    }
+  });
+
+  // node_modules/react/cjs/react.development.js
   var require_react_development = __commonJS({
-    "../../node_modules/react/cjs/react.development.js"(exports, module) {
+    "node_modules/react/cjs/react.development.js"(exports) {
       "use strict";
       if (true) {
         (function() {
           "use strict";
-          if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") {
-            __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
+          var _assign = require_object_assign();
+          var ReactVersion = "17.0.2";
+          var REACT_ELEMENT_TYPE = 60103;
+          var REACT_PORTAL_TYPE = 60106;
+          exports.Fragment = 60107;
+          exports.StrictMode = 60108;
+          exports.Profiler = 60114;
+          var REACT_PROVIDER_TYPE = 60109;
+          var REACT_CONTEXT_TYPE = 60110;
+          var REACT_FORWARD_REF_TYPE = 60112;
+          exports.Suspense = 60113;
+          var REACT_SUSPENSE_LIST_TYPE = 60120;
+          var REACT_MEMO_TYPE = 60115;
+          var REACT_LAZY_TYPE = 60116;
+          var REACT_BLOCK_TYPE = 60121;
+          var REACT_SERVER_BLOCK_TYPE = 60122;
+          var REACT_FUNDAMENTAL_TYPE = 60117;
+          var REACT_SCOPE_TYPE = 60119;
+          var REACT_OPAQUE_ID_TYPE = 60128;
+          var REACT_DEBUG_TRACING_MODE_TYPE = 60129;
+          var REACT_OFFSCREEN_TYPE = 60130;
+          var REACT_LEGACY_HIDDEN_TYPE = 60131;
+          if (typeof Symbol === "function" && Symbol.for) {
+            var symbolFor = Symbol.for;
+            REACT_ELEMENT_TYPE = symbolFor("react.element");
+            REACT_PORTAL_TYPE = symbolFor("react.portal");
+            exports.Fragment = symbolFor("react.fragment");
+            exports.StrictMode = symbolFor("react.strict_mode");
+            exports.Profiler = symbolFor("react.profiler");
+            REACT_PROVIDER_TYPE = symbolFor("react.provider");
+            REACT_CONTEXT_TYPE = symbolFor("react.context");
+            REACT_FORWARD_REF_TYPE = symbolFor("react.forward_ref");
+            exports.Suspense = symbolFor("react.suspense");
+            REACT_SUSPENSE_LIST_TYPE = symbolFor("react.suspense_list");
+            REACT_MEMO_TYPE = symbolFor("react.memo");
+            REACT_LAZY_TYPE = symbolFor("react.lazy");
+            REACT_BLOCK_TYPE = symbolFor("react.block");
+            REACT_SERVER_BLOCK_TYPE = symbolFor("react.server.block");
+            REACT_FUNDAMENTAL_TYPE = symbolFor("react.fundamental");
+            REACT_SCOPE_TYPE = symbolFor("react.scope");
+            REACT_OPAQUE_ID_TYPE = symbolFor("react.opaque.id");
+            REACT_DEBUG_TRACING_MODE_TYPE = symbolFor("react.debug_trace_mode");
+            REACT_OFFSCREEN_TYPE = symbolFor("react.offscreen");
+            REACT_LEGACY_HIDDEN_TYPE = symbolFor("react.legacy_hidden");
           }
-          var ReactVersion = "18.2.0";
-          var REACT_ELEMENT_TYPE = Symbol.for("react.element");
-          var REACT_PORTAL_TYPE = Symbol.for("react.portal");
-          var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
-          var REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode");
-          var REACT_PROFILER_TYPE = Symbol.for("react.profiler");
-          var REACT_PROVIDER_TYPE = Symbol.for("react.provider");
-          var REACT_CONTEXT_TYPE = Symbol.for("react.context");
-          var REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref");
-          var REACT_SUSPENSE_TYPE = Symbol.for("react.suspense");
-          var REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list");
-          var REACT_MEMO_TYPE = Symbol.for("react.memo");
-          var REACT_LAZY_TYPE = Symbol.for("react.lazy");
-          var REACT_OFFSCREEN_TYPE = Symbol.for("react.offscreen");
-          var MAYBE_ITERATOR_SYMBOL = Symbol.iterator;
+          var MAYBE_ITERATOR_SYMBOL = typeof Symbol === "function" && Symbol.iterator;
           var FAUX_ITERATOR_SYMBOL = "@@iterator";
           function getIteratorFn(maybeIterable) {
             if (maybeIterable === null || typeof maybeIterable !== "object") {
@@ -115,12 +208,7 @@
             current: null
           };
           var ReactCurrentBatchConfig = {
-            transition: null
-          };
-          var ReactCurrentActQueue = {
-            current: null,
-            isBatchingLegacy: false,
-            didScheduleLegacyUpdate: false
+            transition: 0
           };
           var ReactCurrentOwner = {
             current: null
@@ -151,38 +239,33 @@
               return stack;
             };
           }
-          var enableScopeAPI = false;
-          var enableCacheElement = false;
-          var enableTransitionTracing = false;
-          var enableLegacyHidden = false;
-          var enableDebugTracing = false;
+          var IsSomeRendererActing = {
+            current: false
+          };
           var ReactSharedInternals = {
             ReactCurrentDispatcher,
             ReactCurrentBatchConfig,
-            ReactCurrentOwner
+            ReactCurrentOwner,
+            IsSomeRendererActing,
+            assign: _assign
           };
           {
             ReactSharedInternals.ReactDebugCurrentFrame = ReactDebugCurrentFrame;
-            ReactSharedInternals.ReactCurrentActQueue = ReactCurrentActQueue;
           }
           function warn(format) {
             {
-              {
-                for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-                  args[_key - 1] = arguments[_key];
-                }
-                printWarning("warn", format, args);
+              for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+                args[_key - 1] = arguments[_key];
               }
+              printWarning("warn", format, args);
             }
           }
           function error(format) {
             {
-              {
-                for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-                  args[_key2 - 1] = arguments[_key2];
-                }
-                printWarning("error", format, args);
+              for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+                args[_key2 - 1] = arguments[_key2];
               }
+              printWarning("error", format, args);
             }
           }
           function printWarning(level, format, args) {
@@ -194,7 +277,7 @@
                 args = args.concat([stack]);
               }
               var argsWithFormat = args.map(function(item) {
-                return String(item);
+                return "" + item;
               });
               argsWithFormat.unshift("Warning: " + format);
               Function.prototype.apply.call(console[level], console, argsWithFormat);
@@ -227,7 +310,6 @@
               warnNoop(publicInstance, "setState");
             }
           };
-          var assign = Object.assign;
           var emptyObject = {};
           {
             Object.freeze(emptyObject);
@@ -240,8 +322,10 @@
           }
           Component.prototype.isReactComponent = {};
           Component.prototype.setState = function(partialState, callback) {
-            if (typeof partialState !== "object" && typeof partialState !== "function" && partialState != null) {
-              throw new Error("setState(...): takes an object of state variables to update or a function which returns an object of state variables.");
+            if (!(typeof partialState === "object" || typeof partialState === "function" || partialState == null)) {
+              {
+                throw Error("setState(...): takes an object of state variables to update or a function which returns an object of state variables.");
+              }
             }
             this.updater.enqueueSetState(this, partialState, callback, "setState");
           };
@@ -278,7 +362,7 @@
           }
           var pureComponentPrototype = PureComponent.prototype = new ComponentDummy();
           pureComponentPrototype.constructor = PureComponent;
-          assign(pureComponentPrototype, Component.prototype);
+          _assign(pureComponentPrototype, Component.prototype);
           pureComponentPrototype.isPureReactComponent = true;
           function createRef() {
             var refObject = {
@@ -289,56 +373,20 @@
             }
             return refObject;
           }
-          var isArrayImpl = Array.isArray;
-          function isArray(a) {
-            return isArrayImpl(a);
-          }
-          function typeName(value) {
-            {
-              var hasToStringTag = typeof Symbol === "function" && Symbol.toStringTag;
-              var type = hasToStringTag && value[Symbol.toStringTag] || value.constructor.name || "Object";
-              return type;
-            }
-          }
-          function willCoercionThrow(value) {
-            {
-              try {
-                testStringCoercion(value);
-                return false;
-              } catch (e) {
-                return true;
-              }
-            }
-          }
-          function testStringCoercion(value) {
-            return "" + value;
-          }
-          function checkKeyStringCoercion(value) {
-            {
-              if (willCoercionThrow(value)) {
-                error("The provided key is an unsupported type %s. This value must be coerced to a string before before using it here.", typeName(value));
-                return testStringCoercion(value);
-              }
-            }
-          }
           function getWrappedName(outerType, innerType, wrapperName) {
-            var displayName = outerType.displayName;
-            if (displayName) {
-              return displayName;
-            }
             var functionName = innerType.displayName || innerType.name || "";
-            return functionName !== "" ? wrapperName + "(" + functionName + ")" : wrapperName;
+            return outerType.displayName || (functionName !== "" ? wrapperName + "(" + functionName + ")" : wrapperName);
           }
           function getContextName(type) {
             return type.displayName || "Context";
           }
-          function getComponentNameFromType(type) {
+          function getComponentName(type) {
             if (type == null) {
               return null;
             }
             {
               if (typeof type.tag === "number") {
-                error("Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue.");
+                error("Received an unexpected object in getComponentName(). This is likely a bug in React. Please file an issue.");
               }
             }
             if (typeof type === "function") {
@@ -348,15 +396,15 @@
               return type;
             }
             switch (type) {
-              case REACT_FRAGMENT_TYPE:
+              case exports.Fragment:
                 return "Fragment";
               case REACT_PORTAL_TYPE:
                 return "Portal";
-              case REACT_PROFILER_TYPE:
+              case exports.Profiler:
                 return "Profiler";
-              case REACT_STRICT_MODE_TYPE:
+              case exports.StrictMode:
                 return "StrictMode";
-              case REACT_SUSPENSE_TYPE:
+              case exports.Suspense:
                 return "Suspense";
               case REACT_SUSPENSE_LIST_TYPE:
                 return "SuspenseList";
@@ -372,17 +420,15 @@
                 case REACT_FORWARD_REF_TYPE:
                   return getWrappedName(type, type.render, "ForwardRef");
                 case REACT_MEMO_TYPE:
-                  var outerName = type.displayName || null;
-                  if (outerName !== null) {
-                    return outerName;
-                  }
-                  return getComponentNameFromType(type.type) || "Memo";
+                  return getComponentName(type.type);
+                case REACT_BLOCK_TYPE:
+                  return getComponentName(type._render);
                 case REACT_LAZY_TYPE: {
                   var lazyComponent = type;
                   var payload = lazyComponent._payload;
                   var init = lazyComponent._init;
                   try {
-                    return getComponentNameFromType(init(payload));
+                    return getComponentName(init(payload));
                   } catch (x) {
                     return null;
                   }
@@ -457,7 +503,7 @@
           function warnIfStringRefCannotBeAutoConverted(config) {
             {
               if (typeof config.ref === "string" && ReactCurrentOwner.current && config.__self && ReactCurrentOwner.current.stateNode !== config.__self) {
-                var componentName = getComponentNameFromType(ReactCurrentOwner.current.type);
+                var componentName = getComponentName(ReactCurrentOwner.current.type);
                 if (!didWarnAboutStringRefs[componentName]) {
                   error('Component "%s" contains the string ref "%s". Support for string refs will be removed in a future major release. This case cannot be automatically converted to an arrow function. We ask you to manually fix this case by using useRef() or createRef() instead. Learn more about using refs safely here: https://reactjs.org/link/strict-mode-string-ref', componentName, config.ref);
                   didWarnAboutStringRefs[componentName] = true;
@@ -516,9 +562,6 @@
                 }
               }
               if (hasValidKey(config)) {
-                {
-                  checkKeyStringCoercion(config.key);
-                }
                 key = "" + config.key;
               }
               self2 = config.__self === void 0 ? null : config.__self;
@@ -570,11 +613,13 @@
             return newElement;
           }
           function cloneElement(element, config, children) {
-            if (element === null || element === void 0) {
-              throw new Error("React.cloneElement(...): The argument must be a React element, but you passed " + element + ".");
+            if (!!(element === null || element === void 0)) {
+              {
+                throw Error("React.cloneElement(...): The argument must be a React element, but you passed " + element + ".");
+              }
             }
             var propName;
-            var props = assign({}, element.props);
+            var props = _assign({}, element.props);
             var key = element.key;
             var ref = element.ref;
             var self2 = element._self;
@@ -586,9 +631,6 @@
                 owner = ReactCurrentOwner.current;
               }
               if (hasValidKey(config)) {
-                {
-                  checkKeyStringCoercion(config.key);
-                }
                 key = "" + config.key;
               }
               var defaultProps;
@@ -640,9 +682,6 @@
           }
           function getElementKey(element, index) {
             if (typeof element === "object" && element !== null && element.key != null) {
-              {
-                checkKeyStringCoercion(element.key);
-              }
               return escape("" + element.key);
             }
             return index.toString(36);
@@ -673,7 +712,7 @@
               var _child = children;
               var mappedChild = callback(_child);
               var childKey = nameSoFar === "" ? SEPARATOR + getElementKey(_child, 0) : nameSoFar;
-              if (isArray(mappedChild)) {
+              if (Array.isArray(mappedChild)) {
                 var escapedChildKey = "";
                 if (childKey != null) {
                   escapedChildKey = escapeUserProvidedKey(childKey) + "/";
@@ -683,12 +722,10 @@
                 });
               } else if (mappedChild != null) {
                 if (isValidElement2(mappedChild)) {
-                  {
-                    if (mappedChild.key && (!_child || _child.key !== mappedChild.key)) {
-                      checkKeyStringCoercion(mappedChild.key);
-                    }
-                  }
-                  mappedChild = cloneAndReplaceKey(mappedChild, escapedPrefix + (mappedChild.key && (!_child || _child.key !== mappedChild.key) ? escapeUserProvidedKey("" + mappedChild.key) + "/" : "") + childKey);
+                  mappedChild = cloneAndReplaceKey(
+                    mappedChild,
+                    escapedPrefix + (mappedChild.key && (!_child || _child.key !== mappedChild.key) ? escapeUserProvidedKey("" + mappedChild.key) + "/" : "") + childKey
+                  );
                 }
                 array.push(mappedChild);
               }
@@ -698,7 +735,7 @@
             var nextName;
             var subtreeCount = 0;
             var nextNamePrefix = nameSoFar === "" ? SEPARATOR : nameSoFar + SUBSEPARATOR;
-            if (isArray(children)) {
+            if (Array.isArray(children)) {
               for (var i = 0; i < children.length; i++) {
                 child = children[i];
                 nextName = nextNamePrefix + getElementKey(child, i);
@@ -725,8 +762,12 @@
                   subtreeCount += mapIntoArray(child, array, escapedPrefix, nextName, callback);
                 }
               } else if (type === "object") {
-                var childrenString = String(children);
-                throw new Error("Objects are not valid as a React child (found: " + (childrenString === "[object Object]" ? "object with keys {" + Object.keys(children).join(", ") + "}" : childrenString) + "). If you meant to render a collection of children, use an array instead.");
+                var childrenString = "" + children;
+                {
+                  {
+                    throw Error("Objects are not valid as a React child (found: " + (childrenString === "[object Object]" ? "object with keys {" + Object.keys(children).join(", ") + "}" : childrenString) + "). If you meant to render a collection of children, use an array instead.");
+                  }
+                }
               }
             }
             return subtreeCount;
@@ -761,20 +802,30 @@
           }
           function onlyChild(children) {
             if (!isValidElement2(children)) {
-              throw new Error("React.Children.only expected to receive a single React element child.");
+              {
+                throw Error("React.Children.only expected to receive a single React element child.");
+              }
             }
             return children;
           }
-          function createContext3(defaultValue) {
+          function createContext3(defaultValue, calculateChangedBits) {
+            if (calculateChangedBits === void 0) {
+              calculateChangedBits = null;
+            } else {
+              {
+                if (calculateChangedBits !== null && typeof calculateChangedBits !== "function") {
+                  error("createContext: Expected the optional second argument to be a function. Instead received: %s", calculateChangedBits);
+                }
+              }
+            }
             var context = {
               $$typeof: REACT_CONTEXT_TYPE,
+              _calculateChangedBits: calculateChangedBits,
               _currentValue: defaultValue,
               _currentValue2: defaultValue,
               _threadCount: 0,
               Provider: null,
-              Consumer: null,
-              _defaultValue: null,
-              _globalName: null
+              Consumer: null
             };
             context.Provider = {
               $$typeof: REACT_PROVIDER_TYPE,
@@ -786,7 +837,8 @@
             {
               var Consumer = {
                 $$typeof: REACT_CONTEXT_TYPE,
-                _context: context
+                _context: context,
+                _calculateChangedBits: context._calculateChangedBits
               };
               Object.defineProperties(Consumer, {
                 Provider: {
@@ -862,45 +914,38 @@
             if (payload._status === Uninitialized) {
               var ctor = payload._result;
               var thenable = ctor();
-              thenable.then(function(moduleObject2) {
-                if (payload._status === Pending || payload._status === Uninitialized) {
+              var pending = payload;
+              pending._status = Pending;
+              pending._result = thenable;
+              thenable.then(function(moduleObject) {
+                if (payload._status === Pending) {
+                  var defaultExport = moduleObject.default;
+                  {
+                    if (defaultExport === void 0) {
+                      error("lazy: Expected the result of a dynamic import() call. Instead received: %s\n\nYour code should look like: \n  const MyComponent = lazy(() => import('./MyComponent'))", moduleObject);
+                    }
+                  }
                   var resolved = payload;
                   resolved._status = Resolved;
-                  resolved._result = moduleObject2;
+                  resolved._result = defaultExport;
                 }
               }, function(error2) {
-                if (payload._status === Pending || payload._status === Uninitialized) {
+                if (payload._status === Pending) {
                   var rejected = payload;
                   rejected._status = Rejected;
                   rejected._result = error2;
                 }
               });
-              if (payload._status === Uninitialized) {
-                var pending = payload;
-                pending._status = Pending;
-                pending._result = thenable;
-              }
             }
             if (payload._status === Resolved) {
-              var moduleObject = payload._result;
-              {
-                if (moduleObject === void 0) {
-                  error("lazy: Expected the result of a dynamic import() call. Instead received: %s\n\nYour code should look like: \n  const MyComponent = lazy(() => import('./MyComponent'))\n\nDid you accidentally put curly braces around the import?", moduleObject);
-                }
-              }
-              {
-                if (!("default" in moduleObject)) {
-                  error("lazy: Expected the result of a dynamic import() call. Instead received: %s\n\nYour code should look like: \n  const MyComponent = lazy(() => import('./MyComponent'))", moduleObject);
-                }
-              }
-              return moduleObject.default;
+              return payload._result;
             } else {
               throw payload._result;
             }
           }
           function lazy(ctor) {
             var payload = {
-              _status: Uninitialized,
+              _status: -1,
               _result: ctor
             };
             var lazyType = {
@@ -973,7 +1018,7 @@
                 },
                 set: function(name) {
                   ownName = name;
-                  if (!render3.name && !render3.displayName) {
+                  if (render3.displayName == null) {
                     render3.displayName = name;
                   }
                 }
@@ -981,19 +1026,16 @@
             }
             return elementType;
           }
-          var REACT_MODULE_REFERENCE;
-          {
-            REACT_MODULE_REFERENCE = Symbol.for("react.module.reference");
-          }
+          var enableScopeAPI = false;
           function isValidElementType(type) {
             if (typeof type === "string" || typeof type === "function") {
               return true;
             }
-            if (type === REACT_FRAGMENT_TYPE || type === REACT_PROFILER_TYPE || enableDebugTracing || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || enableLegacyHidden || type === REACT_OFFSCREEN_TYPE || enableScopeAPI || enableCacheElement || enableTransitionTracing) {
+            if (type === exports.Fragment || type === exports.Profiler || type === REACT_DEBUG_TRACING_MODE_TYPE || type === exports.StrictMode || type === exports.Suspense || type === REACT_SUSPENSE_LIST_TYPE || type === REACT_LEGACY_HIDDEN_TYPE || enableScopeAPI) {
               return true;
             }
             if (typeof type === "object" && type !== null) {
-              if (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_MODULE_REFERENCE || type.getModuleId !== void 0) {
+              if (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_BLOCK_TYPE || type[0] === REACT_SERVER_BLOCK_TYPE) {
                 return true;
               }
             }
@@ -1020,7 +1062,7 @@
                 },
                 set: function(name) {
                   ownName = name;
-                  if (!type.name && !type.displayName) {
+                  if (type.displayName == null) {
                     type.displayName = name;
                   }
                 }
@@ -1030,16 +1072,19 @@
           }
           function resolveDispatcher() {
             var dispatcher = ReactCurrentDispatcher.current;
-            {
-              if (dispatcher === null) {
-                error("Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:\n1. You might have mismatching versions of React and the renderer (such as React DOM)\n2. You might be breaking the Rules of Hooks\n3. You might have more than one copy of React in the same app\nSee https://reactjs.org/link/invalid-hook-call for tips about how to debug and fix this problem.");
+            if (!(dispatcher !== null)) {
+              {
+                throw Error("Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:\n1. You might have mismatching versions of React and the renderer (such as React DOM)\n2. You might be breaking the Rules of Hooks\n3. You might have more than one copy of React in the same app\nSee https://reactjs.org/link/invalid-hook-call for tips about how to debug and fix this problem.");
               }
             }
             return dispatcher;
           }
-          function useContext3(Context) {
+          function useContext3(Context, unstable_observedBits) {
             var dispatcher = resolveDispatcher();
             {
+              if (unstable_observedBits !== void 0) {
+                error("useContext() second argument is reserved for future use in React. Passing it is not supported. You passed: %s.%s", unstable_observedBits, typeof unstable_observedBits === "number" && Array.isArray(arguments[2]) ? "\n\nDid you call array.map(useContext)? Calling Hooks inside a loop is not supported. Learn more at https://reactjs.org/link/rules-of-hooks" : "");
+              }
               if (Context._context !== void 0) {
                 var realContext = Context._context;
                 if (realContext.Consumer === Context) {
@@ -1049,9 +1094,9 @@
                 }
               }
             }
-            return dispatcher.useContext(Context);
+            return dispatcher.useContext(Context, unstable_observedBits);
           }
-          function useState6(initialState) {
+          function useState4(initialState) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState);
           }
@@ -1063,13 +1108,9 @@
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect7(create, deps) {
+          function useEffect5(create, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create, deps);
-          }
-          function useInsertionEffect(create, deps) {
-            var dispatcher = resolveDispatcher();
-            return dispatcher.useInsertionEffect(create, deps);
           }
           function useLayoutEffect(create, deps) {
             var dispatcher = resolveDispatcher();
@@ -1092,22 +1133,6 @@
               var dispatcher = resolveDispatcher();
               return dispatcher.useDebugValue(value, formatterFn);
             }
-          }
-          function useTransition() {
-            var dispatcher = resolveDispatcher();
-            return dispatcher.useTransition();
-          }
-          function useDeferredValue(value) {
-            var dispatcher = resolveDispatcher();
-            return dispatcher.useDeferredValue(value);
-          }
-          function useId() {
-            var dispatcher = resolveDispatcher();
-            return dispatcher.useId();
-          }
-          function useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot) {
-            var dispatcher = resolveDispatcher();
-            return dispatcher.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
           }
           var disabledDepth = 0;
           var prevLog;
@@ -1159,25 +1184,25 @@
                   writable: true
                 };
                 Object.defineProperties(console, {
-                  log: assign({}, props, {
+                  log: _assign({}, props, {
                     value: prevLog
                   }),
-                  info: assign({}, props, {
+                  info: _assign({}, props, {
                     value: prevInfo
                   }),
-                  warn: assign({}, props, {
+                  warn: _assign({}, props, {
                     value: prevWarn
                   }),
-                  error: assign({}, props, {
+                  error: _assign({}, props, {
                     value: prevError
                   }),
-                  group: assign({}, props, {
+                  group: _assign({}, props, {
                     value: prevGroup
                   }),
-                  groupCollapsed: assign({}, props, {
+                  groupCollapsed: _assign({}, props, {
                     value: prevGroupCollapsed
                   }),
-                  groupEnd: assign({}, props, {
+                  groupEnd: _assign({}, props, {
                     value: prevGroupEnd
                   })
                 });
@@ -1278,9 +1303,6 @@
                         c--;
                         if (c < 0 || sampleLines[s] !== controlLines[c]) {
                           var _frame = "\n" + sampleLines[s].replace(" at new ", " at ");
-                          if (fn.displayName && _frame.includes("<anonymous>")) {
-                            _frame = _frame.replace("<anonymous>", fn.displayName);
-                          }
                           {
                             if (typeof fn === "function") {
                               componentFrameCache.set(fn, _frame);
@@ -1333,7 +1355,7 @@
               return describeBuiltInComponentFrame(type);
             }
             switch (type) {
-              case REACT_SUSPENSE_TYPE:
+              case exports.Suspense:
                 return describeBuiltInComponentFrame("Suspense");
               case REACT_SUSPENSE_LIST_TYPE:
                 return describeBuiltInComponentFrame("SuspenseList");
@@ -1344,6 +1366,8 @@
                   return describeFunctionComponentFrame(type.render);
                 case REACT_MEMO_TYPE:
                   return describeUnknownElementTypeFrameInDEV(type.type, source, ownerFn);
+                case REACT_BLOCK_TYPE:
+                  return describeFunctionComponentFrame(type._render);
                 case REACT_LAZY_TYPE: {
                   var lazyComponent = type;
                   var payload = lazyComponent._payload;
@@ -1372,7 +1396,7 @@
           }
           function checkPropTypes(typeSpecs, values, location, componentName, element) {
             {
-              var has2 = Function.call.bind(hasOwnProperty2);
+              var has2 = Function.call.bind(Object.prototype.hasOwnProperty);
               for (var typeSpecName in typeSpecs) {
                 if (has2(typeSpecs, typeSpecName)) {
                   var error$1 = void 0;
@@ -1418,7 +1442,7 @@
           }
           function getDeclarationErrorAddendum() {
             if (ReactCurrentOwner.current) {
-              var name = getComponentNameFromType(ReactCurrentOwner.current.type);
+              var name = getComponentName(ReactCurrentOwner.current.type);
               if (name) {
                 return "\n\nCheck the render method of `" + name + "`.";
               }
@@ -1462,7 +1486,7 @@
             ownerHasKeyUseWarning[currentComponentErrorInfo] = true;
             var childOwner = "";
             if (element && element._owner && element._owner !== ReactCurrentOwner.current) {
-              childOwner = " It was passed a child from " + getComponentNameFromType(element._owner.type) + ".";
+              childOwner = " It was passed a child from " + getComponentName(element._owner.type) + ".";
             }
             {
               setCurrentlyValidatingElement$1(element);
@@ -1474,7 +1498,7 @@
             if (typeof node !== "object") {
               return;
             }
-            if (isArray(node)) {
+            if (Array.isArray(node)) {
               for (var i = 0; i < node.length; i++) {
                 var child = node[i];
                 if (isValidElement2(child)) {
@@ -1515,11 +1539,11 @@
                 return;
               }
               if (propTypes) {
-                var name = getComponentNameFromType(type);
+                var name = getComponentName(type);
                 checkPropTypes(propTypes, element.props, "prop", name, element);
               } else if (type.PropTypes !== void 0 && !propTypesMisspellWarningShown) {
                 propTypesMisspellWarningShown = true;
-                var _name = getComponentNameFromType(type);
+                var _name = getComponentName(type);
                 error("Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?", _name || "Unknown");
               }
               if (typeof type.getDefaultProps === "function" && !type.getDefaultProps.isReactClassApproved) {
@@ -1562,10 +1586,10 @@
               var typeString;
               if (type === null) {
                 typeString = "null";
-              } else if (isArray(type)) {
+              } else if (Array.isArray(type)) {
                 typeString = "array";
               } else if (type !== void 0 && type.$$typeof === REACT_ELEMENT_TYPE) {
-                typeString = "<" + (getComponentNameFromType(type.type) || "Unknown") + " />";
+                typeString = "<" + (getComponentName(type.type) || "Unknown") + " />";
                 info = " Did you accidentally export a JSX literal instead of a component?";
               } else {
                 typeString = typeof type;
@@ -1583,7 +1607,7 @@
                 validateChildKeys(arguments[i], type);
               }
             }
-            if (type === REACT_FRAGMENT_TYPE) {
+            if (type === exports.Fragment) {
               validateFragmentProps(element);
             } else {
               validatePropTypes(element);
@@ -1620,194 +1644,12 @@
             validatePropTypes(newElement);
             return newElement;
           }
-          function startTransition(scope, options) {
-            var prevTransition = ReactCurrentBatchConfig.transition;
-            ReactCurrentBatchConfig.transition = {};
-            var currentTransition = ReactCurrentBatchConfig.transition;
-            {
-              ReactCurrentBatchConfig.transition._updatedFibers = new Set();
-            }
+          {
             try {
-              scope();
-            } finally {
-              ReactCurrentBatchConfig.transition = prevTransition;
-              {
-                if (prevTransition === null && currentTransition._updatedFibers) {
-                  var updatedFibersCount = currentTransition._updatedFibers.size;
-                  if (updatedFibersCount > 10) {
-                    warn("Detected a large number of updates inside startTransition. If this is due to a subscription please re-write it to use React provided hooks. Otherwise concurrent mode guarantees are off the table.");
-                  }
-                  currentTransition._updatedFibers.clear();
-                }
-              }
-            }
-          }
-          var didWarnAboutMessageChannel = false;
-          var enqueueTaskImpl = null;
-          function enqueueTask(task) {
-            if (enqueueTaskImpl === null) {
-              try {
-                var requireString = ("require" + Math.random()).slice(0, 7);
-                var nodeRequire = module && module[requireString];
-                enqueueTaskImpl = nodeRequire.call(module, "timers").setImmediate;
-              } catch (_err) {
-                enqueueTaskImpl = function(callback) {
-                  {
-                    if (didWarnAboutMessageChannel === false) {
-                      didWarnAboutMessageChannel = true;
-                      if (typeof MessageChannel === "undefined") {
-                        error("This browser does not have a MessageChannel implementation, so enqueuing tasks via await act(async () => ...) will fail. Please file an issue at https://github.com/facebook/react/issues if you encounter this warning.");
-                      }
-                    }
-                  }
-                  var channel = new MessageChannel();
-                  channel.port1.onmessage = callback;
-                  channel.port2.postMessage(void 0);
-                };
-              }
-            }
-            return enqueueTaskImpl(task);
-          }
-          var actScopeDepth = 0;
-          var didWarnNoAwaitAct = false;
-          function act(callback) {
-            {
-              var prevActScopeDepth = actScopeDepth;
-              actScopeDepth++;
-              if (ReactCurrentActQueue.current === null) {
-                ReactCurrentActQueue.current = [];
-              }
-              var prevIsBatchingLegacy = ReactCurrentActQueue.isBatchingLegacy;
-              var result;
-              try {
-                ReactCurrentActQueue.isBatchingLegacy = true;
-                result = callback();
-                if (!prevIsBatchingLegacy && ReactCurrentActQueue.didScheduleLegacyUpdate) {
-                  var queue = ReactCurrentActQueue.current;
-                  if (queue !== null) {
-                    ReactCurrentActQueue.didScheduleLegacyUpdate = false;
-                    flushActQueue(queue);
-                  }
-                }
-              } catch (error2) {
-                popActScope(prevActScopeDepth);
-                throw error2;
-              } finally {
-                ReactCurrentActQueue.isBatchingLegacy = prevIsBatchingLegacy;
-              }
-              if (result !== null && typeof result === "object" && typeof result.then === "function") {
-                var thenableResult = result;
-                var wasAwaited = false;
-                var thenable = {
-                  then: function(resolve, reject) {
-                    wasAwaited = true;
-                    thenableResult.then(function(returnValue2) {
-                      popActScope(prevActScopeDepth);
-                      if (actScopeDepth === 0) {
-                        recursivelyFlushAsyncActWork(returnValue2, resolve, reject);
-                      } else {
-                        resolve(returnValue2);
-                      }
-                    }, function(error2) {
-                      popActScope(prevActScopeDepth);
-                      reject(error2);
-                    });
-                  }
-                };
-                {
-                  if (!didWarnNoAwaitAct && typeof Promise !== "undefined") {
-                    Promise.resolve().then(function() {
-                    }).then(function() {
-                      if (!wasAwaited) {
-                        didWarnNoAwaitAct = true;
-                        error("You called act(async () => ...) without await. This could lead to unexpected testing behaviour, interleaving multiple act calls and mixing their scopes. You should - await act(async () => ...);");
-                      }
-                    });
-                  }
-                }
-                return thenable;
-              } else {
-                var returnValue = result;
-                popActScope(prevActScopeDepth);
-                if (actScopeDepth === 0) {
-                  var _queue = ReactCurrentActQueue.current;
-                  if (_queue !== null) {
-                    flushActQueue(_queue);
-                    ReactCurrentActQueue.current = null;
-                  }
-                  var _thenable = {
-                    then: function(resolve, reject) {
-                      if (ReactCurrentActQueue.current === null) {
-                        ReactCurrentActQueue.current = [];
-                        recursivelyFlushAsyncActWork(returnValue, resolve, reject);
-                      } else {
-                        resolve(returnValue);
-                      }
-                    }
-                  };
-                  return _thenable;
-                } else {
-                  var _thenable2 = {
-                    then: function(resolve, reject) {
-                      resolve(returnValue);
-                    }
-                  };
-                  return _thenable2;
-                }
-              }
-            }
-          }
-          function popActScope(prevActScopeDepth) {
-            {
-              if (prevActScopeDepth !== actScopeDepth - 1) {
-                error("You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before making a new one. ");
-              }
-              actScopeDepth = prevActScopeDepth;
-            }
-          }
-          function recursivelyFlushAsyncActWork(returnValue, resolve, reject) {
-            {
-              var queue = ReactCurrentActQueue.current;
-              if (queue !== null) {
-                try {
-                  flushActQueue(queue);
-                  enqueueTask(function() {
-                    if (queue.length === 0) {
-                      ReactCurrentActQueue.current = null;
-                      resolve(returnValue);
-                    } else {
-                      recursivelyFlushAsyncActWork(returnValue, resolve, reject);
-                    }
-                  });
-                } catch (error2) {
-                  reject(error2);
-                }
-              } else {
-                resolve(returnValue);
-              }
-            }
-          }
-          var isFlushing = false;
-          function flushActQueue(queue) {
-            {
-              if (!isFlushing) {
-                isFlushing = true;
-                var i = 0;
-                try {
-                  for (; i < queue.length; i++) {
-                    var callback = queue[i];
-                    do {
-                      callback = callback(true);
-                    } while (callback !== null);
-                  }
-                  queue.length = 0;
-                } catch (error2) {
-                  queue = queue.slice(i + 1);
-                  throw error2;
-                } finally {
-                  isFlushing = false;
-                }
-              }
+              var frozenObject = Object.freeze({});
+              /* @__PURE__ */ new Map([[frozenObject, null]]);
+              /* @__PURE__ */ new Set([frozenObject]);
+            } catch (e) {
             }
           }
           var createElement$1 = createElementWithValidation;
@@ -1822,11 +1664,7 @@
           };
           exports.Children = Children2;
           exports.Component = Component;
-          exports.Fragment = REACT_FRAGMENT_TYPE;
-          exports.Profiler = REACT_PROFILER_TYPE;
           exports.PureComponent = PureComponent;
-          exports.StrictMode = REACT_STRICT_MODE_TYPE;
-          exports.Suspense = REACT_SUSPENSE_TYPE;
           exports.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactSharedInternals;
           exports.cloneElement = cloneElement$1;
           exports.createContext = createContext3;
@@ -1837,35 +1675,25 @@
           exports.isValidElement = isValidElement2;
           exports.lazy = lazy;
           exports.memo = memo2;
-          exports.startTransition = startTransition;
-          exports.unstable_act = act;
           exports.useCallback = useCallback4;
           exports.useContext = useContext3;
           exports.useDebugValue = useDebugValue;
-          exports.useDeferredValue = useDeferredValue;
-          exports.useEffect = useEffect7;
-          exports.useId = useId;
+          exports.useEffect = useEffect5;
           exports.useImperativeHandle = useImperativeHandle;
-          exports.useInsertionEffect = useInsertionEffect;
           exports.useLayoutEffect = useLayoutEffect;
           exports.useMemo = useMemo4;
           exports.useReducer = useReducer;
           exports.useRef = useRef2;
-          exports.useState = useState6;
-          exports.useSyncExternalStore = useSyncExternalStore;
-          exports.useTransition = useTransition;
+          exports.useState = useState4;
           exports.version = ReactVersion;
-          if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop === "function") {
-            __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error());
-          }
         })();
       }
     }
   });
 
-  // ../../node_modules/react/index.js
+  // node_modules/react/index.js
   var require_react = __commonJS({
-    "../../node_modules/react/index.js"(exports, module) {
+    "node_modules/react/index.js"(exports, module) {
       "use strict";
       if (false) {
         module.exports = null;
@@ -1875,236 +1703,9 @@
     }
   });
 
-  // ../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-points/index.js
-  var require_extension_points = __commonJS({
-    "../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-points/index.js"() {
-      "use strict";
-    }
-  });
-
-  // ../../node_modules/@shopify/admin-ui-extensions/extension-points.js
-  var require_extension_points2 = __commonJS({
-    "../../node_modules/@shopify/admin-ui-extensions/extension-points.js"(exports, module) {
-      module.exports = require_extension_points();
-    }
-  });
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-api/LayoutApi/index.js
-  var require_LayoutApi = __commonJS({
-    "../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-api/LayoutApi/index.js"(exports) {
-      "use strict";
-      Object.defineProperty(exports, "__esModule", {
-        value: true
-      });
-      exports.isLayoutApi = isLayoutApi2;
-      function isLayoutApi2(api) {
-        return "layout" in api;
-      }
-    }
-  });
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-api/LocaleApi/index.js
-  var require_LocaleApi = __commonJS({
-    "../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-api/LocaleApi/index.js"(exports) {
-      "use strict";
-      Object.defineProperty(exports, "__esModule", {
-        value: true
-      });
-      exports.isLocaleApi = isLocaleApi2;
-      function isLocaleApi2(api) {
-        return "locale" in api;
-      }
-    }
-  });
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-api/ContainerApi/index.js
-  var require_ContainerApi = __commonJS({
-    "../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-api/ContainerApi/index.js"(exports) {
-      "use strict";
-      Object.defineProperty(exports, "__esModule", {
-        value: true
-      });
-      exports.isContainerApi = isContainerApi2;
-      function isContainerApi2(api) {
-        return "container" in api;
-      }
-    }
-  });
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-api/DataApi/index.js
-  var require_DataApi = __commonJS({
-    "../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-api/DataApi/index.js"(exports) {
-      "use strict";
-      Object.defineProperty(exports, "__esModule", {
-        value: true
-      });
-      exports.isDataApi = isDataApi2;
-      function isDataApi2(api) {
-        return "data" in api;
-      }
-    }
-  });
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-api/SessionTokenApi/index.js
-  var require_SessionTokenApi = __commonJS({
-    "../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-api/SessionTokenApi/index.js"(exports) {
-      "use strict";
-      Object.defineProperty(exports, "__esModule", {
-        value: true
-      });
-      exports.isSessionTokenApi = isSessionTokenApi2;
-      function isSessionTokenApi2(api) {
-        return "sessionToken" in api;
-      }
-    }
-  });
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-api/ToastApi/index.js
-  var require_ToastApi = __commonJS({
-    "../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-api/ToastApi/index.js"(exports) {
-      "use strict";
-      Object.defineProperty(exports, "__esModule", {
-        value: true
-      });
-      exports.isToastApi = isToastApi2;
-      function isToastApi2(api) {
-        return "toast" in api;
-      }
-    }
-  });
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-api/index.js
-  var require_extension_api = __commonJS({
-    "../../node_modules/@shopify/admin-ui-extensions/build/cjs/extension-api/index.js"(exports) {
-      "use strict";
-      Object.defineProperty(exports, "__esModule", {
-        value: true
-      });
-      Object.defineProperty(exports, "isLayoutApi", {
-        enumerable: true,
-        get: function get() {
-          return _LayoutApi.isLayoutApi;
-        }
-      });
-      Object.defineProperty(exports, "isLocaleApi", {
-        enumerable: true,
-        get: function get() {
-          return _LocaleApi.isLocaleApi;
-        }
-      });
-      Object.defineProperty(exports, "isContainerApi", {
-        enumerable: true,
-        get: function get() {
-          return _ContainerApi.isContainerApi;
-        }
-      });
-      Object.defineProperty(exports, "isDataApi", {
-        enumerable: true,
-        get: function get() {
-          return _DataApi.isDataApi;
-        }
-      });
-      Object.defineProperty(exports, "isSessionTokenApi", {
-        enumerable: true,
-        get: function get() {
-          return _SessionTokenApi.isSessionTokenApi;
-        }
-      });
-      Object.defineProperty(exports, "isToastApi", {
-        enumerable: true,
-        get: function get() {
-          return _ToastApi.isToastApi;
-        }
-      });
-      var _LayoutApi = require_LayoutApi();
-      var _LocaleApi = require_LocaleApi();
-      var _ContainerApi = require_ContainerApi();
-      var _DataApi = require_DataApi();
-      var _SessionTokenApi = require_SessionTokenApi();
-      var _ToastApi = require_ToastApi();
-    }
-  });
-
-  // ../../node_modules/@shopify/admin-ui-extensions/extension-api.js
-  var require_extension_api2 = __commonJS({
-    "../../node_modules/@shopify/admin-ui-extensions/extension-api.js"(exports, module) {
-      module.exports = require_extension_api();
-    }
-  });
-
-  // ../../node_modules/object-assign/index.js
-  var require_object_assign = __commonJS({
-    "../../node_modules/object-assign/index.js"(exports, module) {
-      "use strict";
-      var getOwnPropertySymbols = Object.getOwnPropertySymbols;
-      var hasOwnProperty2 = Object.prototype.hasOwnProperty;
-      var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-      function toObject(val) {
-        if (val === null || val === void 0) {
-          throw new TypeError("Object.assign cannot be called with null or undefined");
-        }
-        return Object(val);
-      }
-      function shouldUseNative() {
-        try {
-          if (!Object.assign) {
-            return false;
-          }
-          var test1 = new String("abc");
-          test1[5] = "de";
-          if (Object.getOwnPropertyNames(test1)[0] === "5") {
-            return false;
-          }
-          var test2 = {};
-          for (var i = 0; i < 10; i++) {
-            test2["_" + String.fromCharCode(i)] = i;
-          }
-          var order2 = Object.getOwnPropertyNames(test2).map(function(n) {
-            return test2[n];
-          });
-          if (order2.join("") !== "0123456789") {
-            return false;
-          }
-          var test3 = {};
-          "abcdefghijklmnopqrst".split("").forEach(function(letter) {
-            test3[letter] = letter;
-          });
-          if (Object.keys(Object.assign({}, test3)).join("") !== "abcdefghijklmnopqrst") {
-            return false;
-          }
-          return true;
-        } catch (err) {
-          return false;
-        }
-      }
-      module.exports = shouldUseNative() ? Object.assign : function(target, source) {
-        var from;
-        var to = toObject(target);
-        var symbols;
-        for (var s = 1; s < arguments.length; s++) {
-          from = Object(arguments[s]);
-          for (var key in from) {
-            if (hasOwnProperty2.call(from, key)) {
-              to[key] = from[key];
-            }
-          }
-          if (getOwnPropertySymbols) {
-            symbols = getOwnPropertySymbols(from);
-            for (var i = 0; i < symbols.length; i++) {
-              if (propIsEnumerable.call(from, symbols[i])) {
-                to[symbols[i]] = from[symbols[i]];
-              }
-            }
-          }
-        }
-        return to;
-      };
-    }
-  });
-
-  // ../../node_modules/scheduler/cjs/scheduler.development.js
+  // node_modules/scheduler/cjs/scheduler.development.js
   var require_scheduler_development = __commonJS({
-    "../../node_modules/scheduler/cjs/scheduler.development.js"(exports) {
+    "node_modules/scheduler/cjs/scheduler.development.js"(exports) {
       "use strict";
       if (true) {
         (function() {
@@ -2578,9 +2179,9 @@
     }
   });
 
-  // ../../node_modules/scheduler/index.js
+  // node_modules/scheduler/index.js
   var require_scheduler = __commonJS({
-    "../../node_modules/scheduler/index.js"(exports, module) {
+    "node_modules/scheduler/index.js"(exports, module) {
       "use strict";
       if (false) {
         module.exports = null;
@@ -2590,9 +2191,9 @@
     }
   });
 
-  // ../../node_modules/scheduler/cjs/scheduler-tracing.development.js
+  // node_modules/scheduler/cjs/scheduler-tracing.development.js
   var require_scheduler_tracing_development = __commonJS({
-    "../../node_modules/scheduler/cjs/scheduler-tracing.development.js"(exports) {
+    "node_modules/scheduler/cjs/scheduler-tracing.development.js"(exports) {
       "use strict";
       if (true) {
         (function() {
@@ -2604,7 +2205,7 @@
           exports.__subscriberRef = null;
           {
             exports.__interactionsRef = {
-              current: new Set()
+              current: /* @__PURE__ */ new Set()
             };
             exports.__subscriberRef = {
               current: null
@@ -2612,7 +2213,7 @@
           }
           function unstable_clear(callback) {
             var prevInteractions = exports.__interactionsRef.current;
-            exports.__interactionsRef.current = new Set();
+            exports.__interactionsRef.current = /* @__PURE__ */ new Set();
             try {
               return callback();
             } finally {
@@ -2733,7 +2334,7 @@
           }
           var subscribers = null;
           {
-            subscribers = new Set();
+            subscribers = /* @__PURE__ */ new Set();
           }
           function unstable_subscribe(subscriber) {
             {
@@ -2872,9 +2473,9 @@
     }
   });
 
-  // ../../node_modules/scheduler/tracing.js
+  // node_modules/scheduler/tracing.js
   var require_tracing = __commonJS({
-    "../../node_modules/scheduler/tracing.js"(exports, module) {
+    "node_modules/scheduler/tracing.js"(exports, module) {
       "use strict";
       if (false) {
         module.exports = null;
@@ -2884,9 +2485,9 @@
     }
   });
 
-  // ../../node_modules/react-reconciler/cjs/react-reconciler.development.js
+  // node_modules/react-reconciler/cjs/react-reconciler.development.js
   var require_react_reconciler_development = __commonJS({
-    "../../node_modules/react-reconciler/cjs/react-reconciler.development.js"(exports, module) {
+    "node_modules/react-reconciler/cjs/react-reconciler.development.js"(exports, module) {
       "use strict";
       if (true) {
         module.exports = function $$$reconciler($$$hostConfig) {
@@ -2935,7 +2536,7 @@
           var HostPortal = 4;
           var HostComponent = 5;
           var HostText = 6;
-          var Fragment = 7;
+          var Fragment4 = 7;
           var Mode = 8;
           var ContextConsumer = 9;
           var ContextProvider = 10;
@@ -4789,7 +4390,7 @@
             var pendingUNSAFE_ComponentWillReceivePropsWarnings = [];
             var pendingComponentWillUpdateWarnings = [];
             var pendingUNSAFE_ComponentWillUpdateWarnings = [];
-            var didWarnAboutUnsafeLifecycles = new Set();
+            var didWarnAboutUnsafeLifecycles = /* @__PURE__ */ new Set();
             ReactStrictModeWarnings.recordUnsafeLifecycleWarnings = function(fiber, instance) {
               if (didWarnAboutUnsafeLifecycles.has(fiber.type)) {
                 return;
@@ -4814,7 +4415,7 @@
               }
             };
             ReactStrictModeWarnings.flushPendingUnsafeLifecycleWarnings = function() {
-              var componentWillMountUniqueNames = new Set();
+              var componentWillMountUniqueNames = /* @__PURE__ */ new Set();
               if (pendingComponentWillMountWarnings.length > 0) {
                 pendingComponentWillMountWarnings.forEach(function(fiber) {
                   componentWillMountUniqueNames.add(getComponentName(fiber.type) || "Component");
@@ -4822,7 +4423,7 @@
                 });
                 pendingComponentWillMountWarnings = [];
               }
-              var UNSAFE_componentWillMountUniqueNames = new Set();
+              var UNSAFE_componentWillMountUniqueNames = /* @__PURE__ */ new Set();
               if (pendingUNSAFE_ComponentWillMountWarnings.length > 0) {
                 pendingUNSAFE_ComponentWillMountWarnings.forEach(function(fiber) {
                   UNSAFE_componentWillMountUniqueNames.add(getComponentName(fiber.type) || "Component");
@@ -4830,7 +4431,7 @@
                 });
                 pendingUNSAFE_ComponentWillMountWarnings = [];
               }
-              var componentWillReceivePropsUniqueNames = new Set();
+              var componentWillReceivePropsUniqueNames = /* @__PURE__ */ new Set();
               if (pendingComponentWillReceivePropsWarnings.length > 0) {
                 pendingComponentWillReceivePropsWarnings.forEach(function(fiber) {
                   componentWillReceivePropsUniqueNames.add(getComponentName(fiber.type) || "Component");
@@ -4838,7 +4439,7 @@
                 });
                 pendingComponentWillReceivePropsWarnings = [];
               }
-              var UNSAFE_componentWillReceivePropsUniqueNames = new Set();
+              var UNSAFE_componentWillReceivePropsUniqueNames = /* @__PURE__ */ new Set();
               if (pendingUNSAFE_ComponentWillReceivePropsWarnings.length > 0) {
                 pendingUNSAFE_ComponentWillReceivePropsWarnings.forEach(function(fiber) {
                   UNSAFE_componentWillReceivePropsUniqueNames.add(getComponentName(fiber.type) || "Component");
@@ -4846,7 +4447,7 @@
                 });
                 pendingUNSAFE_ComponentWillReceivePropsWarnings = [];
               }
-              var componentWillUpdateUniqueNames = new Set();
+              var componentWillUpdateUniqueNames = /* @__PURE__ */ new Set();
               if (pendingComponentWillUpdateWarnings.length > 0) {
                 pendingComponentWillUpdateWarnings.forEach(function(fiber) {
                   componentWillUpdateUniqueNames.add(getComponentName(fiber.type) || "Component");
@@ -4854,7 +4455,7 @@
                 });
                 pendingComponentWillUpdateWarnings = [];
               }
-              var UNSAFE_componentWillUpdateUniqueNames = new Set();
+              var UNSAFE_componentWillUpdateUniqueNames = /* @__PURE__ */ new Set();
               if (pendingUNSAFE_ComponentWillUpdateWarnings.length > 0) {
                 pendingUNSAFE_ComponentWillUpdateWarnings.forEach(function(fiber) {
                   UNSAFE_componentWillUpdateUniqueNames.add(getComponentName(fiber.type) || "Component");
@@ -4887,8 +4488,8 @@
                 warn("componentWillUpdate has been renamed, and is not recommended for use. See https://reactjs.org/link/unsafe-component-lifecycles for details.\n\n* Move data fetching code or side effects to componentDidUpdate.\n* Rename componentWillUpdate to UNSAFE_componentWillUpdate to suppress this warning in non-strict mode. In React 18.x, only the UNSAFE_ name will work. To rename all deprecated lifecycles to their new names, you can run `npx react-codemod rename-unsafe-lifecycles` in your project source folder.\n\nPlease update the following components: %s", _sortedNames5);
               }
             };
-            var pendingLegacyContextWarning = new Map();
-            var didWarnAboutLegacyContext = new Set();
+            var pendingLegacyContextWarning = /* @__PURE__ */ new Map();
+            var didWarnAboutLegacyContext = /* @__PURE__ */ new Set();
             ReactStrictModeWarnings.recordLegacyContextWarning = function(fiber, instance) {
               var strictRoot = findStrictRoot(fiber);
               if (strictRoot === null) {
@@ -4913,7 +4514,7 @@
                   return;
                 }
                 var firstFiber = fiberArray[0];
-                var uniqueNames = new Set();
+                var uniqueNames = /* @__PURE__ */ new Set();
                 fiberArray.forEach(function(fiber) {
                   uniqueNames.add(getComponentName(fiber.type) || "Component");
                   didWarnAboutLegacyContext.add(fiber.type);
@@ -4934,7 +4535,7 @@
               pendingUNSAFE_ComponentWillReceivePropsWarnings = [];
               pendingComponentWillUpdateWarnings = [];
               pendingUNSAFE_ComponentWillUpdateWarnings = [];
-              pendingLegacyContextWarning = new Map();
+              pendingLegacyContextWarning = /* @__PURE__ */ new Map();
             };
           }
           function resolveDefaultProps(Component, baseProps) {
@@ -5492,15 +5093,15 @@
           var didWarnAboutContextTypeAndContextTypes;
           var didWarnAboutInvalidateContextType;
           {
-            didWarnAboutStateAssignmentForComponent = new Set();
-            didWarnAboutUninitializedState = new Set();
-            didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate = new Set();
-            didWarnAboutLegacyLifecyclesAndDerivedState = new Set();
-            didWarnAboutDirectlyAssigningPropsToState = new Set();
-            didWarnAboutUndefinedDerivedState = new Set();
-            didWarnAboutContextTypeAndContextTypes = new Set();
-            didWarnAboutInvalidateContextType = new Set();
-            var didWarnOnInvalidCallback = new Set();
+            didWarnAboutStateAssignmentForComponent = /* @__PURE__ */ new Set();
+            didWarnAboutUninitializedState = /* @__PURE__ */ new Set();
+            didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate = /* @__PURE__ */ new Set();
+            didWarnAboutLegacyLifecyclesAndDerivedState = /* @__PURE__ */ new Set();
+            didWarnAboutDirectlyAssigningPropsToState = /* @__PURE__ */ new Set();
+            didWarnAboutUndefinedDerivedState = /* @__PURE__ */ new Set();
+            didWarnAboutContextTypeAndContextTypes = /* @__PURE__ */ new Set();
+            didWarnAboutInvalidateContextType = /* @__PURE__ */ new Set();
+            var didWarnOnInvalidCallback = /* @__PURE__ */ new Set();
             warnOnInvalidCallback = function(callback, callerName) {
               if (callback === null || typeof callback === "function") {
                 return;
@@ -6172,7 +5773,7 @@
               return null;
             }
             function mapRemainingChildren(returnFiber, currentFirstChild) {
-              var existingChildren = new Map();
+              var existingChildren = /* @__PURE__ */ new Map();
               var existingChild = currentFirstChild;
               while (existingChild !== null) {
                 if (existingChild.key !== null) {
@@ -6256,7 +5857,7 @@
               }
             }
             function updateFragment2(returnFiber, current2, fragment, lanes, key) {
-              if (current2 === null || current2.tag !== Fragment) {
+              if (current2 === null || current2.tag !== Fragment4) {
                 var created = createFiberFromFragment(fragment, returnFiber.mode, lanes, key);
                 created.return = returnFiber;
                 return created;
@@ -6389,7 +5990,7 @@
                       break;
                     }
                     if (knownKeys === null) {
-                      knownKeys = new Set();
+                      knownKeys = /* @__PURE__ */ new Set();
                       knownKeys.add(key);
                       break;
                     }
@@ -6624,7 +6225,7 @@
               while (child !== null) {
                 if (child.key === key) {
                   switch (child.tag) {
-                    case Fragment: {
+                    case Fragment4: {
                       if (element.type === REACT_FRAGMENT_TYPE) {
                         deleteRemainingChildren(returnFiber, child.sibling);
                         var existing = useFiber(child, element.props.children);
@@ -7216,7 +6817,7 @@
           var didWarnAboutUseOpaqueIdentifier;
           {
             didWarnAboutUseOpaqueIdentifier = {};
-            didWarnAboutMismatchedHooksForComponent = new Set();
+            didWarnAboutMismatchedHooksForComponent = /* @__PURE__ */ new Set();
           }
           var renderLanes = NoLanes;
           var currentlyRenderingFiber$1 = null;
@@ -7832,7 +7433,7 @@
           }
           function mountEffect(create, deps) {
             {
-              if (typeof jest !== "undefined") {
+              if ("undefined" !== typeof jest) {
                 warnIfNotCurrentlyActingEffectsInDEV(currentlyRenderingFiber$1);
               }
             }
@@ -7840,7 +7441,7 @@
           }
           function updateEffect(create, deps) {
             {
-              if (typeof jest !== "undefined") {
+              if ("undefined" !== typeof jest) {
                 warnIfNotCurrentlyActingEffectsInDEV(currentlyRenderingFiber$1);
               }
             }
@@ -8125,7 +7726,7 @@
                 }
               }
               {
-                if (typeof jest !== "undefined") {
+                if ("undefined" !== typeof jest) {
                   warnIfNotScopedWithMatchingAct(fiber);
                   warnIfNotCurrentlyActingUpdatesInDev(fiber);
                 }
@@ -8945,7 +8546,12 @@
               if (workInProgress2.type !== workInProgress2.elementType) {
                 var innerPropTypes = Component.propTypes;
                 if (innerPropTypes) {
-                  checkPropTypes(innerPropTypes, nextProps, "prop", getComponentName(Component));
+                  checkPropTypes(
+                    innerPropTypes,
+                    nextProps,
+                    "prop",
+                    getComponentName(Component)
+                  );
                 }
               }
             }
@@ -8993,7 +8599,12 @@
               {
                 var innerPropTypes = type.propTypes;
                 if (innerPropTypes) {
-                  checkPropTypes(innerPropTypes, nextProps, "prop", getComponentName(type));
+                  checkPropTypes(
+                    innerPropTypes,
+                    nextProps,
+                    "prop",
+                    getComponentName(type)
+                  );
                 }
               }
               var child = createFiberFromTypeAndProps(Component.type, null, nextProps, workInProgress2, workInProgress2.mode, renderLanes2);
@@ -9006,7 +8617,12 @@
               var _type = Component.type;
               var _innerPropTypes = _type.propTypes;
               if (_innerPropTypes) {
-                checkPropTypes(_innerPropTypes, nextProps, "prop", getComponentName(_type));
+                checkPropTypes(
+                  _innerPropTypes,
+                  nextProps,
+                  "prop",
+                  getComponentName(_type)
+                );
               }
             }
             var currentChild = current2.child;
@@ -9040,7 +8656,12 @@
                   }
                   var outerPropTypes = outerMemoType && outerMemoType.propTypes;
                   if (outerPropTypes) {
-                    checkPropTypes(outerPropTypes, nextProps, "prop", getComponentName(outerMemoType));
+                    checkPropTypes(
+                      outerPropTypes,
+                      nextProps,
+                      "prop",
+                      getComponentName(outerMemoType)
+                    );
                   }
                 }
               }
@@ -9143,7 +8764,12 @@
               if (workInProgress2.type !== workInProgress2.elementType) {
                 var innerPropTypes = Component.propTypes;
                 if (innerPropTypes) {
-                  checkPropTypes(innerPropTypes, nextProps, "prop", getComponentName(Component));
+                  checkPropTypes(
+                    innerPropTypes,
+                    nextProps,
+                    "prop",
+                    getComponentName(Component)
+                  );
                 }
               }
             }
@@ -9181,7 +8807,12 @@
               if (workInProgress2.type !== workInProgress2.elementType) {
                 var innerPropTypes = Component.propTypes;
                 if (innerPropTypes) {
-                  checkPropTypes(innerPropTypes, nextProps, "prop", getComponentName(Component));
+                  checkPropTypes(
+                    innerPropTypes,
+                    nextProps,
+                    "prop",
+                    getComponentName(Component)
+                  );
                 }
               }
             }
@@ -9386,11 +9017,23 @@
                   if (workInProgress2.type !== workInProgress2.elementType) {
                     var outerPropTypes = Component.propTypes;
                     if (outerPropTypes) {
-                      checkPropTypes(outerPropTypes, resolvedProps, "prop", getComponentName(Component));
+                      checkPropTypes(
+                        outerPropTypes,
+                        resolvedProps,
+                        "prop",
+                        getComponentName(Component)
+                      );
                     }
                   }
                 }
-                child = updateMemoComponent(null, workInProgress2, Component, resolveDefaultProps(Component.type, resolvedProps), updateLanes, renderLanes2);
+                child = updateMemoComponent(
+                  null,
+                  workInProgress2,
+                  Component,
+                  resolveDefaultProps(Component.type, resolvedProps),
+                  updateLanes,
+                  renderLanes2
+                );
                 return child;
               }
             }
@@ -9958,7 +9601,14 @@
                     tail = lastContentRow.sibling;
                     lastContentRow.sibling = null;
                   }
-                  initSuspenseListRenderState(workInProgress2, false, tail, lastContentRow, tailMode, workInProgress2.lastEffect);
+                  initSuspenseListRenderState(
+                    workInProgress2,
+                    false,
+                    tail,
+                    lastContentRow,
+                    tailMode,
+                    workInProgress2.lastEffect
+                  );
                   break;
                 }
                 case "backwards": {
@@ -9976,11 +9626,25 @@
                     _tail = row;
                     row = nextRow;
                   }
-                  initSuspenseListRenderState(workInProgress2, true, _tail, null, tailMode, workInProgress2.lastEffect);
+                  initSuspenseListRenderState(
+                    workInProgress2,
+                    true,
+                    _tail,
+                    null,
+                    tailMode,
+                    workInProgress2.lastEffect
+                  );
                   break;
                 }
                 case "together": {
-                  initSuspenseListRenderState(workInProgress2, false, null, null, void 0, workInProgress2.lastEffect);
+                  initSuspenseListRenderState(
+                    workInProgress2,
+                    false,
+                    null,
+                    null,
+                    void 0,
+                    workInProgress2.lastEffect
+                  );
                   break;
                 }
                 default: {
@@ -10273,7 +9937,7 @@
                 var _resolvedProps2 = workInProgress2.elementType === type ? _unresolvedProps2 : resolveDefaultProps(type, _unresolvedProps2);
                 return updateForwardRef(current2, workInProgress2, type, _resolvedProps2, renderLanes2);
               }
-              case Fragment:
+              case Fragment4:
                 return updateFragment(current2, workInProgress2, renderLanes2);
               case Mode:
                 return updateMode(current2, workInProgress2, renderLanes2);
@@ -10291,7 +9955,12 @@
                   if (workInProgress2.type !== workInProgress2.elementType) {
                     var outerPropTypes = _type2.propTypes;
                     if (outerPropTypes) {
-                      checkPropTypes(outerPropTypes, _resolvedProps3, "prop", getComponentName(_type2));
+                      checkPropTypes(
+                        outerPropTypes,
+                        _resolvedProps3,
+                        "prop",
+                        getComponentName(_type2)
+                      );
                     }
                   }
                 }
@@ -10627,7 +10296,7 @@
               case SimpleMemoComponent:
               case FunctionComponent:
               case ForwardRef:
-              case Fragment:
+              case Fragment4:
               case Mode:
               case Profiler:
               case ContextConsumer:
@@ -11127,12 +10796,12 @@
             var threadIDs;
             if (pingCache === null) {
               pingCache = root.pingCache = new PossiblyWeakMap$1();
-              threadIDs = new Set();
+              threadIDs = /* @__PURE__ */ new Set();
               pingCache.set(wakeable, threadIDs);
             } else {
               threadIDs = pingCache.get(wakeable);
               if (threadIDs === void 0) {
-                threadIDs = new Set();
+                threadIDs = /* @__PURE__ */ new Set();
                 pingCache.set(wakeable, threadIDs);
               }
             }
@@ -11164,7 +10833,7 @@
                 if (_workInProgress.tag === SuspenseComponent && shouldCaptureSuspense(_workInProgress, hasInvisibleParentBoundary)) {
                   var wakeables = _workInProgress.updateQueue;
                   if (wakeables === null) {
-                    var updateQueue = new Set();
+                    var updateQueue = /* @__PURE__ */ new Set();
                     updateQueue.add(wakeable);
                     _workInProgress.updateQueue = updateQueue;
                   } else {
@@ -11338,7 +11007,7 @@
           }
           var didWarnAboutUndefinedSnapshotBeforeUpdate = null;
           {
-            didWarnAboutUndefinedSnapshotBeforeUpdate = new Set();
+            didWarnAboutUndefinedSnapshotBeforeUpdate = /* @__PURE__ */ new Set();
           }
           var PossiblyWeakSet = typeof WeakSet === "function" ? WeakSet : Set;
           var callComponentWillUnmountWithTimer = function(current2, instance) {
@@ -12799,7 +12468,7 @@
             } else {
               if ((executionContext & DiscreteEventContext) !== NoContext && (priorityLevel === UserBlockingPriority$1 || priorityLevel === ImmediatePriority$1)) {
                 if (rootsWithPendingDiscreteUpdates === null) {
-                  rootsWithPendingDiscreteUpdates = new Set([root]);
+                  rootsWithPendingDiscreteUpdates = /* @__PURE__ */ new Set([root]);
                 } else {
                   rootsWithPendingDiscreteUpdates.add(root);
                 }
@@ -13937,7 +13606,7 @@
           }
           function markLegacyErrorBoundaryAsFailed(instance) {
             if (legacyErrorBoundariesThatAlreadyFailed === null) {
-              legacyErrorBoundariesThatAlreadyFailed = new Set([instance]);
+              legacyErrorBoundariesThatAlreadyFailed = /* @__PURE__ */ new Set([instance]);
             } else {
               legacyErrorBoundariesThatAlreadyFailed.add(instance);
             }
@@ -14086,7 +13755,7 @@
                 }
                 didWarnStateUpdateForNotYetMountedComponent.add(componentName);
               } else {
-                didWarnStateUpdateForNotYetMountedComponent = new Set([componentName]);
+                didWarnStateUpdateForNotYetMountedComponent = /* @__PURE__ */ new Set([componentName]);
               }
               var previousFiber = current;
               try {
@@ -14118,7 +13787,7 @@
                 }
                 didWarnStateUpdateForUnmountedComponent.add(componentName);
               } else {
-                didWarnStateUpdateForUnmountedComponent = new Set([componentName]);
+                didWarnStateUpdateForUnmountedComponent = /* @__PURE__ */ new Set([componentName]);
               }
               if (isFlushingPassiveEffects)
                 ;
@@ -14168,7 +13837,7 @@
           var didWarnAboutUpdateInRender = false;
           var didWarnAboutUpdateInRenderForAnotherComponent;
           {
-            didWarnAboutUpdateInRenderForAnotherComponent = new Set();
+            didWarnAboutUpdateInRenderForAnotherComponent = /* @__PURE__ */ new Set();
           }
           function warnAboutRenderPhaseUpdatesInDEV(fiber) {
             {
@@ -14294,7 +13963,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             scheduleInteractions(root, lane, tracing.__interactionsRef.current);
           }
           function startWorkOnPendingInteractions(root, lanes) {
-            var interactions = new Set();
+            var interactions = /* @__PURE__ */ new Set();
             root.pendingInteractionMap.forEach(function(scheduledInteractions, scheduledLane) {
               if (includesSomeLane(lanes, scheduledLane)) {
                 scheduledInteractions.forEach(function(interaction) {
@@ -14585,7 +14254,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 return;
               }
               if (failedBoundaries === null) {
-                failedBoundaries = new WeakSet();
+                failedBoundaries = /* @__PURE__ */ new WeakSet();
               }
               failedBoundaries.add(fiber);
             }
@@ -14667,7 +14336,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           }
           var findHostInstancesForRefresh = function(root, families) {
             {
-              var hostInstances = new Set();
+              var hostInstances = /* @__PURE__ */ new Set();
               var types = new Set(families.map(function(family) {
                 return family.current;
               }));
@@ -14766,8 +14435,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             hasBadMapPolyfill = false;
             try {
               var nonExtensibleObject = Object.preventExtensions({});
-              new Map([[nonExtensibleObject, null]]);
-              new Set([nonExtensibleObject]);
+              /* @__PURE__ */ new Map([[nonExtensibleObject, null]]);
+              /* @__PURE__ */ new Set([nonExtensibleObject]);
             } catch (e) {
               hasBadMapPolyfill = true;
             }
@@ -15068,7 +14737,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             return fiber;
           }
           function createFiberFromFragment(elements, mode, lanes, key) {
-            var fiber = createFiber(Fragment, elements, key, mode);
+            var fiber = createFiber(Fragment4, elements, key, mode);
             fiber.lanes = lanes;
             return fiber;
           }
@@ -15214,8 +14883,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             }
             {
               this.interactionThreadID = tracing.unstable_getThreadID();
-              this.memoizedInteractions = new Set();
-              this.pendingInteractionMap = new Map();
+              this.memoizedInteractions = /* @__PURE__ */ new Set();
+              this.pendingInteractionMap = /* @__PURE__ */ new Map();
             }
             {
               switch (tag) {
@@ -15357,7 +15026,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             var current$1 = container.current;
             var eventTime = requestEventTime();
             {
-              if (typeof jest !== "undefined") {
+              if ("undefined" !== typeof jest) {
                 warnIfUnmockedScheduler(current$1);
                 warnIfNotScopedWithMatchingAct(current$1);
               }
@@ -15526,7 +15195,12 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   delete updated[oldKey];
                 }
               } else {
-                updated[oldKey] = copyWithRenameImpl(obj[oldKey], oldPath, newPath, index2 + 1);
+                updated[oldKey] = copyWithRenameImpl(
+                  obj[oldKey],
+                  oldPath,
+                  newPath,
+                  index2 + 1
+                );
               }
               return updated;
             };
@@ -15704,9 +15378,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }
   });
 
-  // ../../node_modules/react-reconciler/index.js
+  // node_modules/react-reconciler/index.js
   var require_react_reconciler = __commonJS({
-    "../../node_modules/react-reconciler/index.js"(exports, module) {
+    "node_modules/react-reconciler/index.js"(exports, module) {
       "use strict";
       if (false) {
         module.exports = null;
@@ -15716,28 +15390,59 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }
   });
 
-  // ../../node_modules/react/cjs/react-jsx-runtime.development.js
+  // node_modules/react/cjs/react-jsx-runtime.development.js
   var require_react_jsx_runtime_development = __commonJS({
-    "../../node_modules/react/cjs/react-jsx-runtime.development.js"(exports) {
+    "node_modules/react/cjs/react-jsx-runtime.development.js"(exports) {
       "use strict";
       if (true) {
         (function() {
           "use strict";
           var React6 = require_react();
-          var REACT_ELEMENT_TYPE = Symbol.for("react.element");
-          var REACT_PORTAL_TYPE = Symbol.for("react.portal");
-          var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
-          var REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode");
-          var REACT_PROFILER_TYPE = Symbol.for("react.profiler");
-          var REACT_PROVIDER_TYPE = Symbol.for("react.provider");
-          var REACT_CONTEXT_TYPE = Symbol.for("react.context");
-          var REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref");
-          var REACT_SUSPENSE_TYPE = Symbol.for("react.suspense");
-          var REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list");
-          var REACT_MEMO_TYPE = Symbol.for("react.memo");
-          var REACT_LAZY_TYPE = Symbol.for("react.lazy");
-          var REACT_OFFSCREEN_TYPE = Symbol.for("react.offscreen");
-          var MAYBE_ITERATOR_SYMBOL = Symbol.iterator;
+          var _assign = require_object_assign();
+          var REACT_ELEMENT_TYPE = 60103;
+          var REACT_PORTAL_TYPE = 60106;
+          exports.Fragment = 60107;
+          var REACT_STRICT_MODE_TYPE = 60108;
+          var REACT_PROFILER_TYPE = 60114;
+          var REACT_PROVIDER_TYPE = 60109;
+          var REACT_CONTEXT_TYPE = 60110;
+          var REACT_FORWARD_REF_TYPE = 60112;
+          var REACT_SUSPENSE_TYPE = 60113;
+          var REACT_SUSPENSE_LIST_TYPE = 60120;
+          var REACT_MEMO_TYPE = 60115;
+          var REACT_LAZY_TYPE = 60116;
+          var REACT_BLOCK_TYPE = 60121;
+          var REACT_SERVER_BLOCK_TYPE = 60122;
+          var REACT_FUNDAMENTAL_TYPE = 60117;
+          var REACT_SCOPE_TYPE = 60119;
+          var REACT_OPAQUE_ID_TYPE = 60128;
+          var REACT_DEBUG_TRACING_MODE_TYPE = 60129;
+          var REACT_OFFSCREEN_TYPE = 60130;
+          var REACT_LEGACY_HIDDEN_TYPE = 60131;
+          if (typeof Symbol === "function" && Symbol.for) {
+            var symbolFor = Symbol.for;
+            REACT_ELEMENT_TYPE = symbolFor("react.element");
+            REACT_PORTAL_TYPE = symbolFor("react.portal");
+            exports.Fragment = symbolFor("react.fragment");
+            REACT_STRICT_MODE_TYPE = symbolFor("react.strict_mode");
+            REACT_PROFILER_TYPE = symbolFor("react.profiler");
+            REACT_PROVIDER_TYPE = symbolFor("react.provider");
+            REACT_CONTEXT_TYPE = symbolFor("react.context");
+            REACT_FORWARD_REF_TYPE = symbolFor("react.forward_ref");
+            REACT_SUSPENSE_TYPE = symbolFor("react.suspense");
+            REACT_SUSPENSE_LIST_TYPE = symbolFor("react.suspense_list");
+            REACT_MEMO_TYPE = symbolFor("react.memo");
+            REACT_LAZY_TYPE = symbolFor("react.lazy");
+            REACT_BLOCK_TYPE = symbolFor("react.block");
+            REACT_SERVER_BLOCK_TYPE = symbolFor("react.server.block");
+            REACT_FUNDAMENTAL_TYPE = symbolFor("react.fundamental");
+            REACT_SCOPE_TYPE = symbolFor("react.scope");
+            REACT_OPAQUE_ID_TYPE = symbolFor("react.opaque.id");
+            REACT_DEBUG_TRACING_MODE_TYPE = symbolFor("react.debug_trace_mode");
+            REACT_OFFSCREEN_TYPE = symbolFor("react.offscreen");
+            REACT_LEGACY_HIDDEN_TYPE = symbolFor("react.legacy_hidden");
+          }
+          var MAYBE_ITERATOR_SYMBOL = typeof Symbol === "function" && Symbol.iterator;
           var FAUX_ITERATOR_SYMBOL = "@@iterator";
           function getIteratorFn(maybeIterable) {
             if (maybeIterable === null || typeof maybeIterable !== "object") {
@@ -15752,12 +15457,10 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           var ReactSharedInternals = React6.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
           function error(format) {
             {
-              {
-                for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-                  args[_key2 - 1] = arguments[_key2];
-                }
-                printWarning("error", format, args);
+              for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+                args[_key2 - 1] = arguments[_key2];
               }
+              printWarning("error", format, args);
             }
           }
           function printWarning(level, format, args) {
@@ -15769,53 +15472,41 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 args = args.concat([stack]);
               }
               var argsWithFormat = args.map(function(item) {
-                return String(item);
+                return "" + item;
               });
               argsWithFormat.unshift("Warning: " + format);
               Function.prototype.apply.call(console[level], console, argsWithFormat);
             }
           }
           var enableScopeAPI = false;
-          var enableCacheElement = false;
-          var enableTransitionTracing = false;
-          var enableLegacyHidden = false;
-          var enableDebugTracing = false;
-          var REACT_MODULE_REFERENCE;
-          {
-            REACT_MODULE_REFERENCE = Symbol.for("react.module.reference");
-          }
           function isValidElementType(type) {
             if (typeof type === "string" || typeof type === "function") {
               return true;
             }
-            if (type === REACT_FRAGMENT_TYPE || type === REACT_PROFILER_TYPE || enableDebugTracing || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || enableLegacyHidden || type === REACT_OFFSCREEN_TYPE || enableScopeAPI || enableCacheElement || enableTransitionTracing) {
+            if (type === exports.Fragment || type === REACT_PROFILER_TYPE || type === REACT_DEBUG_TRACING_MODE_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || type === REACT_LEGACY_HIDDEN_TYPE || enableScopeAPI) {
               return true;
             }
             if (typeof type === "object" && type !== null) {
-              if (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_MODULE_REFERENCE || type.getModuleId !== void 0) {
+              if (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_BLOCK_TYPE || type[0] === REACT_SERVER_BLOCK_TYPE) {
                 return true;
               }
             }
             return false;
           }
           function getWrappedName(outerType, innerType, wrapperName) {
-            var displayName = outerType.displayName;
-            if (displayName) {
-              return displayName;
-            }
             var functionName = innerType.displayName || innerType.name || "";
-            return functionName !== "" ? wrapperName + "(" + functionName + ")" : wrapperName;
+            return outerType.displayName || (functionName !== "" ? wrapperName + "(" + functionName + ")" : wrapperName);
           }
           function getContextName(type) {
             return type.displayName || "Context";
           }
-          function getComponentNameFromType(type) {
+          function getComponentName(type) {
             if (type == null) {
               return null;
             }
             {
               if (typeof type.tag === "number") {
-                error("Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue.");
+                error("Received an unexpected object in getComponentName(). This is likely a bug in React. Please file an issue.");
               }
             }
             if (typeof type === "function") {
@@ -15825,7 +15516,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               return type;
             }
             switch (type) {
-              case REACT_FRAGMENT_TYPE:
+              case exports.Fragment:
                 return "Fragment";
               case REACT_PORTAL_TYPE:
                 return "Portal";
@@ -15849,17 +15540,15 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 case REACT_FORWARD_REF_TYPE:
                   return getWrappedName(type, type.render, "ForwardRef");
                 case REACT_MEMO_TYPE:
-                  var outerName = type.displayName || null;
-                  if (outerName !== null) {
-                    return outerName;
-                  }
-                  return getComponentNameFromType(type.type) || "Memo";
+                  return getComponentName(type.type);
+                case REACT_BLOCK_TYPE:
+                  return getComponentName(type._render);
                 case REACT_LAZY_TYPE: {
                   var lazyComponent = type;
                   var payload = lazyComponent._payload;
                   var init = lazyComponent._init;
                   try {
-                    return getComponentNameFromType(init(payload));
+                    return getComponentName(init(payload));
                   } catch (x) {
                     return null;
                   }
@@ -15868,7 +15557,6 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             }
             return null;
           }
-          var assign = Object.assign;
           var disabledDepth = 0;
           var prevLog;
           var prevInfo;
@@ -15919,25 +15607,25 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   writable: true
                 };
                 Object.defineProperties(console, {
-                  log: assign({}, props, {
+                  log: _assign({}, props, {
                     value: prevLog
                   }),
-                  info: assign({}, props, {
+                  info: _assign({}, props, {
                     value: prevInfo
                   }),
-                  warn: assign({}, props, {
+                  warn: _assign({}, props, {
                     value: prevWarn
                   }),
-                  error: assign({}, props, {
+                  error: _assign({}, props, {
                     value: prevError
                   }),
-                  group: assign({}, props, {
+                  group: _assign({}, props, {
                     value: prevGroup
                   }),
-                  groupCollapsed: assign({}, props, {
+                  groupCollapsed: _assign({}, props, {
                     value: prevGroupCollapsed
                   }),
-                  groupEnd: assign({}, props, {
+                  groupEnd: _assign({}, props, {
                     value: prevGroupEnd
                   })
                 });
@@ -16038,9 +15726,6 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                         c--;
                         if (c < 0 || sampleLines[s] !== controlLines[c]) {
                           var _frame = "\n" + sampleLines[s].replace(" at new ", " at ");
-                          if (fn.displayName && _frame.includes("<anonymous>")) {
-                            _frame = _frame.replace("<anonymous>", fn.displayName);
-                          }
                           {
                             if (typeof fn === "function") {
                               componentFrameCache.set(fn, _frame);
@@ -16104,6 +15789,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   return describeFunctionComponentFrame(type.render);
                 case REACT_MEMO_TYPE:
                   return describeUnknownElementTypeFrameInDEV(type.type, source, ownerFn);
+                case REACT_BLOCK_TYPE:
+                  return describeFunctionComponentFrame(type._render);
                 case REACT_LAZY_TYPE: {
                   var lazyComponent = type;
                   var payload = lazyComponent._payload;
@@ -16117,7 +15804,6 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             }
             return "";
           }
-          var hasOwnProperty2 = Object.prototype.hasOwnProperty;
           var loggedTypeFailures = {};
           var ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
           function setCurrentlyValidatingElement(element) {
@@ -16133,7 +15819,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           }
           function checkPropTypes(typeSpecs, values, location, componentName, element) {
             {
-              var has2 = Function.call.bind(hasOwnProperty2);
+              var has2 = Function.call.bind(Object.prototype.hasOwnProperty);
               for (var typeSpecName in typeSpecs) {
                 if (has2(typeSpecs, typeSpecName)) {
                   var error$1 = void 0;
@@ -16162,39 +15848,8 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               }
             }
           }
-          var isArrayImpl = Array.isArray;
-          function isArray(a) {
-            return isArrayImpl(a);
-          }
-          function typeName(value) {
-            {
-              var hasToStringTag = typeof Symbol === "function" && Symbol.toStringTag;
-              var type = hasToStringTag && value[Symbol.toStringTag] || value.constructor.name || "Object";
-              return type;
-            }
-          }
-          function willCoercionThrow(value) {
-            {
-              try {
-                testStringCoercion(value);
-                return false;
-              } catch (e) {
-                return true;
-              }
-            }
-          }
-          function testStringCoercion(value) {
-            return "" + value;
-          }
-          function checkKeyStringCoercion(value) {
-            {
-              if (willCoercionThrow(value)) {
-                error("The provided key is an unsupported type %s. This value must be coerced to a string before before using it here.", typeName(value));
-                return testStringCoercion(value);
-              }
-            }
-          }
           var ReactCurrentOwner = ReactSharedInternals.ReactCurrentOwner;
+          var hasOwnProperty2 = Object.prototype.hasOwnProperty;
           var RESERVED_PROPS = {
             key: true,
             ref: true,
@@ -16232,9 +15887,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           function warnIfStringRefCannotBeAutoConverted(config, self2) {
             {
               if (typeof config.ref === "string" && ReactCurrentOwner.current && self2 && ReactCurrentOwner.current.stateNode !== self2) {
-                var componentName = getComponentNameFromType(ReactCurrentOwner.current.type);
+                var componentName = getComponentName(ReactCurrentOwner.current.type);
                 if (!didWarnAboutStringRefs[componentName]) {
-                  error('Component "%s" contains the string ref "%s". Support for string refs will be removed in a future major release. This case cannot be automatically converted to an arrow function. We ask you to manually fix this case by using useRef() or createRef() instead. Learn more about using refs safely here: https://reactjs.org/link/strict-mode-string-ref', getComponentNameFromType(ReactCurrentOwner.current.type), config.ref);
+                  error('Component "%s" contains the string ref "%s". Support for string refs will be removed in a future major release. This case cannot be automatically converted to an arrow function. We ask you to manually fix this case by using useRef() or createRef() instead. Learn more about using refs safely here: https://reactjs.org/link/strict-mode-string-ref', getComponentName(ReactCurrentOwner.current.type), config.ref);
                   didWarnAboutStringRefs[componentName] = true;
                 }
               }
@@ -16313,15 +15968,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               var key = null;
               var ref = null;
               if (maybeKey !== void 0) {
-                {
-                  checkKeyStringCoercion(maybeKey);
-                }
                 key = "" + maybeKey;
               }
               if (hasValidKey(config)) {
-                {
-                  checkKeyStringCoercion(config.key);
-                }
                 key = "" + config.key;
               }
               if (hasValidRef(config)) {
@@ -16378,7 +16027,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
           function getDeclarationErrorAddendum() {
             {
               if (ReactCurrentOwner$1.current) {
-                var name = getComponentNameFromType(ReactCurrentOwner$1.current.type);
+                var name = getComponentName(ReactCurrentOwner$1.current.type);
                 if (name) {
                   return "\n\nCheck the render method of `" + name + "`.";
                 }
@@ -16422,7 +16071,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               ownerHasKeyUseWarning[currentComponentErrorInfo] = true;
               var childOwner = "";
               if (element && element._owner && element._owner !== ReactCurrentOwner$1.current) {
-                childOwner = " It was passed a child from " + getComponentNameFromType(element._owner.type) + ".";
+                childOwner = " It was passed a child from " + getComponentName(element._owner.type) + ".";
               }
               setCurrentlyValidatingElement$1(element);
               error('Each child in a list should have a unique "key" prop.%s%s See https://reactjs.org/link/warning-keys for more information.', currentComponentErrorInfo, childOwner);
@@ -16434,7 +16083,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               if (typeof node !== "object") {
                 return;
               }
-              if (isArray(node)) {
+              if (Array.isArray(node)) {
                 for (var i = 0; i < node.length; i++) {
                   var child = node[i];
                   if (isValidElement2(child)) {
@@ -16476,11 +16125,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 return;
               }
               if (propTypes) {
-                var name = getComponentNameFromType(type);
+                var name = getComponentName(type);
                 checkPropTypes(propTypes, element.props, "prop", name, element);
               } else if (type.PropTypes !== void 0 && !propTypesMisspellWarningShown) {
                 propTypesMisspellWarningShown = true;
-                var _name = getComponentNameFromType(type);
+                var _name = getComponentName(type);
                 error("Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?", _name || "Unknown");
               }
               if (typeof type.getDefaultProps === "function" && !type.getDefaultProps.isReactClassApproved) {
@@ -16524,10 +16173,10 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 var typeString;
                 if (type === null) {
                   typeString = "null";
-                } else if (isArray(type)) {
+                } else if (Array.isArray(type)) {
                   typeString = "array";
                 } else if (type !== void 0 && type.$$typeof === REACT_ELEMENT_TYPE) {
-                  typeString = "<" + (getComponentNameFromType(type.type) || "Unknown") + " />";
+                  typeString = "<" + (getComponentName(type.type) || "Unknown") + " />";
                   info = " Did you accidentally export a JSX literal instead of a component?";
                 } else {
                   typeString = typeof type;
@@ -16542,7 +16191,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                 var children = props.children;
                 if (children !== void 0) {
                   if (isStaticChildren) {
-                    if (isArray(children)) {
+                    if (Array.isArray(children)) {
                       for (var i = 0; i < children.length; i++) {
                         validateChildKeys(children[i], type);
                       }
@@ -16557,7 +16206,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
                   }
                 }
               }
-              if (type === REACT_FRAGMENT_TYPE) {
+              if (type === exports.Fragment) {
                 validateFragmentProps(element);
               } else {
                 validatePropTypes(element);
@@ -16575,19 +16224,18 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
               return jsxWithValidation(type, props, key, false);
             }
           }
-          var jsx3 = jsxWithValidationDynamic;
-          var jsxs = jsxWithValidationStatic;
-          exports.Fragment = REACT_FRAGMENT_TYPE;
-          exports.jsx = jsx3;
-          exports.jsxs = jsxs;
+          var jsx8 = jsxWithValidationDynamic;
+          var jsxs4 = jsxWithValidationStatic;
+          exports.jsx = jsx8;
+          exports.jsxs = jsxs4;
         })();
       }
     }
   });
 
-  // ../../node_modules/react/jsx-runtime.js
+  // node_modules/react/jsx-runtime.js
   var require_jsx_runtime = __commonJS({
-    "../../node_modules/react/jsx-runtime.js"(exports, module) {
+    "node_modules/react/jsx-runtime.js"(exports, module) {
       "use strict";
       if (false) {
         module.exports = null;
@@ -16597,9 +16245,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }
   });
 
-  // ../../node_modules/iso8601-duration/lib/index.js
+  // node_modules/iso8601-duration/lib/index.js
   var require_lib = __commonJS({
-    "../../node_modules/iso8601-duration/lib/index.js"(exports) {
+    "node_modules/iso8601-duration/lib/index.js"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       exports.toSeconds = exports.end = exports.parse = exports.pattern = void 0;
@@ -16687,102 +16335,44 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }
   });
 
-  // src/index.jsx
-  var import_react37 = __toModule(require_react());
+  // extensions/tryonify/src/index.jsx
+  var import_react19 = __toESM(require_react());
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/index.mjs
-  var admin_ui_extensions_react_exports = {};
-  __export(admin_ui_extensions_react_exports, {
-    Badge: () => Badge2,
-    Banner: () => Banner2,
-    BlockStack: () => BlockStack2,
-    Button: () => Button2,
-    Card: () => Card2,
-    CardSection: () => CardSection2,
-    Checkbox: () => Checkbox2,
-    Heading: () => Heading2,
-    Icon: () => Icon2,
-    InlineStack: () => InlineStack2,
-    Link: () => Link2,
-    Modal: () => Modal2,
-    OptionList: () => OptionList2,
-    Pressable: () => Pressable2,
-    Radio: () => Radio2,
-    ResourceItem: () => ResourceItem2,
-    ResourceList: () => ResourceList2,
-    Select: () => Select2,
-    Spinner: () => Spinner2,
-    StackItem: () => StackItem2,
-    Text: () => Text2,
-    TextBlock: () => TextBlock2,
-    TextField: () => TextField2,
-    Thumbnail: () => Thumbnail2,
-    extend: () => extend,
-    render: () => render2,
-    useContainer: () => useContainer,
-    useData: () => useData,
-    useExtensionApi: () => useExtensionApi,
-    useLayout: () => useLayout,
-    useLocale: () => useLocale,
-    useSessionToken: () => useSessionToken,
-    useToast: () => useToast
-  });
+  // node_modules/@shopify/admin-ui-extensions/build/esm/extension-api/ContainerApi/index.mjs
+  function isContainerApi(api) {
+    return "container" in api;
+  }
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/index.mjs
-  var esm_exports = {};
-  __export(esm_exports, {
-    Badge: () => Badge2,
-    Banner: () => Banner2,
-    BlockStack: () => BlockStack2,
-    Button: () => Button2,
-    Card: () => Card2,
-    CardSection: () => CardSection2,
-    Checkbox: () => Checkbox2,
-    Heading: () => Heading2,
-    Icon: () => Icon2,
-    InlineStack: () => InlineStack2,
-    Link: () => Link2,
-    Modal: () => Modal2,
-    OptionList: () => OptionList2,
-    Pressable: () => Pressable2,
-    Radio: () => Radio2,
-    ResourceItem: () => ResourceItem2,
-    ResourceList: () => ResourceList2,
-    Select: () => Select2,
-    Spinner: () => Spinner2,
-    StackItem: () => StackItem2,
-    Text: () => Text2,
-    TextBlock: () => TextBlock2,
-    TextField: () => TextField2,
-    Thumbnail: () => Thumbnail2,
-    extend: () => extend,
-    render: () => render2,
-    useContainer: () => useContainer,
-    useData: () => useData,
-    useExtensionApi: () => useExtensionApi,
-    useLayout: () => useLayout,
-    useLocale: () => useLocale,
-    useSessionToken: () => useSessionToken,
-    useToast: () => useToast
-  });
-  __reExport(esm_exports, __toModule(require_extension_points2()));
-  __reExport(esm_exports, __toModule(require_extension_api2()));
+  // node_modules/@shopify/admin-ui-extensions/build/esm/extension-api/DataApi/index.mjs
+  function isDataApi(api) {
+    return "data" in api;
+  }
 
-  // ../../node_modules/@remote-ui/core/build/esm/component.mjs
+  // node_modules/@shopify/admin-ui-extensions/build/esm/extension-api/SessionTokenApi/index.mjs
+  function isSessionTokenApi(api) {
+    return "sessionToken" in api;
+  }
+
+  // node_modules/@shopify/admin-ui-extensions/build/esm/extension-api/ToastApi/index.mjs
+  function isToastApi(api) {
+    return "toast" in api;
+  }
+
+  // node_modules/@remote-ui/core/build/esm/component.mjs
   function createRemoteComponent(componentType) {
     return componentType;
   }
 
-  // ../../node_modules/@remote-ui/core/build/esm/types.mjs
+  // node_modules/@remote-ui/core/build/esm/types.mjs
   var KIND_FRAGMENT = 3;
 
-  // ../../node_modules/@remote-ui/core/build/esm/utilities.mjs
+  // node_modules/@remote-ui/core/build/esm/utilities.mjs
   function isRemoteFragment(object) {
     return object != null && object.kind === KIND_FRAGMENT;
   }
 
-  // ../../node_modules/@remote-ui/react/build/esm/reconciler.mjs
-  var import_react_reconciler = __toModule(require_react_reconciler());
+  // node_modules/@remote-ui/react/build/esm/reconciler.mjs
+  var import_react_reconciler = __toESM(require_react_reconciler(), 1);
   var reconciler = (0, import_react_reconciler.default)({
     now: Date.now,
     scheduleTimeout: setTimeout,
@@ -16898,13 +16488,13 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     return hasOwnProperty.call(object, property);
   }
 
-  // ../../node_modules/@remote-ui/react/build/esm/context.mjs
-  var import_react = __toModule(require_react());
+  // node_modules/@remote-ui/react/build/esm/context.mjs
+  var import_react = __toESM(require_react(), 1);
   var RenderContext = /* @__PURE__ */ (0, import_react.createContext)(null);
 
-  // ../../node_modules/@remote-ui/react/build/esm/render.mjs
-  var import_jsx_runtime = __toModule(require_jsx_runtime());
-  var cache = new WeakMap();
+  // node_modules/@remote-ui/react/build/esm/render.mjs
+  var import_jsx_runtime = __toESM(require_jsx_runtime(), 1);
+  var cache = /* @__PURE__ */ new WeakMap();
   var LEGACY_ROOT = 0;
   function render(element, root, callback) {
     let cached = cache.get(root);
@@ -16929,12 +16519,12 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     }), container, null, callback);
   }
 
-  // ../../node_modules/@remote-ui/react/build/esm/components.mjs
-  var import_react3 = __toModule(require_react());
-  var import_jsx_runtime2 = __toModule(require_jsx_runtime());
+  // node_modules/@remote-ui/react/build/esm/components.mjs
+  var import_react3 = __toESM(require_react(), 1);
+  var import_jsx_runtime2 = __toESM(require_jsx_runtime(), 1);
 
-  // ../../node_modules/@remote-ui/react/build/esm/hooks/render.mjs
-  var import_react2 = __toModule(require_react());
+  // node_modules/@remote-ui/react/build/esm/hooks/render.mjs
+  var import_react2 = __toESM(require_react(), 1);
   function useRender() {
     const render3 = (0, import_react2.useContext)(RenderContext);
     if (render3 == null) {
@@ -16943,7 +16533,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     return render3;
   }
 
-  // ../../node_modules/@remote-ui/react/build/esm/components.mjs
+  // node_modules/@remote-ui/react/build/esm/components.mjs
   function createRemoteReactComponent(componentType, {
     fragmentProps
   } = {}) {
@@ -17006,98 +16596,40 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     });
   }
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/api.mjs
-  var import_react6 = __toModule(require_react());
+  // node_modules/@shopify/admin-ui-extensions-react/build/esm/api.mjs
+  var import_react6 = __toESM(require_react(), 1);
 
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/api.mjs
+  // node_modules/@shopify/admin-ui-extensions/build/esm/api.mjs
   function extend(extensionPoint, callback) {
     return self.shopify.extend(extensionPoint, callback);
   }
 
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/Badge/Badge.mjs
-  var Badge = createRemoteComponent("Badge");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/Banner/Banner.mjs
-  var Banner = createRemoteComponent("Banner");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/BlockStack/BlockStack.mjs
+  // node_modules/@shopify/admin-ui-extensions/build/esm/components/BlockStack/BlockStack.mjs
   var BlockStack = createRemoteComponent("BlockStack");
 
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/Button/Button.mjs
+  // node_modules/@shopify/admin-ui-extensions/build/esm/components/Button/Button.mjs
   var Button = createRemoteComponent("Button");
 
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/Card/Card.mjs
+  // node_modules/@shopify/admin-ui-extensions/build/esm/components/Card/Card.mjs
   var Card = createRemoteComponent("Card");
 
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/CardSection/CardSection.mjs
-  var CardSection = createRemoteComponent("CardSection");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/Checkbox/Checkbox.mjs
-  var Checkbox = createRemoteComponent("Checkbox");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/Heading/Heading.mjs
-  var Heading = createRemoteComponent("Heading");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/Icon/Icon.mjs
-  var Icon = createRemoteComponent("Icon");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/InlineStack/InlineStack.mjs
+  // node_modules/@shopify/admin-ui-extensions/build/esm/components/InlineStack/InlineStack.mjs
   var InlineStack = createRemoteComponent("InlineStack");
 
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/Modal/Modal.mjs
-  var Modal = createRemoteComponent("Modal");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/Link/Link.mjs
-  var Link = createRemoteComponent("Link");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/OptionList/OptionList.mjs
-  var OptionList = createRemoteComponent("OptionList");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/Pressable/Pressable.mjs
-  var Pressable = createRemoteComponent("Pressable");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/Radio/Radio.mjs
-  var Radio = createRemoteComponent("Radio");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/ResourceItem/ResourceItem.mjs
-  var ResourceItem = createRemoteComponent("ResourceItem");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/ResourceList/ResourceList.mjs
-  var ResourceList = createRemoteComponent("ResourceList");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/Select/Select.mjs
+  // node_modules/@shopify/admin-ui-extensions/build/esm/components/Select/Select.mjs
   var Select = createRemoteComponent("Select");
 
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/Spinner/Spinner.mjs
-  var Spinner = createRemoteComponent("Spinner");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/StackItem/StackItem.mjs
-  var StackItem = createRemoteComponent("StackItem");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/Text/Text.mjs
+  // node_modules/@shopify/admin-ui-extensions/build/esm/components/Text/Text.mjs
   var Text = createRemoteComponent("Text");
 
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/TextBlock/TextBlock.mjs
+  // node_modules/@shopify/admin-ui-extensions/build/esm/components/TextBlock/TextBlock.mjs
   var TextBlock = createRemoteComponent("TextBlock");
 
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/TextField/TextField.mjs
+  // node_modules/@shopify/admin-ui-extensions/build/esm/components/TextField/TextField.mjs
   var TextField = createRemoteComponent("TextField");
 
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/components/Thumbnail/Thumbnail.mjs
-  var Thumbnail = createRemoteComponent("Thumbnail");
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/extension-api/LayoutApi/index.mjs
-  function isLayoutApi(api) {
-    return "layout" in api;
-  }
-
-  // ../../node_modules/@shopify/admin-ui-extensions/build/esm/extension-api/LocaleApi/index.mjs
-  function isLocaleApi(api) {
-    return "locale" in api;
-  }
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/extension-api/utils.mjs
-  var import_react4 = __toModule(require_react());
+  // node_modules/@shopify/admin-ui-extensions-react/build/esm/extension-api/utils.mjs
+  var import_react4 = __toESM(require_react(), 1);
   var ExtensionApiContext = /* @__PURE__ */ (0, import_react4.createContext)(null);
   function useExtensionApi() {
     var api = (0, import_react4.useContext)(ExtensionApiContext);
@@ -17107,7 +16639,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     return api;
   }
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/api.mjs
+  // node_modules/@shopify/admin-ui-extensions-react/build/esm/api.mjs
   function render2(renderCallback) {
     return function(root, api) {
       var element = renderCallback(api);
@@ -17119,280 +16651,76 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     };
   }
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Badge/Badge.mjs
-  var Badge2 = createRemoteReactComponent(Badge);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Banner/Banner.mjs
-  var Banner2 = createRemoteReactComponent(Banner);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/BlockStack/BlockStack.mjs
+  // node_modules/@shopify/admin-ui-extensions-react/build/esm/components/BlockStack/BlockStack.mjs
   var BlockStack2 = createRemoteReactComponent(BlockStack);
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Button/Button.mjs
+  // node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Button/Button.mjs
   var Button2 = createRemoteReactComponent(Button);
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Card/Card.mjs
+  // node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Card/Card.mjs
   var Card2 = createRemoteReactComponent(Card);
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/CardSection/CardSection.mjs
-  var CardSection2 = createRemoteReactComponent(CardSection);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Checkbox/Checkbox.mjs
-  var Checkbox2 = createRemoteReactComponent(Checkbox);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Pressable/Pressable.mjs
-  var Pressable2 = createRemoteReactComponent(Pressable);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Icon/Icon.mjs
-  var Icon2 = createRemoteReactComponent(Icon);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/InlineStack/InlineStack.mjs
+  // node_modules/@shopify/admin-ui-extensions-react/build/esm/components/InlineStack/InlineStack.mjs
   var InlineStack2 = createRemoteReactComponent(InlineStack);
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Heading/Heading.mjs
-  var Heading2 = createRemoteReactComponent(Heading);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Link/Link.mjs
-  var Link2 = createRemoteReactComponent(Link);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Modal/Modal.mjs
-  var Modal2 = createRemoteReactComponent(Modal);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/OptionList/OptionList.mjs
-  var OptionList2 = createRemoteReactComponent(OptionList);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Radio/Radio.mjs
-  var Radio2 = createRemoteReactComponent(Radio);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/ResourceItem/ResourceItem.mjs
-  var ResourceItem2 = createRemoteReactComponent(ResourceItem);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/ResourceList/ResourceList.mjs
-  var ResourceList2 = createRemoteReactComponent(ResourceList);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Select/Select.mjs
+  // node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Select/Select.mjs
   var Select2 = createRemoteReactComponent(Select);
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Spinner/Spinner.mjs
-  var Spinner2 = createRemoteReactComponent(Spinner);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/StackItem/StackItem.mjs
-  var StackItem2 = createRemoteReactComponent(StackItem);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Text/Text.mjs
+  // node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Text/Text.mjs
   var Text2 = createRemoteReactComponent(Text);
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/TextBlock/TextBlock.mjs
+  // node_modules/@shopify/admin-ui-extensions-react/build/esm/components/TextBlock/TextBlock.mjs
   var TextBlock2 = createRemoteReactComponent(TextBlock);
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/TextField/TextField.mjs
+  // node_modules/@shopify/admin-ui-extensions-react/build/esm/components/TextField/TextField.mjs
   var TextField2 = createRemoteReactComponent(TextField);
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/components/Thumbnail/Thumbnail.mjs
-  var Thumbnail2 = createRemoteReactComponent(Thumbnail);
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/extension-api/LayoutApi/index.mjs
-  var import_react31 = __toModule(require_react());
-  function _slicedToArray(arr, i) {
-    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
-  }
-  function _nonIterableRest() {
-    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-  }
-  function _unsupportedIterableToArray(o, minLen) {
-    if (!o)
-      return;
-    if (typeof o === "string")
-      return _arrayLikeToArray(o, minLen);
-    var n = Object.prototype.toString.call(o).slice(8, -1);
-    if (n === "Object" && o.constructor)
-      n = o.constructor.name;
-    if (n === "Map" || n === "Set")
-      return Array.from(o);
-    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))
-      return _arrayLikeToArray(o, minLen);
-  }
-  function _arrayLikeToArray(arr, len) {
-    if (len == null || len > arr.length)
-      len = arr.length;
-    for (var i = 0, arr2 = new Array(len); i < len; i++) {
-      arr2[i] = arr[i];
-    }
-    return arr2;
-  }
-  function _iterableToArrayLimit(arr, i) {
-    if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr)))
-      return;
-    var _arr = [];
-    var _n = true;
-    var _d = false;
-    var _e = void 0;
-    try {
-      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-        _arr.push(_s.value);
-        if (i && _arr.length === i)
-          break;
-      }
-    } catch (err) {
-      _d = true;
-      _e = err;
-    } finally {
-      try {
-        if (!_n && _i["return"] != null)
-          _i["return"]();
-      } finally {
-        if (_d)
-          throw _e;
-      }
-    }
-    return _arr;
-  }
-  function _arrayWithHoles(arr) {
-    if (Array.isArray(arr))
-      return arr;
-  }
-  function useLayout() {
-    var api = useExtensionApi();
-    if (!isLayoutApi(api)) {
-      throw new Error("No layout api found");
-    }
-    var _api$layout = api.layout, initialValue = _api$layout.initialValue, setOnChange = _api$layout.setOnChange;
-    var _useState = (0, import_react31.useState)(initialValue), _useState2 = _slicedToArray(_useState, 2), layout = _useState2[0], setLayout = _useState2[1];
-    (0, import_react31.useEffect)(function() {
-      setOnChange(function(newLayout) {
-        return setLayout(newLayout);
-      });
-    }, [setOnChange]);
-    return layout;
-  }
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/extension-api/LocaleApi/index.mjs
-  var import_react32 = __toModule(require_react());
-  function _slicedToArray2(arr, i) {
-    return _arrayWithHoles2(arr) || _iterableToArrayLimit2(arr, i) || _unsupportedIterableToArray2(arr, i) || _nonIterableRest2();
-  }
-  function _nonIterableRest2() {
-    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-  }
-  function _unsupportedIterableToArray2(o, minLen) {
-    if (!o)
-      return;
-    if (typeof o === "string")
-      return _arrayLikeToArray2(o, minLen);
-    var n = Object.prototype.toString.call(o).slice(8, -1);
-    if (n === "Object" && o.constructor)
-      n = o.constructor.name;
-    if (n === "Map" || n === "Set")
-      return Array.from(o);
-    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))
-      return _arrayLikeToArray2(o, minLen);
-  }
-  function _arrayLikeToArray2(arr, len) {
-    if (len == null || len > arr.length)
-      len = arr.length;
-    for (var i = 0, arr2 = new Array(len); i < len; i++) {
-      arr2[i] = arr[i];
-    }
-    return arr2;
-  }
-  function _iterableToArrayLimit2(arr, i) {
-    if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr)))
-      return;
-    var _arr = [];
-    var _n = true;
-    var _d = false;
-    var _e = void 0;
-    try {
-      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-        _arr.push(_s.value);
-        if (i && _arr.length === i)
-          break;
-      }
-    } catch (err) {
-      _d = true;
-      _e = err;
-    } finally {
-      try {
-        if (!_n && _i["return"] != null)
-          _i["return"]();
-      } finally {
-        if (_d)
-          throw _e;
-      }
-    }
-    return _arr;
-  }
-  function _arrayWithHoles2(arr) {
-    if (Array.isArray(arr))
-      return arr;
-  }
-  function useLocale() {
-    var api = useExtensionApi();
-    if (!isLocaleApi(api)) {
-      throw new Error("No locale api found");
-    }
-    var _api$locale = api.locale, initialValue = _api$locale.initialValue, setOnChange = _api$locale.setOnChange;
-    var _useState = (0, import_react32.useState)(initialValue), _useState2 = _slicedToArray2(_useState, 2), locale = _useState2[0], setLocale = _useState2[1];
-    (0, import_react32.useEffect)(function() {
-      setOnChange(function(newLocale) {
-        return setLocale(newLocale);
-      });
-    }, [setOnChange]);
-    return locale;
-  }
-
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/extension-api/ContainerApi/index.mjs
-  var import_extension_api = __toModule(require_extension_api2());
+  // node_modules/@shopify/admin-ui-extensions-react/build/esm/extension-api/ContainerApi/index.mjs
   function useContainer() {
     var api = useExtensionApi();
-    if (!(0, import_extension_api.isContainerApi)(api)) {
+    if (!isContainerApi(api)) {
       throw new Error("No container api found");
     }
     return api.container;
   }
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/extension-api/SessionTokenApi/index.mjs
-  var import_extension_api2 = __toModule(require_extension_api2());
+  // node_modules/@shopify/admin-ui-extensions-react/build/esm/extension-api/SessionTokenApi/index.mjs
   function useSessionToken() {
     var api = useExtensionApi();
-    if (!(0, import_extension_api2.isSessionTokenApi)(api)) {
+    if (!isSessionTokenApi(api)) {
       throw new Error("No sessionToken api found");
     }
     return api.sessionToken;
   }
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/extension-api/ToastApi/index.mjs
-  var import_extension_api3 = __toModule(require_extension_api2());
+  // node_modules/@shopify/admin-ui-extensions-react/build/esm/extension-api/ToastApi/index.mjs
   function useToast() {
     var api = useExtensionApi();
-    if (!(0, import_extension_api3.isToastApi)(api)) {
+    if (!isToastApi(api)) {
       throw new Error("No toast api found");
     }
     return api.toast;
   }
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/build/esm/extension-api/DataApi/index.mjs
-  var import_extension_api4 = __toModule(require_extension_api2());
+  // node_modules/@shopify/admin-ui-extensions-react/build/esm/extension-api/DataApi/index.mjs
   function useData() {
     var api = useExtensionApi();
-    if (!(0, import_extension_api4.isDataApi)(api)) {
+    if (!isDataApi(api)) {
       throw new Error("No data api found");
     }
     return api.data;
   }
 
-  // ../../node_modules/@shopify/admin-ui-extensions-react/index.mjs
-  __reExport(admin_ui_extensions_react_exports, esm_exports);
-
-  // src/Add.jsx
-  var import_react33 = __toModule(require_react());
+  // extensions/tryonify/src/Add.jsx
+  var import_react15 = __toESM(require_react());
+  var import_jsx_runtime = __toESM(require_jsx_runtime());
   function Add() {
     const data = useData();
     const { close, done, setPrimaryAction, setSecondaryAction } = useContainer();
     const { getSessionToken } = useSessionToken();
-    const [trialPlans, setTrialPlans] = (0, import_react33.useState)([]);
-    const [selected, setSelected] = (0, import_react33.useState)(null);
-    const fetchPlans = (0, import_react33.useCallback)(() => __async(this, null, function* () {
+    const [trialPlans, setTrialPlans] = (0, import_react15.useState)([]);
+    const [selected, setSelected] = (0, import_react15.useState)(null);
+    const fetchPlans = (0, import_react15.useCallback)(() => __async(this, null, function* () {
       const token = yield getSessionToken();
       const resp = yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups`, {
         headers: {
@@ -17422,10 +16750,10 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         done();
       }
     });
-    (0, import_react33.useEffect)(() => {
+    (0, import_react15.useEffect)(() => {
       fetchPlans();
     }, []);
-    (0, import_react33.useEffect)(() => {
+    (0, import_react15.useEffect)(() => {
       setPrimaryAction({
         content: "Add to plan",
         onAction: handleSubmit
@@ -17439,16 +16767,19 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       label: name,
       value: id
     }));
-    return /* @__PURE__ */ import_react33.default.createElement(import_react33.default.Fragment, null, /* @__PURE__ */ import_react33.default.createElement(Select2, {
-      label: "Select a trial plan",
-      options,
-      onChange: setSelected,
-      value: selected
-    }));
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Select2, {
+        label: "Select a trial plan",
+        options,
+        onChange: setSelected,
+        value: selected
+      })
+    });
   }
 
-  // src/Create.jsx
-  var import_react34 = __toModule(require_react());
+  // extensions/tryonify/src/Create.jsx
+  var import_react16 = __toESM(require_react());
+  var import_jsx_runtime = __toESM(require_jsx_runtime());
   var validate = (values) => {
     const errors = {};
     if (!values.name) {
@@ -17463,29 +16794,33 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     return errors;
   };
   function Actions({ onPrimary, onClose, title }) {
-    return /* @__PURE__ */ import_react34.default.createElement(InlineStack2, {
-      inlineAlignment: "trailing"
-    }, /* @__PURE__ */ import_react34.default.createElement(Button2, {
-      title: "Cancel",
-      onPress: onClose
-    }), /* @__PURE__ */ import_react34.default.createElement(Button2, {
-      title,
-      onPress: onPrimary,
-      kind: "primary"
-    }));
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(InlineStack2, {
+      inlineAlignment: "trailing",
+      children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button2, {
+          title: "Cancel",
+          onPress: onClose
+        }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button2, {
+          title,
+          onPress: onPrimary,
+          kind: "primary"
+        })
+      ]
+    });
   }
   function Create() {
     const data = useData();
     const { close, done } = useContainer();
     const toast = useToast();
     const { getSessionToken } = useSessionToken();
-    const [errors, setErrors] = (0, import_react34.useState)({});
-    const [name, setName] = (0, import_react34.useState)("");
-    const [description, setDescription] = (0, import_react34.useState)("");
-    const [sellingPlanName, setSellingPlanName] = (0, import_react34.useState)("");
-    const [sellingPlanDescription, setSellingPlanDescription] = (0, import_react34.useState)("");
-    const [prepay, setPrepay] = (0, import_react34.useState)(0);
-    const [trialDays, setTrialDays] = (0, import_react34.useState)(14);
+    const [errors, setErrors] = (0, import_react16.useState)({});
+    const [name, setName] = (0, import_react16.useState)("");
+    const [description, setDescription] = (0, import_react16.useState)("");
+    const [sellingPlanName, setSellingPlanName] = (0, import_react16.useState)("");
+    const [sellingPlanDescription, setSellingPlanDescription] = (0, import_react16.useState)("");
+    const [prepay, setPrepay] = (0, import_react16.useState)(0);
+    const [trialDays, setTrialDays] = (0, import_react16.useState)(14);
     const createPlan = () => __async(this, null, function* () {
       try {
         const token = yield getSessionToken();
@@ -17546,69 +16881,100 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         done();
       }
     });
-    const cachedActions = (0, import_react34.useMemo)(() => /* @__PURE__ */ import_react34.default.createElement(Actions, {
-      onPrimary: onPrimaryAction,
-      onClose: close,
-      title: "Create trial plan"
-    }), [onPrimaryAction, close]);
-    return /* @__PURE__ */ import_react34.default.createElement(import_react34.default.Fragment, null, /* @__PURE__ */ import_react34.default.createElement(BlockStack2, {
-      spacing: "none"
-    }, /* @__PURE__ */ import_react34.default.createElement(TextBlock2, {
-      size: "extraLarge"
-    }, "Create trial plan")), /* @__PURE__ */ import_react34.default.createElement(Card2, {
-      title: "Admin Details",
-      sectioned: true
-    }, /* @__PURE__ */ import_react34.default.createElement(BlockStack2, null, /* @__PURE__ */ import_react34.default.createElement(TextField2, {
-      label: "Name",
-      name: "name",
-      onChange: setName,
-      value: name,
-      error: errors.name
-    }), /* @__PURE__ */ import_react34.default.createElement(TextField2, {
-      label: "Description",
-      name: "description",
-      multiline: 4,
-      onChange: setDescription,
-      value: description
-    }))), /* @__PURE__ */ import_react34.default.createElement(Card2, {
-      title: "Customer Details",
-      sectioned: true
-    }, /* @__PURE__ */ import_react34.default.createElement(BlockStack2, null, /* @__PURE__ */ import_react34.default.createElement(TextField2, {
-      label: "Name",
-      name: "sellingPlan[name]",
-      onChange: setSellingPlanName,
-      value: sellingPlanName,
-      error: errors.sellingPlanName
-    }), /* @__PURE__ */ import_react34.default.createElement(TextField2, {
-      label: "Description",
-      name: "sellingPlan[description]",
-      multiline: 4,
-      onChange: setSellingPlanDescription,
-      value: sellingPlanDescription
-    }))), /* @__PURE__ */ import_react34.default.createElement(Card2, {
-      title: "Payment Terms",
-      sectioned: true
-    }, /* @__PURE__ */ import_react34.default.createElement(InlineStack2, {
-      inlineAlignment: "fill"
-    }, /* @__PURE__ */ import_react34.default.createElement(TextField2, {
-      label: "Pre-paid Amount",
-      name: "sellingPlan[prepay]",
-      type: "number",
-      onChange: setPrepay,
-      value: prepay
-    }), /* @__PURE__ */ import_react34.default.createElement(TextField2, {
-      label: "Trial Length (Days)",
-      name: "sellingPlan[trialDays]",
-      type: "number",
-      onChange: setTrialDays,
-      value: trialDays,
-      error: errors.trialDays
-    }))), cachedActions);
+    const cachedActions = (0, import_react16.useMemo)(
+      () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Actions, {
+        onPrimary: onPrimaryAction,
+        onClose: close,
+        title: "Create trial plan"
+      }),
+      [onPrimaryAction, close]
+    );
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, {
+      children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BlockStack2, {
+          spacing: "none",
+          children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextBlock2, {
+            size: "extraLarge",
+            children: "Create trial plan"
+          })
+        }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card2, {
+          title: "Admin Details",
+          sectioned: true,
+          children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(BlockStack2, {
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextField2, {
+                label: "Name",
+                name: "name",
+                onChange: setName,
+                value: name,
+                error: errors.name
+              }),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextField2, {
+                label: "Description",
+                name: "description",
+                multiline: 4,
+                onChange: setDescription,
+                value: description
+              })
+            ]
+          })
+        }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card2, {
+          title: "Customer Details",
+          sectioned: true,
+          children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(BlockStack2, {
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextField2, {
+                label: "Name",
+                name: "sellingPlan[name]",
+                onChange: setSellingPlanName,
+                value: sellingPlanName,
+                error: errors.sellingPlanName
+              }),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextField2, {
+                label: "Description",
+                name: "sellingPlan[description]",
+                multiline: 4,
+                onChange: setSellingPlanDescription,
+                value: sellingPlanDescription
+              })
+            ]
+          })
+        }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card2, {
+          title: "Payment Terms",
+          sectioned: true,
+          children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(InlineStack2, {
+            inlineAlignment: "fill",
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextField2, {
+                label: "Pre-paid Amount",
+                name: "sellingPlan[prepay]",
+                type: "number",
+                onChange: setPrepay,
+                value: prepay
+              }),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextField2, {
+                label: "Trial Length (Days)",
+                name: "sellingPlan[trialDays]",
+                type: "number",
+                onChange: setTrialDays,
+                value: trialDays,
+                error: errors.trialDays
+              })
+            ]
+          })
+        }),
+        cachedActions
+      ]
+    });
   }
 
-  // src/Edit.jsx
-  var import_react35 = __toModule(require_react());
-  var import_iso8601_duration = __toModule(require_lib());
+  // extensions/tryonify/src/Edit.jsx
+  var import_react17 = __toESM(require_react());
+  var import_iso8601_duration = __toESM(require_lib());
+  var import_jsx_runtime = __toESM(require_jsx_runtime());
   var validate2 = (values) => {
     const errors = {};
     if (!values.name) {
@@ -17623,31 +16989,35 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     return errors;
   };
   function Actions2({ onPrimary, onClose, title }) {
-    return /* @__PURE__ */ import_react35.default.createElement(InlineStack2, {
-      inlineAlignment: "trailing"
-    }, /* @__PURE__ */ import_react35.default.createElement(Button2, {
-      title: "Cancel",
-      onPress: onClose
-    }), /* @__PURE__ */ import_react35.default.createElement(Button2, {
-      title,
-      onPress: onPrimary,
-      kind: "primary"
-    }));
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(InlineStack2, {
+      inlineAlignment: "trailing",
+      children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button2, {
+          title: "Cancel",
+          onPress: onClose
+        }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button2, {
+          title,
+          onPress: onPrimary,
+          kind: "primary"
+        })
+      ]
+    });
   }
   function Edit() {
     const data = useData();
     const { close, done } = useContainer();
     const toast = useToast();
     const { getSessionToken } = useSessionToken();
-    const [errors, setErrors] = (0, import_react35.useState)({});
-    const [name, setName] = (0, import_react35.useState)("");
-    const [description, setDescription] = (0, import_react35.useState)("");
-    const [sellingPlanId, setSellingPlanId] = (0, import_react35.useState)("");
-    const [sellingPlanName, setSellingPlanName] = (0, import_react35.useState)("");
-    const [sellingPlanDescription, setSellingPlanDescription] = (0, import_react35.useState)("");
-    const [prepay, setPrepay] = (0, import_react35.useState)(0);
-    const [trialDays, setTrialDays] = (0, import_react35.useState)(14);
-    const fetchPlan = (0, import_react35.useCallback)(() => __async(this, null, function* () {
+    const [errors, setErrors] = (0, import_react17.useState)({});
+    const [name, setName] = (0, import_react17.useState)("");
+    const [description, setDescription] = (0, import_react17.useState)("");
+    const [sellingPlanId, setSellingPlanId] = (0, import_react17.useState)("");
+    const [sellingPlanName, setSellingPlanName] = (0, import_react17.useState)("");
+    const [sellingPlanDescription, setSellingPlanDescription] = (0, import_react17.useState)("");
+    const [prepay, setPrepay] = (0, import_react17.useState)(0);
+    const [trialDays, setTrialDays] = (0, import_react17.useState)(14);
+    const fetchPlan = (0, import_react17.useCallback)(() => __async(this, null, function* () {
       var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u;
       const token = yield getSessionToken();
       const resp = yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}`, {
@@ -17707,71 +17077,102 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         done();
       }
     });
-    const cachedActions = (0, import_react35.useMemo)(() => /* @__PURE__ */ import_react35.default.createElement(Actions2, {
-      onPrimary: onPrimaryAction,
-      onClose: close,
-      title: "Update trial plan"
-    }), [onPrimaryAction, close]);
-    (0, import_react35.useEffect)(() => {
+    const cachedActions = (0, import_react17.useMemo)(
+      () => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Actions2, {
+        onPrimary: onPrimaryAction,
+        onClose: close,
+        title: "Update trial plan"
+      }),
+      [onPrimaryAction, close]
+    );
+    (0, import_react17.useEffect)(() => {
       fetchPlan();
     }, []);
-    return /* @__PURE__ */ import_react35.default.createElement(import_react35.default.Fragment, null, /* @__PURE__ */ import_react35.default.createElement(BlockStack2, {
-      spacing: "none"
-    }, /* @__PURE__ */ import_react35.default.createElement(TextBlock2, {
-      size: "extraLarge"
-    }, "Update trial plan")), /* @__PURE__ */ import_react35.default.createElement(Card2, {
-      title: "Admin Details",
-      sectioned: true
-    }, /* @__PURE__ */ import_react35.default.createElement(BlockStack2, null, /* @__PURE__ */ import_react35.default.createElement(TextField2, {
-      label: "Name",
-      name: "name",
-      onChange: setName,
-      value: name,
-      error: errors.name
-    }), /* @__PURE__ */ import_react35.default.createElement(TextField2, {
-      label: "Description",
-      name: "description",
-      multiline: 4,
-      onChange: setDescription,
-      value: description
-    }))), /* @__PURE__ */ import_react35.default.createElement(Card2, {
-      title: "Customer Details",
-      sectioned: true
-    }, /* @__PURE__ */ import_react35.default.createElement(BlockStack2, null, /* @__PURE__ */ import_react35.default.createElement(TextField2, {
-      label: "Name",
-      name: "sellingPlan[name]",
-      onChange: setSellingPlanName,
-      value: sellingPlanName,
-      error: errors.sellingPlanName
-    }), /* @__PURE__ */ import_react35.default.createElement(TextField2, {
-      label: "Description",
-      name: "sellingPlan[description]",
-      multiline: 4,
-      onChange: setSellingPlanDescription,
-      value: sellingPlanDescription
-    }))), /* @__PURE__ */ import_react35.default.createElement(Card2, {
-      title: "Payment Terms",
-      sectioned: true
-    }, /* @__PURE__ */ import_react35.default.createElement(InlineStack2, {
-      inlineAlignment: "fill"
-    }, /* @__PURE__ */ import_react35.default.createElement(TextField2, {
-      label: "Pre-paid Amount",
-      name: "sellingPlan[prepay]",
-      type: "number",
-      onChange: setPrepay,
-      value: prepay
-    }), /* @__PURE__ */ import_react35.default.createElement(TextField2, {
-      label: "Trial Length (Days)",
-      name: "sellingPlan[trialDays]",
-      type: "number",
-      onChange: setTrialDays,
-      value: trialDays,
-      error: errors.trialDays
-    }))), cachedActions);
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, {
+      children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BlockStack2, {
+          spacing: "none",
+          children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextBlock2, {
+            size: "extraLarge",
+            children: "Update trial plan"
+          })
+        }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card2, {
+          title: "Admin Details",
+          sectioned: true,
+          children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(BlockStack2, {
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextField2, {
+                label: "Name",
+                name: "name",
+                onChange: setName,
+                value: name,
+                error: errors.name
+              }),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextField2, {
+                label: "Description",
+                name: "description",
+                multiline: 4,
+                onChange: setDescription,
+                value: description
+              })
+            ]
+          })
+        }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card2, {
+          title: "Customer Details",
+          sectioned: true,
+          children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(BlockStack2, {
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextField2, {
+                label: "Name",
+                name: "sellingPlan[name]",
+                onChange: setSellingPlanName,
+                value: sellingPlanName,
+                error: errors.sellingPlanName
+              }),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextField2, {
+                label: "Description",
+                name: "sellingPlan[description]",
+                multiline: 4,
+                onChange: setSellingPlanDescription,
+                value: sellingPlanDescription
+              })
+            ]
+          })
+        }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card2, {
+          title: "Payment Terms",
+          sectioned: true,
+          children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(InlineStack2, {
+            inlineAlignment: "fill",
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextField2, {
+                label: "Pre-paid Amount",
+                name: "sellingPlan[prepay]",
+                type: "number",
+                onChange: setPrepay,
+                value: prepay
+              }),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextField2, {
+                label: "Trial Length (Days)",
+                name: "sellingPlan[trialDays]",
+                type: "number",
+                onChange: setTrialDays,
+                value: trialDays,
+                error: errors.trialDays
+              })
+            ]
+          })
+        }),
+        cachedActions
+      ]
+    });
   }
 
-  // src/Remove.jsx
-  var import_react36 = __toModule(require_react());
+  // extensions/tryonify/src/Remove.jsx
+  var import_react18 = __toESM(require_react());
+  var import_jsx_runtime = __toESM(require_jsx_runtime());
   function Remove() {
     const data = useData();
     const { close, done, setPrimaryAction, setSecondaryAction } = useContainer();
@@ -17791,7 +17192,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       });
       done();
     });
-    (0, import_react36.useEffect)(() => {
+    (0, import_react18.useEffect)(() => {
       setPrimaryAction({
         content: "Remove from plan",
         onAction: handleSubmit
@@ -17801,12 +17202,27 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         onAction: () => close()
       });
     }, [getSessionToken, close, done, setPrimaryAction, setSecondaryAction]);
-    return /* @__PURE__ */ import_react36.default.createElement(Text2, null, "Remove this product from the selling plan group?");
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Text2, {
+      children: "Remove this product from the selling plan group?"
+    });
   }
 
-  // src/index.jsx
-  extend("Admin::Product::SubscriptionPlan::Add", render2(() => /* @__PURE__ */ import_react37.default.createElement(Add, null)));
-  extend("Admin::Product::SubscriptionPlan::Create", render2(() => /* @__PURE__ */ import_react37.default.createElement(Create, null)));
-  extend("Admin::Product::SubscriptionPlan::Remove", render2(() => /* @__PURE__ */ import_react37.default.createElement(Remove, null)));
-  extend("Admin::Product::SubscriptionPlan::Edit", render2(() => /* @__PURE__ */ import_react37.default.createElement(Edit, null)));
+  // extensions/tryonify/src/index.jsx
+  var import_jsx_runtime = __toESM(require_jsx_runtime());
+  extend(
+    "Admin::Product::SubscriptionPlan::Add",
+    render2(() => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Add, {}))
+  );
+  extend(
+    "Admin::Product::SubscriptionPlan::Create",
+    render2(() => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Create, {}))
+  );
+  extend(
+    "Admin::Product::SubscriptionPlan::Remove",
+    render2(() => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Remove, {}))
+  );
+  extend(
+    "Admin::Product::SubscriptionPlan::Edit",
+    render2(() => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Edit, {}))
+  );
 })();

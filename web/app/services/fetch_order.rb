@@ -47,6 +47,16 @@ class FetchOrder
             lineItems(first: 10, after: $after) {
               edges {
                 node {
+                  id
+                  image {
+                    url
+                  }
+                  merchantEditable
+                  quantity
+                  restockable
+                  unfulfilledQuantity
+                  title
+                  variantTitle
                   sellingPlan {
                     sellingPlanId
                   }
