@@ -5,6 +5,7 @@ import {
   Layout,
   Card,
   IndexTable,
+  SkeletonBodyText,
   Stack,
   Text,
   Thumbnail
@@ -35,11 +36,13 @@ export default function EditSellingPlan() {
     plural: 'products'
   }
 
-  const returnIds = data?.returns?.map(returnItem => returnItem.shopifyId)
-
   const rowMarkup = data?.graphqlOrder?.lineItems.edges.map(({ node }) => {
     const { id, title, variantTitle, image, quantity } = node;
     let status = { level: 'warning', label: 'Pending' };
+
+    if (data?.order?.financialStatus === 'PAID') {
+      status = { level: 'success', label: 'Paid' };
+    }
 
     const returnItem = data?.returns?.find(returnItem => returnItem.shopifyId === id);
 
@@ -72,8 +75,6 @@ export default function EditSellingPlan() {
       </IndexTable.Row>
     )
   })
-
-  const dueDate = DateTime.fromISO(data?.order?.dueDate).toLocaleString();
 
   return (
     <Page
@@ -109,7 +110,11 @@ export default function EditSellingPlan() {
         <Layout.Section oneThird>
           <Card title='Payment Details'>
             <Card.Section title='Due Date'>
-              {dueDate}
+              {isLoading ? (
+                <SkeletonBodyText />
+              ) : (
+                <span>{DateTime.fromISO(data?.order?.calculatedDueDate).toLocaleString()}</span>
+              )}
             </Card.Section>
           </Card>
         </Layout.Section>

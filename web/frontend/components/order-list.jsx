@@ -33,16 +33,16 @@ export default function OrderList({ query }) {
   const rowMarkup = data?.map(
     (order, index) => {
       const {
-        id, shopifyId, name, shopifyCreatedAt, financialStatus, dueDate, returns,
+        id, shopifyId, name, shopifyCreatedAt, financialStatus, dueDate, calculatedDueDate, returns,
       } = order;
-      const dt = DateTime.fromISO(dueDate);
+      const dt = DateTime.fromISO(calculatedDueDate);
       const tz = dt.zoneName;
       let overdue = false;
 
       if ((dt <= DateTime.now().setZone(tz)) && financialStatus !== 'PAID') {
-        let overdue = true;
+        overdue = true;
       }
-      console.log(order)
+
       const activeReturns = returns.filter(returnItem => returnItem.active).length
 
       return (
@@ -63,7 +63,7 @@ export default function OrderList({ query }) {
             {new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(shopifyCreatedAt))}
           </IndexTable.Cell>
           <IndexTable.Cell>
-            {dueDate && new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(dueDate))}
+            {calculatedDueDate && new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(calculatedDueDate))}
           </IndexTable.Cell>
           <IndexTable.Cell>
             <Stack spacing="extraTight">

@@ -20,8 +20,7 @@ class FetchExistingOrdersJob < ActiveJob::Base
       service = FetchOrders.new({
                                   first: 20,
                                   after: cursor,
-                                  query:,
-                                  sortKey: 'UPDATED_AT'
+                                  query:
                                 })
       service.call
 
