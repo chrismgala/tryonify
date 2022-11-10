@@ -4,7 +4,7 @@
   const triggers = document.querySelectorAll('.tryonify-selling-plan-option');
   const sellingPlanInputs = getSellingPlanInputs();
 
-  document.addEventListener('DOMContentLoaded', addListeners);
+  document.addEventListener('DOMContentLoaded', initialize);
 
   if (embed) {
     insertEmbed();
@@ -85,5 +85,20 @@
     triggers.forEach((trigger) => {
       trigger.addEventListener('change', handleChange);
     });
+  }
+
+  function setInitialValue() {
+    triggers.forEach((trigger) => {
+      if (trigger.checked) {
+        sellingPlanInputs.forEach((sellingPlanInput) => {
+          sellingPlanInput.value = trigger.value;
+        });
+      }
+    });
+  }
+
+  function initialize() {
+    addListeners();
+    setInitialValue();
   }
 }());

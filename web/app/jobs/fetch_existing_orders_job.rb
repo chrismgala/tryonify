@@ -11,9 +11,9 @@ class FetchExistingOrdersJob < ActiveJob::Base
 
     shop.with_shopify_session do
       query = if shop.orders_updated_at
-                "(financial_status:pending OR financial_status:partially_paid) AND created_at:>'#{shop.orders_updated_at}'"
+                "-status:closed AND created_at:>'#{shop.orders_updated_at}'"
               else
-                'financial_status:pending OR financial_status:partially_paid'
+                '-status:closed'
               end
 
       # Fetch pending orders since last check was done
