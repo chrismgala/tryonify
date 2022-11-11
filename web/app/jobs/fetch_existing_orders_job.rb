@@ -59,7 +59,7 @@ class FetchExistingOrdersJob < ActiveJob::Base
         FetchExistingOrdersJob.perform_later(shop.id, service.orders.dig('pageInfo', 'endCursor'))
       else
         latest_order = shop.orders.order(shopify_created_at: :desc).first
-        shop.update(orders_updated_at: latest_order.shopify_created_at)
+        shop.update(orders_updated_at: latest_order.shopify_created_at) if latest_order
       end
     end
   end

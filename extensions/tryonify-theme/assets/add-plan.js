@@ -81,24 +81,9 @@
     }
   }
 
-  function addListeners() {
+  function initialize() {
     triggers.forEach((trigger) => {
       trigger.addEventListener('change', handleChange);
     });
-  }
-
-  function setInitialValue() {
-    triggers.forEach((trigger) => {
-      if (trigger.checked) {
-        sellingPlanInputs.forEach((sellingPlanInput) => {
-          sellingPlanInput.value = trigger.value;
-        });
-      }
-    });
-  }
-
-  function initialize() {
-    addListeners();
-    setInitialValue();
   }
 }());
