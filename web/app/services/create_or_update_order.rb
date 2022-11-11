@@ -6,73 +6,30 @@ class CreateOrUpdateOrder
 
   attr_accessor :order, :error
 
-  FETCH_ORDER_QUERY = <<~QUERY
-    query fetchOrder($id: ID!, $after: String) {
-      order(id: $id) {
-        ...on Order {
-          id
-          legacyResourceId
-          name
-          closedAt
-          displayFinancialStatus
-          displayFulfillmentStatus
-          createdAt
-          customer {
-            email
-          }
-          paymentTerms {
-            paymentSchedules(first: 1) {
-              edges {
-                node {
-                  dueAt
-                }
-              }
-            }
-          }
-          paymentCollectionDetails {
-            vaultedPaymentMethods {
-              id
-            }
-          }
-          lineItems(first: 10, after: $after) {
-            edges {
-              node {
-                sellingPlan {
-                  sellingPlanId
-                }
-              }
-            }
-            pageInfo {
-              hasNextPage
-              endCursor
-            }
-          }
-          totalPriceSet {
-            shopMoney {
-              amount
-            }
-          }
-        }
-      }
-    }
-  QUERY
-
   def initialize(shop_id:, order_id:)
     @shop_id = shop_id
     @order_id = order_id
     @order = nil
-    @session = ShopifyAPI::Context.active_session
-    @client = ShopifyAPI::Clients::Graphql::Admin.new(session: @session)
   end
 
   def call
-    @order = fetch_order
+    service = if @order_id.to_s.starts_with?('gid://')
+                FetchOrder.new(@order_id)
+              else
+                FetchOrder.new("gid://shopify/Order/#{@order_id}")
+              end
+    service.call
+
+    raise service.error and return if service.error
+
+    @order = service.order
 
     existing_order = Order.find_by(shopify_id: @order_id)
 
     order_attributes = {
       shopify_id: @order.dig('legacyResourceId'),
       shopify_created_at: @order.dig('createdAt'),
+      shopify_updated_at: @order.dig('updatedAt'),
       name: @order.dig('name'),
       due_date: @order.dig('paymentTerms', 'paymentSchedules', 'edges', 0, 'node', 'dueAt'),
       closed_at: @order.dig('closedAt'),
@@ -84,7 +41,10 @@ class CreateOrUpdateOrder
 
     if existing_order
       existing_order.update(order_attributes)
-    elsif selling_plan?(@order)
+    elsif has_selling_plan?(@order)
+      # Tag order as TryOnify
+      tag_order
+
       order_attributes[:shop_id] = @shop_id
       new_order = Order.create!(order_attributes)
 
@@ -106,36 +66,30 @@ class CreateOrUpdateOrder
     raise @error
   end
 
-  def fetch_order(after = nil)
-    query = FETCH_ORDER_QUERY
-
-    variables = {
-      id: "gid://shopify/Order/#{@order_id}",
-      after:
-    }
-
-    response = @client.query(query:, variables:)
-
-    unless response.body['errors'].nil?
-      raise CreateOrUpdateOrder::InvalidRequest,
-            response.body.dig('errors', 0, 'message') and return
-    end
-
-    response.body.dig('data', 'order')
-  end
-
   # Page through line items looking for selling plan
-  def selling_plan?(order)
+  def has_selling_plan?(order)
     line_items = order.dig('lineItems', 'edges')
-    selling_plan_ids = line_items.map { |x| x.dig('node', 'sellingPlan', 'sellingPlanId') }
+    selling_plan_ids = line_items.select { |x| x.dig('node', 'sellingPlan', 'sellingPlanId') }
 
     if selling_plan_ids.length.positive?
       true
     elsif order.dig('lineItems', 'pageInfo', 'hasNextPage')
-      updated_order = fetch_order(order.dig('lineItems', 'pageInfo', 'endCursor'))
-      selling_plan?(updated_order)
+      service = FetchOrder.new(order.dig('id'), order.dig('lineItems', 'pageInfo', 'endCursor'))
+      service.call
+
+      if service.order
+        updated_order = service.order
+        has_selling_plan?(updated_order)
+      else
+        raise "Could not fetch order #{order.dig('id')}"
+      end
     else
       false
     end
+  end
+
+  def tag_order
+    service = UpdateOrderTag.new(@shop_id, @order)
+    service.call
   end
 end

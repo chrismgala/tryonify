@@ -102,3 +102,4 @@ gem 'postmark-rails', '~> 0.22.1'
 # Performance Monitoring
 gem "sentry-ruby"
 gem "sentry-rails"
+gem 'rest-client', '~> 2.1'

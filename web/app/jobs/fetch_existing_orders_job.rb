@@ -11,9 +11,9 @@ class FetchExistingOrdersJob < ActiveJob::Base
 
     shop.with_shopify_session do
       query = if shop.orders_updated_at
-                "(financial_status:PENDING OR financial_status:PARTIALLY_PAID) AND updated_at:>'#{shop.orders_updated_at}'"
+                "-status:closed AND created_at:>'#{shop.orders_updated_at}'"
               else
-                'financial_status:PENDING OR financial_status:PARTIALLY_PAID'
+                '-status:closed'
               end
 
       # Fetch pending orders since last check was done
@@ -32,13 +32,14 @@ class FetchExistingOrdersJob < ActiveJob::Base
       # Create an array of orders with selling plans
       order_array = []
       order_edges.each do |order|
-        next unless has_selling_plan(order['node'])
+        next unless has_selling_plan?(order['node'])
 
         order_array.push({
                            shopify_id: order.dig('node', 'legacyResourceId'),
                            name: order.dig('node', 'name'),
                            due_date: order.dig('node', 'paymentTerms', 'paymentSchedules', 'nodes', 0, 'dueAt'),
                            shopify_created_at: order.dig('node', 'createdAt'),
+                           shopify_updated_at: order.dig('node', 'updatedAt'),
                            shop_id: shop.id,
                            financial_status: order.dig('node', 'displayFinancialStatus'),
                            email: order.dig('node', 'customer', 'email'),
@@ -57,14 +58,31 @@ class FetchExistingOrdersJob < ActiveJob::Base
       if service.orders.dig('pageInfo', 'hasNextPage')
         FetchExistingOrdersJob.perform_later(shop.id, service.orders.dig('pageInfo', 'endCursor'))
       else
-        shop.update(orders_updated_at: DateTime.now)
+        latest_order = shop.orders.order(shopify_created_at: :desc).first
+        shop.update(orders_updated_at: latest_order.shopify_created_at) if latest_order
       end
     end
   end
 
-  def has_selling_plan(order)
-    return false if order.blank?
+  # Page through line items looking for selling plan
+  def has_selling_plan?(order)
+    line_items = order.dig('lineItems', 'edges')
+    selling_plan_ids = line_items.select { |x| x.dig('node', 'sellingPlan', 'sellingPlanId') }
 
-    order.dig('paymentTerms', 'paymentSchedules', 'nodes', 0, 'dueAt')
+    if selling_plan_ids.length.positive?
+      true
+    elsif order.dig('lineItems', 'pageInfo', 'hasNextPage')
+      service = FetchOrder.new(order.dig('id'), order.dig('lineItems', 'pageInfo', 'endCursor'))
+      service.call
+
+      if service.order
+        updated_order = service.order
+        has_selling_plan?(updated_order)
+      else
+        raise "Could not fetch order #{order.dig('id')}"
+      end
+    else
+      false
+    end
   end
 end

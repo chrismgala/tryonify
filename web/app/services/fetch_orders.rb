@@ -20,7 +20,8 @@ class FetchOrders
       last: @pagination[:last].to_i,
       before: @pagination[:before],
       after: @pagination[:after],
-      query: @pagination[:query]
+      query: @pagination[:query],
+      sortKey: @pagination[:sortKey] || 'CREATED_AT'
     }
 
     response = @client.query(query:, variables:)
@@ -34,12 +35,13 @@ class FetchOrders
   rescue ActiveRecord::RecordInvalid, StandardError => e
     Rails.logger.error("[FetchOrders Failed]: #{e.message}")
     @error = e.message
+    raise e
   end
 
   def next_query
     <<~QUERY
-      query fetchOrders($first: Int, $after: String, $query: String) {
-        orders(first: $first, after: $after, query: $query, sortKey: CREATED_AT, reverse: true) {
+      query fetchOrders($first: Int, $after: String, $query: String, $sortKey: OrderSortKeys!) {
+        orders(first: $first, after: $after, query: $query, sortKey: $sortKey, reverse: true) {
           edges {
             node {
               id
@@ -49,15 +51,31 @@ class FetchOrders
               updatedAt
               closedAt
               displayFinancialStatus
+              displayFulfillmentStatus
               customer {
                 email
               }
+              note
+              tags
               paymentTerms {
                 overdue
                 paymentSchedules(first: 1) {
                   nodes {
                     dueAt
                   }
+                }
+              }
+              lineItems(first: 10) {
+                edges {
+                  node {
+                    sellingPlan {
+                      sellingPlanId
+                    }
+                  }
+                }
+                pageInfo {
+                  hasNextPage
+                  endCursor
                 }
               }
             }

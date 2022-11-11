@@ -4,7 +4,7 @@
   const triggers = document.querySelectorAll('.tryonify-selling-plan-option');
   const sellingPlanInputs = getSellingPlanInputs();
 
-  document.addEventListener('DOMContentLoaded', addListeners);
+  document.addEventListener('DOMContentLoaded', initialize);
 
   if (embed) {
     insertEmbed();
@@ -81,7 +81,7 @@
     }
   }
 
-  function addListeners() {
+  function initialize() {
     triggers.forEach((trigger) => {
       trigger.addEventListener('change', handleChange);
     });

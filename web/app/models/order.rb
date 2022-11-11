@@ -17,10 +17,24 @@ class Order < ApplicationRecord
                     where('DATE(due_date) > DATE(?)', DateTime.current)
                       .where(financial_status: %w[PARTIALLY_PAID PENDING]).where(closed_at: nil)
                   }
-  scope :pending_returns, -> { joins(:returns).where(returns: { active: true }) }
+  scope :pending_returns, -> { includes(:returns).where(returns: { active: true }) }
   scope :failed_payments, lambda {
                             where(financial_status: %w[PARTIALLY_PAID PENDING])
                               .where(closed_at: nil)
                               .joins(:payment).where(payment: { status: 'ERROR' })
                           }
+
+  attribute :calculated_due_date, :datetime
+
+  def calculated_due_date
+    latest_return = returns.where(active: true).order(created_at: :desc).first
+
+    # If return due date comes after order due date, use the return due date
+    if latest_return
+      return_due_date = latest_return.created_at + shop.return_period if latest_return
+      return return_due_date if return_due_date&.after?(due_date)
+    end
+
+    due_date
+  end
 end
