@@ -1,0 +1,39 @@
+{%- assign max_trial_items = app.metafields.settings.maxTrialItems -%}
+<div class="tryonify-alert">
+  {% if block.settings.max_quantity_text == '' %}
+    Only {{ max_trial_items }} trial items allowed in cart
+  {% else %}
+    {{ block.settings.max_quantity_text }}
+  {% endif %}
+</div>
+<script>
+  window.tryonify = window.tryonify || {
+    maxTrialItems: {{ max_trial_items }},
+  }
+</script>
+<style>
+  .tryonify-alert {
+    background-color: {{ block.settings.alert_background_color }};
+  }
+</style>
+{% schema %}
+{
+  "name": "TryOnify Features",
+  "target": "body",
+  "javascript": "app.js",
+  "stylesheet": "app.css",
+  "settings": [
+    {
+      "type": "text",
+      "id": "max_quantity_text",
+      "label": "Max quantity alert text"
+    },
+    {
+      "type": "color",
+      "id": "alert_background_color",
+      "label": "Alert background color",
+      "default": "#ff0000"
+    }
+  ]
+}
+{% endschema %}

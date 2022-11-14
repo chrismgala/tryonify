@@ -12,7 +12,7 @@ class AfterAuthenticateJob < ActiveJob::Base
       shop.save!
 
       # Set max trial metafield
-      service = CreateMetafield.new(shop, {
+      service = CreateMetafield.new({
                                       key: 'maxTrialItems',
                                       namespace: 'settings',
                                       type: 'number_integer',

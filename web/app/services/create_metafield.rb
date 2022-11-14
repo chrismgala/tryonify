@@ -24,10 +24,9 @@ class CreateMetafield
   QUERY
 
   # attributes - Metafield attributes https://shopify.dev/api/admin-graphql/2022-10/mutations/metafieldDefinitionUpdate
-  def initialize(shop, attributes)
+  def initialize(attributes)
     session = ShopifyAPI::Context.active_session
     @client = ShopifyAPI::Clients::Graphql::Admin.new(session:)
-    @shop = shop
     @attributes = attributes
     @error = nil
   end

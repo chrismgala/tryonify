@@ -16,7 +16,7 @@
   transition: background 0.2s linear;
 }
 
-.tryonify-selling-plan:hover {
+.tryonify-selling-plan:hover:not(.tryonify-selling-plan--disabled) {
   background: #eee;
 }
 
@@ -56,4 +56,8 @@
   font-size: 12px;
   margin: 3px 0;
   padding-left: 35px;
+}
+
+.tryonify-selling-plan--disabled > * {
+  opacity: 0.7;
 }
