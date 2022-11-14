@@ -1,7 +1,9 @@
 (function () {
   const config = {
     cart: null,
-    trialLineItemKeys: {},
+    trialLineItemKeys: [],
+    trialLineItemIndex: [],
+    trialLineItemId: [],
   };
 
   const watchedEndpoints = [
@@ -18,15 +20,13 @@
   }
 
   function findTrialLineItems() {
-    return config.cart?.items.reduce((acc, item, index) => {
+    return config.cart?.items.forEach((item, index) => {
       if (item.selling_plan_allocation) {
-        acc[item.key] = {
-          index,
-          id: item.id,
-        }
+        config.trialLineItemKeys.push(item.key);
+        config.trialLineItemIndex.push(index);
+        config.trialLineItemId.push(item.id);
       }
-      return acc;
-    }, {});
+    });
   }
 
   function getTrialQuantity() {
@@ -118,7 +118,7 @@
         if (!config.trialLineItemKeys.includes(payload.id) && !payload.selling_plan) return true;
         item = config.cart.items.find(item => item.key === payload.id);
       } else {
-        const trialIds = Object.keys(config.trialLineItemKeys).map(item => item.id);
+        const trialIds = Object.keys(config.trialLineItemKeys).map(key => config.trialLineItemKeys[key].id);
         if (!trialIds.includes(payload.id) && !payload.selling_plan) return true;
         item = config.cart.items.find(item => item.id === payload.id);
       }
