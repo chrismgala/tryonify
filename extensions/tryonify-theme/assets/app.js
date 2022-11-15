@@ -54,18 +54,21 @@
           option.classList.remove('tryonify-selling-plan--disabled');
         }
 
+        const changeEvent = new Event('change');
         input.disabled = isDisabled;
+        input.dispatchEvent(changeEvent);
       });
     }
   }
 
   async function setup() {
     config.cart = await fetchCart();
-    config.trialQuantity = getTrialQuantity();
+    window.tryonify.currentTrialQuantity = getTrialQuantity();
 
     findTrialLineItems();
+    showProgress();
 
-    if (config.trialQuantity >= window.tryonify.maxTrialItems) {
+    if (window.tryonify.currentTrialQuantity >= window.tryonify.maxTrialItems) {
       disableTrialOptions(true)
     } else {
       disableTrialOptions(false)
@@ -126,12 +129,13 @@
 
     // Using line key
     if (payload.line) {
-      item = config.cart.items[payload.line - 1];
+      if (!config.trialLineItemIndex.includes(parseInt(payload.line) - 1)) return true;
+      item = config.cart.items[parseInt(payload.line) - 1];
     }
 
     if (item) {
       const quantityDifference = parseInt(payload.quantity) - parseInt(item.quantity);
-      return (config.trialQuantity + quantityDifference) <= window.tryonify.maxTrialItems;
+      return (window.tryonify.currentTrialQuantity + quantityDifference) <= window.tryonify.maxTrialItems;
     } else {
       return true;
     }
@@ -188,7 +192,7 @@
       return true;
     }
 
-    return (parseInt(sellingPlanQuantity) + config.trialQuantity) <= window.tryonify.maxTrialItems;
+    return (parseInt(sellingPlanQuantity) + window.tryonify.currentTrialQuantity) <= window.tryonify.maxTrialItems;
   }
 
   function handleCheckout(payload) {
@@ -216,6 +220,25 @@
     window.setTimeout(() => {
       alertEl.classList.remove('open')
     }, 5000);
+  }
+
+  function showProgress() {
+    const sellingGroup = document.querySelectorAll('.tryonify-selling-plan-group');
+    const wrapper = document.querySelector('.tryonify-selling-plan-wrapper');
+
+    if (sellingGroup.length === 0) return;
+    if (!wrapper) return;
+
+    let el = document.querySelector('.tryonify-trial-count');
+
+    if (!el) {
+      el = document.createElement('div');
+      el.classList.add('tryonify-trial-count');
+      wrapper.prepend(el);
+    }
+
+    el.textContent = window.tryonify.currentTrialQuantityText.replace('%d', window.tryonify.currentTrialQuantity)
+      .replace('%d', window.tryonify.maxTrialItems);
   }
 
   function interceptFetch() {

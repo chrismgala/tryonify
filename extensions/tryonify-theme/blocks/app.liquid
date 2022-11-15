@@ -9,6 +9,8 @@
 <script>
   window.tryonify = window.tryonify || {
     maxTrialItems: {{ max_trial_items }},
+    currentTrialQuantity: 0,
+    currentTrialQuantityText: "{{ block.settings.current_trial_quantity_text | default: "%d of % trial products chosen"}}"
   }
 </script>
 <style>
@@ -23,6 +25,13 @@
   "javascript": "app.js",
   "stylesheet": "app.css",
   "settings": [
+    {
+      "type": "text",
+      "id": "current_trial_quantity_text",
+      "label": "Current trial quantity text",
+      "default": "%d of %d trial products chosen",
+      "info": "Use %d as placeholders for trial count. The first %d is the current trial quantity and the second is the max trial quantity."
+    },
     {
       "type": "text",
       "id": "max_quantity_text",

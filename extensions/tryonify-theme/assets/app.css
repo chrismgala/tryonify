@@ -18,3 +18,7 @@
   opacity: 1;
   transform: translate(-50%, 0);
 }
+.tryonify-trial-count {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
