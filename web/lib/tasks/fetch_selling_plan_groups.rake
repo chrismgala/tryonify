@@ -21,6 +21,6 @@ def check_billing(shop)
     subscriptions = service.call
 
     # Redirect to billing if no active subscription
-    false unless subscriptions.length > 0
+    subscriptions.length > 0
   end
 end
