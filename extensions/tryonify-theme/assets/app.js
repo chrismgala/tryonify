@@ -61,8 +61,9 @@
 
   async function setup() {
     config.cart = await fetchCart();
-    config.trialLineItemKeys = findTrialLineItems();
     config.trialQuantity = getTrialQuantity();
+
+    findTrialLineItems();
 
     if (config.trialQuantity >= window.tryonify.maxTrialItems) {
       disableTrialOptions(true)
@@ -118,8 +119,7 @@
         if (!config.trialLineItemKeys.includes(payload.id) && !payload.selling_plan) return true;
         item = config.cart.items.find(item => item.key === payload.id);
       } else {
-        const trialIds = Object.keys(config.trialLineItemKeys).map(key => config.trialLineItemKeys[key].id);
-        if (!trialIds.includes(payload.id) && !payload.selling_plan) return true;
+        if (!config.trialLineItemId.includes(payload.id) && !payload.selling_plan) return true;
         item = config.cart.items.find(item => item.id === payload.id);
       }
     }
@@ -139,9 +139,8 @@
 
   function handleUpdateEndpoint(payload) {
     if (Array.isArray(payload.updates)) {
-      const trialLineItemIndex = Object.keys(config.trialLineItemKeys).map(key => config.trialLineItemKeys[key].index);
       const updatedTrialQuantity = payload.updates.reduce((acc, value, index) => {
-        if (trialLineItemIndex.includes(index)) {
+        if (config.trialLineItemIndex.includes(index)) {
           acc += parseInt(value);
         }
 
@@ -151,16 +150,14 @@
       return updatedTrialQuantity <= window.tryonify.maxTrialItems;
     } else {
       const updatedTrialQuantity = Object.keys(payload.updates).reduce(key => {
-        const trialKeys = Object.keys(config.trialLineItemKeys);
-        const trialIds = Object.keys(config.trialLineItemKeys).map(item => item.id);
         let id = parseInt(key);
 
         if (id) {
-          if (trialIds.includes(id)) {
+          if (config.trialLineItemId.includes(id)) {
             acc += parseInt(payload.updates[key]);
           }
         } else {
-          if (trialKeys.includes(key)) {
+          if (config.trialLineItemKeys.includes(key)) {
             acc += parseInt(payload.updates[key]);
           }
         }
@@ -195,12 +192,11 @@
   }
 
   function handleCheckout(payload) {
-    const trialItemIndex = Object.keys(config.trialLineItemKeys).map(key => config.trialLineItemKeys[key].index);
     let i = 0;
     let sellingPlanQuantity = 0;
 
     for (const entry of payload.entries()) {
-      if (trialItemIndex.includes(i)) {
+      if (config.trialLineItemIndex.includes(i)) {
         sellingPlanQuantity += parseInt(entry[1]);
       }
       i++;
