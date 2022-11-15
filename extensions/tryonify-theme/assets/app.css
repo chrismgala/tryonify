@@ -1,0 +1,24 @@
+.tryonify-alert {
+  position: fixed;
+  bottom: -9999px;
+  left: 50%;
+  transform: translate(-50%, -20%);
+  opacity: 0;
+  padding: 15px;
+  color: #fff;
+  display: none;
+  transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  z-index: 9999;
+  line-height: 1;
+  border-radius: 10px;
+}
+.tryonify-alert.open {
+  display: block;
+  bottom: 50px;
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.tryonify-trial-count {
+  margin-bottom: 5px;
+  font-weight: bold;
+}

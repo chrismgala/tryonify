@@ -21,7 +21,8 @@ module Api
           :onboarded,
           :return_explainer,
           :allow_automatic_payments,
-          :return_period
+          :return_period,
+          :max_trial_items
         )
       end
     end
