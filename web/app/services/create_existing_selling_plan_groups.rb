@@ -8,9 +8,10 @@ class CreateExistingSellingPlanGroups
     fetch_plans
   rescue StandardError => e
     Rails.logger.error(e)
+    raise e
   end
 
-  def fetch_plans(pagination = nil)
+  def fetch_plans(pagination = {})
     service = FetchSellingPlanGroups.new(pagination)
     service.call
 
@@ -29,18 +30,18 @@ class CreateExistingSellingPlanGroups
         description: selling_plan.dig('node', 'description'),
         prepay: selling_plan.dig('node', 'billingPolicy', 'checkoutCharge', 'value', 'amount'),
         trial_days: ActiveSupport::Duration.parse(selling_plan.dig('node', 'billingPolicy',
-                                                                   'remainingBalanceChargeTimeAfterCheckout'))
+                                                                   'remainingBalanceChargeTimeAfterCheckout')).in_days.to_i
       )
 
       new_selling_plan_group.selling_plan = new_selling_plan
 
-      result = new_selling_plan_group.save!
+      new_selling_plan_group.save! unless SellingPlanGroup.exists?(shopify_id: new_selling_plan_group.shopify_id)
     end
 
-    if service.dig('sellingPlanGroups', 'pageInfo', 'hasNextPage')
+    if service.selling_plan_groups.dig('pageInfo', 'hasNextPage')
       pagination = {
         next: 'true',
-        cursor: service.dig('sellingPlanGroups', 'pageInfo', 'endCursor')
+        cursor: service.selling_plan_groups.dig('pageInfo', 'endCursor')
       }
 
       fetch_plans(pagination)

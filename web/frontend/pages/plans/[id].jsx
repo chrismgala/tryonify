@@ -40,7 +40,7 @@ export default function EditSellingPlan() {
     initialValues = {
       name: data.name,
       description: data.description,
-      sellingPlan: {
+      sellingPlanAttributes: {
         shopifyId: sellingPlan.id,
         name: sellingPlan.name,
         description: sellingPlan.description,

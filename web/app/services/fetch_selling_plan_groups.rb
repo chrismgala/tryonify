@@ -89,7 +89,7 @@ class FetchSellingPlanGroups
     }
   QUERY
 
-  def initialize(pagination)
+  def initialize(pagination = {})
     @selling_plan_groups = nil
     @pagination = pagination
     @session = ShopifyAPI::Context.active_session
@@ -117,5 +117,6 @@ class FetchSellingPlanGroups
   rescue ActiveRecord::RecordInvalid, StandardError => e
     Rails.logger.error("[FetchSellingPlanGroups Failed]: #{e.message}")
     @error = e.message
+    raise e
   end
 end

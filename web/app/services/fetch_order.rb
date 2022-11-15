@@ -90,6 +90,7 @@ class FetchOrder
     end
 
     @order = response.body.dig('data', 'order')
+    puts @order.inspect
   rescue ActiveRecord::RecordInvalid, StandardError => e
     Rails.logger.error("[FetchOrder Failed]: #{e.message}")
     @error = e.message

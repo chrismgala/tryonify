@@ -14,7 +14,7 @@ import SaveBar from './save-bar';
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
   description: Yup.string().nullable(),
-  sellingPlan: Yup.object().shape({
+  sellingPlanAttributes: Yup.object().shape({
     name: Yup.string().required('Name is required'),
     description: Yup.string().nullable(),
     prepay: Yup.number().required('Pre-paid amount is required'),
@@ -62,14 +62,14 @@ export default function SellingPlanForm({
                 <FormLayout>
                   <Field
                     label="Name"
-                    name="sellingPlan.name"
+                    name="sellingPlanAttributes.name"
                     component={TextField}
                     helpText="Name customers will see."
                   />
 
                   <Field
                     label="Description"
-                    name="sellingPlan.description"
+                    name="sellingPlanAttributes.description"
                     multiline={4}
                     component={TextField}
                     helpText="Description customers will see."
@@ -82,14 +82,14 @@ export default function SellingPlanForm({
                 <FormLayout>
                   <Field
                     label="Pre-paid Amount"
-                    name="sellingPlan.prepay"
+                    name="sellingPlanAttributes.prepay"
                     type="number"
                     component={TextField}
                   />
 
                   <Field
                     label="Trial Length (Days)"
-                    name="sellingPlan.trialDays"
+                    name="sellingPlanAttributes.trialDays"
                     type="number"
                     component={TextField}
                   />
