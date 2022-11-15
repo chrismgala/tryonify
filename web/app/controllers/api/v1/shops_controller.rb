@@ -9,6 +9,18 @@ module Api
 
       def update
         @shop = current_user
+
+        if @shop.max_trial_items != shop_params[:max_trial_items].to_i
+          # Set max trial metafield
+          service = CreateMetafield.new({
+                                          key: 'maxTrialItems',
+                                          namespace: 'settings',
+                                          type: 'number_integer',
+                                          value: shop_params[:max_trial_items].to_i
+                                        })
+          service.call
+        end
+
         render_errors @shop and return unless @shop.update(shop_params)
       end
 
