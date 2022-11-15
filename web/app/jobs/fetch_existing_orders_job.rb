@@ -68,8 +68,9 @@ class FetchExistingOrdersJob < ActiveJob::Base
   def has_selling_plan?(order)
     line_items = order.dig('lineItems', 'edges')
     selling_plan_ids = line_items.select { |x| x.dig('node', 'sellingPlan', 'sellingPlanId') }
+                                 .map { |x| x.dig('node', 'sellingPlan', 'sellingPlanId') }
 
-    if selling_plan_ids.length.positive?
+    if selling_plan_ids.length.positive? && SellingPlan.where(shopify_id: selling_plan_ids).any?
       true
     elsif order.dig('lineItems', 'pageInfo', 'hasNextPage')
       service = FetchOrder.new(order.dig('id'), order.dig('lineItems', 'pageInfo', 'endCursor'))

@@ -14,7 +14,7 @@ import SellingPlanForm from '../../components/selling-plan-form';
 const initialValues = {
   name: '',
   description: '',
-  sellingPlan: {
+  sellingPlanAttributes: {
     name: '',
     description: '',
     prepay: 0,

@@ -2,6 +2,7 @@
 
 class SellingPlan < ApplicationRecord
   validates :name, :prepay, :trial_days, presence: true
+  validates :shopify_id, uniqueness: true
   validates :trial_days, numericality: { only_integer: true, less_than_or_equal_to: 60 }
 
   belongs_to :selling_plan_group

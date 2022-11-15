@@ -2,6 +2,7 @@
 
 class SellingPlanGroup < ApplicationRecord
   validates :name, presence: true
+  validates :shopify_id, uniqueness: true
   validates_associated :selling_plan
 
   has_one :selling_plan, dependent: :destroy
