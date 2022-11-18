@@ -1,37 +1,21 @@
+{% liquid
+  assign cart_trial_items = 0
+
+  for item in cart.items 
+    if item.selling_plan_allocation
+      assign cart_trial_items = cart_trial_items | plus: item.quantity
+    endif
+  endfor
+%}
 <div class="tryonify-embed" data-embed-target="{{ block.settings.embed_target }}">
   <div class="tryonify-selling-plan-wrapper">
-    {% for selling_plan_group in product.selling_plan_groups %}
-      <div class="tryonify-selling-plan-group">
-        {% if selling_plan_group.app_id == "tryonify" %}
-          {% for selling_plan in selling_plan_group.selling_plans %}
-            <label class="tryonify-selling-plan" for="tryonify-{{ selling_plan.id }}">
-              <div class="tryonify-selling-plan-row">
-                <div class="tryonify-selling-plan-option-wrapper">
-                  <input id="tryonify-{{ selling_plan.id }}" class="tryonify-selling-plan-option" type="radio" name="selling_plan_{{ selling_plan_group.id }}" value="{{ selling_plan.id }}" autocomplete="off" />
-                </div>
-                <div class="tryonify-selling-plan-name">
-                  {{ selling_plan.name }}
-                </div>
-                {% if selling_plan.checkout_charge.value > 0 %}
-                  <div class="tryonify-selling-plan-option-charge">{{ selling_plan.checkout_charge.value | money }}</div>
-                {% endif %}
-              </div>
-              <p class="tryonify-selling-plan-description">{{ selling_plan.description }}</p>
-            </label>
-          {% endfor %}
-          <label class="tryonify-selling-plan" for="tryonify-no-{{ selling_plan_group.id }}">
-            <div class="tryonify-selling-plan-row">
-              <div class="tryonify-selling-plan-option-wrapper">
-                <input id="tryonify-no-{{ selling_plan_group.id }}" class="tryonify-selling-plan-option" type="radio" name="selling_plan_{{ selling_plan_group.id }}" checked autocomplete="off" value="" />
-              </div>
-              <div class="tryonify-selling-plan-name">
-                Buy Now
-              </div>
-            </div>
-          </label>
-        {% endif %}
-      </div>
-    {% endfor %}
+    {% if block.settings.style == 'expanded' %}
+      {% render 'expanded', variable: cart_trial_items %}
+    {% endif %}
+  
+    {% if block.settings.style == 'compact' %}
+      {% render 'compact', cart_trial_items: cart_trial_items, button_text: block.settings.button_text, button_class: block.settings.button_class %}
+    {% endif %}
   </div>
 </div>
 
@@ -48,6 +32,41 @@
       "id": "embed_target",
       "label": "Embed target",
       "info": "Insert trial options into HTML element with this selector."
+    },
+    {
+      "type": "radio",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        {
+          "value": "expanded",
+          "label": "Expanded"
+        },
+        {
+          "value": "compact",
+          "label": "Compact"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Compact Styling"
+    },
+    {
+      "type": "paragraph",
+      "content": "These settings are used when the app block style is set to Compact."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Try For Free"
+    },
+    {
+      "type": "text",
+      "id": "button_class",
+      "label": "Button Class",
+      "default": "tryonify-button"
     }
   ]
 }

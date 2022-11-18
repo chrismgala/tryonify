@@ -14,8 +14,10 @@
   "dependencies": {
     "@shopify/admin-ui-extensions-react": "^1.0.4",
     "@shopify/app": "^3.21.0",
+    "@shopify/checkout-ui-extensions-react": "^0.20.0",
     "@shopify/cli": "^3.21.0",
-    "iso8601-duration": "^2.1.1"
+    "iso8601-duration": "^2.1.1",
+    "react": "^17.0.0"
   },
   "author": "davidw",
   "devDependencies": {
