@@ -1,22 +1,34 @@
 (function () {
   const embed = document.querySelector('.tryonify-embed');
-  const forms = document.querySelectorAll('form[action="/cart/add"]');
-  const triggers = document.querySelectorAll('.tryonify-selling-plan-option');
-  const addToCartButton = document.getElementById('tryonify-add-to-cart');
+  const forms = document.querySelectorAll('form[action="/cart/add"]:not(.installment)');
+  let triggers;
+  let addToCartButtons
 
   const sellingPlanInputs = getSellingPlanInputs();
 
   document.addEventListener('DOMContentLoaded', initialize);
 
-  if (embed) {
-    insertEmbed();
-  }
-
   function insertEmbed() {
-    embed.style = 'display:block;';
     if (embed.dataset.embedTarget) {
-      const target = document.querySelector(embed.dataset.embedTarget);
-      if (target) target.appendChild(embed);
+      const targets = document.querySelectorAll(embed.dataset.embedTarget);
+
+      if (targets.length === 1) {
+        targets.forEach(target => {
+          let clonedEmbed = embed.cloneNode(true);
+          clonedEmbed.style = 'display:block;';
+          target.appendChild(clonedEmbed);
+        });
+      } else if (targets.length > 1) {
+        targets.forEach(target => {
+          const form = target.closest('form[action="/cart/add"]:not(.installment)');
+
+          if (!form) return;
+
+          let clonedEmbed = embed.cloneNode(true);
+          clonedEmbed.style = 'display:block;';
+          target.appendChild(clonedEmbed);
+        });
+      }
     } else {
       forms.forEach((form) => {
         let productButton = form.querySelector('button[type="submit"]');
@@ -34,10 +46,12 @@
               retry -= 1;
             }
           }
-
-          if (embed && productButton) form.insertBefore(embed, productButton);
+          const clonedEmbed = embed.cloneNode(true);
+          clonedEmbed.style = 'display:block;';
+          if (clonedEmbed && productButton) form.insertBefore(clonedEmbed, productButton);
         }
       });
+      embed.remove();
     }
   }
 
@@ -86,24 +100,46 @@
   function handleAddToCart(e) {
     e.preventDefault();
 
-    const form = document.querySelector('form[action~="/cart/add"]');
+    let form;
+
+    if (addToCartButtons.length > 1) {
+      form = e.target.closest('form');
+    } else {
+      form = document.querySelector('form[action~="/cart/add"]:not(.installment)');
+    }
 
     if (form) {
       const sellingPlan = form.querySelector('input[name="selling_plan"]');
 
       if (!sellingPlan) return;
       sellingPlan.value = e.target.dataset.sellingPlanId;
-      form.submit();
+
+      const submitButton = form.querySelector('[type="submit"]');
+
+      if (submitButton) {
+        submitButton.click();
+      } else {
+        form.submit();
+      }
     }
   }
 
   function initialize() {
+    if (embed) {
+      insertEmbed();
+    }
+
+    triggers = document.querySelectorAll('.tryonify-selling-plan-option');
+    addToCartButtons = document.querySelectorAll('.tryonify-add-to-cart');
+
     triggers.forEach((trigger) => {
       trigger.addEventListener('change', handleChange);
     });
 
-    if (addToCartButton) {
-      addToCartButton.addEventListener('click', handleAddToCart);
+    if (addToCartButtons.length > 0) {
+      addToCartButtons.forEach(button => {
+        button.addEventListener('click', handleAddToCart);
+      });
     }
   }
 }());
