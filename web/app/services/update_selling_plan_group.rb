@@ -77,15 +77,19 @@ class UpdateSellingPlanGroup
       updatePlans: [plan]
     }
 
-    response = @client.query(query: query, variables: variables)
+    response = @client.query(query:, variables:)
 
     # Raise an error if the query is unsuccessful
-    raise UpdateSellingPlanGroup::InvalidRequest, response.body.dig('errors', 0, 'message') and return unless response.body['errors'].nil?
+    unless response.body['errors'].nil?
+      raise UpdateSellingPlanGroup::InvalidRequest,
+            response.body.dig('errors', 0, 'message') and return
+    end
 
     @selling_plan_group = response.body.dig('data', 'sellingPlanGroupUpdate', 'sellingPlanGroup')
   rescue ActiveRecord::RecordInvalid, StandardError => e
-    Rails.logger.error("[UpdateSellingPlanGroup Failed]: #{e}")
+    Rails.logger.error("[UpdateSellingPlanGroup Failed]: #{e.message}")
     @error = e
+    raise e
   end
 
   def create_plan(plan)
@@ -95,11 +99,11 @@ class UpdateSellingPlanGroup
 
     trial_days_iso = trial_days_integer.days.iso8601
 
-    new_plan = {
+    {
       id: plan.shopify_id,
       name: plan.name,
       description: plan.description || '',
-      options: ["default"],
+      options: ['default'],
       billingPolicy: {
         fixed: {
           checkoutCharge: {
@@ -130,7 +134,5 @@ class UpdateSellingPlanGroup
         }
       }
     }
-
-    new_plan
   end
 end

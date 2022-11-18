@@ -56,32 +56,35 @@ class CreateSellingPlanGroup
       }
     QUERY
 
-
     variables = {
       name: @selling_plan_group.name,
       description: @selling_plan_group.description,
       plan: create_plan(@selling_plan_group.selling_plan)
     }
 
-    response = @client.query(query: query, variables: variables)
+    response = @client.query(query:, variables:)
 
     # Raise an error if the query is unsuccessful
-    raise CreateSellingPlanGroup::InvalidRequest, response.body.dig('errors', 0, 'message') and return unless response.body['errors'].nil?
+    unless response.body['errors'].nil?
+      raise CreateSellingPlanGroup::InvalidRequest,
+            response.body.dig('errors', 0, 'message') and return
+    end
 
     @selling_plan_group = response.body.dig('data', 'sellingPlanGroupCreate', 'sellingPlanGroup')
   rescue ActiveRecord::RecordInvalid, StandardError => e
-    Rails.logger.error("[CreateSellingPlanGroup Failed]: #{e}")
+    Rails.logger.error("[CreateSellingPlanGroup Failed]: #{e.message}")
     @error = e
+    raise e
   end
 
   def create_plan(plan)
     trial_days_integer = plan.trial_days.to_i
     trial_days_iso = trial_days_integer.days.iso8601
 
-    return [{
+    [{
       name: plan.name,
       description: plan.description,
-      options: ["default"],
+      options: ['default'],
       billingPolicy: {
         fixed: {
           checkoutCharge: {

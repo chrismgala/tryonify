@@ -20,7 +20,14 @@ export function useAuthenticatedFetch() {
 
   return async (uri, options) => {
     const response = await fetchFunction(uri, options);
+
     checkHeadersForReauthorization(response.headers, app);
+
+    if (!response.ok) {
+      const { message } = await response.json();
+      throw new Error(message);
+    }
+
     return response;
   };
 }
