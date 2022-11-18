@@ -17,7 +17,7 @@ module Api
           name: selling_plan_params[:name],
           description: selling_plan_params[:description],
           shop: current_user,
-          selling_plan: SellingPlan.new(selling_plan_params[:selling_plan])
+          selling_plan: SellingPlan.new(selling_plan_params[:selling_plan_attributes])
         )
 
         if selling_plan_group.valid?
@@ -55,15 +55,16 @@ module Api
 
         render_errors :unauthorized and return unless selling_plan_group.shop_id == current_user.id
 
-        selling_plan_params[:selling_plan_attributes][:id] = selling_plan_group.selling_plan.id
-        selling_plan_group.assign_attributes(selling_plan_params)
+        # selling_plan_params[:selling_plan_attributes][:id] = selling_plan_group.selling_plan.id
+        # selling_plan_group.assign_attributes(selling_plan_params)
 
         if selling_plan_group.valid?
           service = UpdateSellingPlanGroup.new(selling_plan_group)
           service.call
 
           render_errors service.error and return if service.error
-          render_errors selling_plan_group and return unless selling_plan_group.save!
+
+          # render_errors selling_plan_group and return unless selling_plan_group.update!(selling_plan_params)
 
           render json: service.selling_plan_group
         else
@@ -77,7 +78,7 @@ module Api
 
         render_errors service.error if service.error
 
-        selling_plan_group.find_by(shopify_id: params[:id])
+        selling_plan_group = SellingPlanGroup.find_by(shopify_id: params[:id])
         selling_plan_group.destroy! if selling_plan_group
       end
 
