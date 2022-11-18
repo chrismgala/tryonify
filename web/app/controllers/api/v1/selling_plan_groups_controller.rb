@@ -25,6 +25,9 @@ module Api
           service.call
 
           if service.selling_plan_group
+            selling_plan_group.shopify_id = service.selling_plan_group.dig('id')
+            selling_plan_group.selling_plan.shopify_id = service.selling_plan_group.dig('sellingPlans', 'edges', 0,
+                                                                                        'node', 'id')
             selling_plan_group.save!
 
             render json: service.selling_plan_group

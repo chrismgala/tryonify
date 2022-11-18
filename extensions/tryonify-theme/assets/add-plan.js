@@ -60,11 +60,14 @@
 
     forms.forEach((form) => {
       const sellingPlanInput = form.querySelector('input[name="selling_plan"]');
+      const idInput = form.querySelector('input[name="id"]');
 
       if (sellingPlanInput) {
+        sellingPlanInput.dataset.variantId = idInput.value;
         inputs.push(sellingPlanInput);
       } else {
         const input = createInput();
+        input.dataset.variantId = idInput.value;
         inputs.push(form.appendChild(input));
       }
     });

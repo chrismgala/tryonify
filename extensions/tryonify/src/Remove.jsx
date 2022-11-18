@@ -14,7 +14,7 @@ export default function Remove() {
   const handleSubmit = async () => {
     const token = await getSessionToken();
 
-    await fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}/products`, {
+    await fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}/products`, {
       method: 'POST',
       headers: {
         'authorization': `Bearer ${token}`,

@@ -15,7 +15,7 @@ export default function Add() {
 
   const fetchPlans = useCallback(async () => {
     const token = await getSessionToken();
-    const resp = await fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups`, {
+    const resp = await fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups`, {
       headers: {
         'authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ export default function Add() {
     if (selected) {
       const token = await getSessionToken();
 
-      await fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(selected)}/products`, {
+      await fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups/${encodeURIComponent(selected)}/products`, {
         method: 'POST',
         headers: {
           'authorization': `Bearer ${token}`,
@@ -63,6 +63,10 @@ export default function Add() {
       onAction: () => close(),
     });
   }, [getSessionToken, close, done, setPrimaryAction, setSecondaryAction, selected]);
+
+  useEffect(() => {
+    setSelected(options[0].id);
+  }, [options])
 
   const options = trialPlans.map(({ id, name }) => ({
     label: name,

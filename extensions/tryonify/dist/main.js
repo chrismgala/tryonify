@@ -16722,7 +16722,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     const [selected, setSelected] = (0, import_react15.useState)(null);
     const fetchPlans = (0, import_react15.useCallback)(() => __async(this, null, function* () {
       const token = yield getSessionToken();
-      const resp = yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups`, {
+      const resp = yield fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups`, {
         headers: {
           "authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
@@ -16736,7 +16736,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     const handleSubmit = () => __async(this, null, function* () {
       if (selected) {
         const token = yield getSessionToken();
-        yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(selected)}/products`, {
+        yield fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups/${encodeURIComponent(selected)}/products`, {
           method: "POST",
           headers: {
             "authorization": `Bearer ${token}`,
@@ -16763,6 +16763,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
         onAction: () => close()
       });
     }, [getSessionToken, close, done, setPrimaryAction, setSecondaryAction, selected]);
+    (0, import_react15.useEffect)(() => {
+      setSelected(options[0].id);
+    }, [options]);
     const options = trialPlans.map(({ id, name }) => ({
       label: name,
       value: id
@@ -16824,7 +16827,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     const createPlan = () => __async(this, null, function* () {
       try {
         const token = yield getSessionToken();
-        const resp = yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups`, {
+        const resp = yield fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups`, {
           method: "POST",
           headers: {
             "authorization": `Bearer ${token}`,
@@ -16850,7 +16853,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     const addProductToPlan = (id) => __async(this, null, function* () {
       try {
         const token = yield getSessionToken();
-        const resp = yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(id)}/products`, {
+        const resp = yield fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups/${encodeURIComponent(id)}/products`, {
           method: "POST",
           headers: {
             "authorization": `Bearer ${token}`,
@@ -17020,7 +17023,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     const fetchPlan = (0, import_react17.useCallback)(() => __async(this, null, function* () {
       var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u;
       const token = yield getSessionToken();
-      const resp = yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}`, {
+      const resp = yield fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}`, {
         headers: {
           "authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
@@ -17040,7 +17043,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     const updatePlan = () => __async(this, null, function* () {
       try {
         const token = yield getSessionToken();
-        const resp = yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}`, {
+        const resp = yield fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}`, {
           method: "PUT",
           headers: {
             "authorization": `Bearer ${token}`,
@@ -17179,7 +17182,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     const { getSessionToken } = useSessionToken();
     const handleSubmit = () => __async(this, null, function* () {
       const token = yield getSessionToken();
-      yield fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}/products`, {
+      yield fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}/products`, {
         method: "POST",
         headers: {
           "authorization": `Bearer ${token}`,

@@ -57,7 +57,7 @@ export default function Create() {
   const createPlan = async () => {
     try {
       const token = await getSessionToken();
-      const resp = await fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups`, {
+      const resp = await fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups`, {
         method: 'POST',
         headers: {
           'authorization': `Bearer ${token}`,
@@ -85,7 +85,7 @@ export default function Create() {
   const addProductToPlan = async (id) => {
     try {
       const token = await getSessionToken();
-      const resp = await fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(id)}/products`, {
+      const resp = await fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups/${encodeURIComponent(id)}/products`, {
         method: 'POST',
         headers: {
           'authorization': `Bearer ${token}`,

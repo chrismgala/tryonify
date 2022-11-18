@@ -58,7 +58,7 @@ export default function Edit() {
 
   const fetchPlan = useCallback(async () => {
     const token = await getSessionToken();
-    const resp = await fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}`, {
+    const resp = await fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}`, {
       headers: {
         'authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ export default function Edit() {
   const updatePlan = async () => {
     try {
       const token = await getSessionToken();
-      const resp = await fetch(`https://tryonify.ngrok.io/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}`, {
+      const resp = await fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups/${encodeURIComponent(data.sellingPlanGroupId)}`, {
         method: 'PUT',
         headers: {
           'authorization': `Bearer ${token}`,
