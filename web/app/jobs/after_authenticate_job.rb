@@ -13,5 +13,6 @@ class AfterAuthenticateJob < ActiveJob::Base
     end
 
     FetchExistingOrdersJob.perform_later(shop.id, nil)
+    CreateExistingSellingPlanGroupsJob.perform_later(shop.id)
   end
 end
