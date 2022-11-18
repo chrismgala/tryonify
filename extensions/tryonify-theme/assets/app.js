@@ -12,6 +12,8 @@
     '/cart/add',
   ]
 
+  let newPayload;
+
   document.addEventListener('DOMContentLoaded', initialize);
 
   async function fetchCart() {
@@ -63,6 +65,7 @@
 
   async function setup() {
     config.cart = await fetchCart();
+    newPayload = null;
     window.tryonify.currentTrialQuantity = getTrialQuantity();
 
     findTrialLineItems();
@@ -135,6 +138,13 @@
 
     if (item) {
       const quantityDifference = parseInt(payload.quantity) - parseInt(item.quantity);
+
+      // Create new payload with valid quantity
+      newPayload = {
+        ...payload,
+        quantity: item.quantity,
+      }
+
       return (window.tryonify.currentTrialQuantity + quantityDifference) <= window.tryonify.maxTrialItems;
     } else {
       return true;
@@ -142,6 +152,10 @@
   }
 
   function handleUpdateEndpoint(payload) {
+    newPayload = {
+      updates: {}
+    }
+
     if (Array.isArray(payload.updates)) {
       const updatedTrialQuantity = payload.updates.reduce((acc, value, index) => {
         if (config.trialLineItemIndex.includes(index)) {
@@ -153,7 +167,7 @@
 
       return updatedTrialQuantity <= window.tryonify.maxTrialItems;
     } else {
-      const updatedTrialQuantity = Object.keys(payload.updates).reduce(key => {
+      const updatedTrialQuantity = Object.keys(payload.updates).reduce((acc, key) => {
         let id = parseInt(key);
 
         if (id) {
@@ -201,7 +215,7 @@
 
     for (const entry of payload.entries()) {
       if (config.trialLineItemIndex.includes(i)) {
-        sellingPlanQuantity += parseInt(entry[1]);
+        if (entry[0].includes('update')) sellingPlanQuantity += parseInt(entry[1]);
       }
       i++;
     }
@@ -210,7 +224,14 @@
   }
 
   function isWatchedEndpoint(endpoint) {
-    return watchedEndpoints.includes(endpoint)
+    let watched = false;
+
+    watchedEndpoints.forEach(watchedEndpoint => {
+      if (endpoint.includes(watchedEndpoint)) {
+        watched = true;
+      }
+    });
+    return watched;
   }
 
   function showAlert() {
@@ -249,7 +270,15 @@
 
       if (isWatchedEndpoint(resource) && !validCartUpdate(args)) {
         showAlert();
-        throw new Error(`Only ${window.tryonify.maxTrialItems} trial products allowed`);
+
+        if (newPayload) {
+          options.body = JSON.stringify(newPayload);
+        } else {
+          return new Response(JSON.stringify({}), {
+            status: 422,
+            statusText: `Only ${window.tryonify.maxTrialItems} trial products allowed`
+          });
+        }
       }
 
       const response = await originalFetch(resource, options);
