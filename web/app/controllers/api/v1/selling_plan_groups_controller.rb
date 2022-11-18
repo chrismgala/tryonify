@@ -51,10 +51,16 @@ module Api
       end
 
       def update
-        selling_plan_group = SellingPlanGroup.find_by(shopify_id: params[:id])
+        selling_plan_group = SellingPlanGroup.find_by!(shopify_id: params[:id])
 
         render_errors :unauthorized and return unless selling_plan_group.shop_id == current_user.id
 
+        selling_plan_group.name = selling_plan_params[:name]
+        selling_plan_group.description = selling_plan_params[:description]
+        selling_plan_group.selling_plan.name = selling_plan_params[:selling_plan_attributes][:name]
+        selling_plan_group.selling_plan.description = selling_plan_params[:selling_plan_attributes][:description]
+        selling_plan_group.selling_plan.prepay = selling_plan_params[:selling_plan_attributes][:prepay]
+        selling_plan_group.selling_plan.trial_days = selling_plan_params[:selling_plan_attributes][:trial_days]
         # selling_plan_params[:selling_plan_attributes][:id] = selling_plan_group.selling_plan.id
         # selling_plan_group.assign_attributes(selling_plan_params)
 
@@ -64,7 +70,7 @@ module Api
 
           render_errors service.error and return if service.error
 
-          # render_errors selling_plan_group and return unless selling_plan_group.update!(selling_plan_params)
+          render_errors selling_plan_group and return unless selling_plan_group.save!
 
           render json: service.selling_plan_group
         else
