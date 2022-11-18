@@ -2,6 +2,8 @@
   const embed = document.querySelector('.tryonify-embed');
   const forms = document.querySelectorAll('form[action="/cart/add"]');
   const triggers = document.querySelectorAll('.tryonify-selling-plan-option');
+  const addToCartButton = document.getElementById('tryonify-add-to-cart');
+
   const sellingPlanInputs = getSellingPlanInputs();
 
   document.addEventListener('DOMContentLoaded', initialize);
@@ -81,9 +83,27 @@
     }
   }
 
+  function handleAddToCart(e) {
+    e.preventDefault();
+
+    const form = document.querySelector('form[action~="/cart/add"]');
+
+    if (form) {
+      const sellingPlan = form.querySelector('input[name="selling_plan"]');
+
+      if (!sellingPlan) return;
+      sellingPlan.value = e.target.dataset.sellingPlanId;
+      form.submit();
+    }
+  }
+
   function initialize() {
     triggers.forEach((trigger) => {
       trigger.addEventListener('change', handleChange);
     });
+
+    if (addToCartButton) {
+      addToCartButton.addEventListener('click', handleAddToCart);
+    }
   }
 }());

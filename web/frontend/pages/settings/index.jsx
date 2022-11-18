@@ -18,8 +18,10 @@ import CheckboxField from '../../components/checkbox-field';
 const initialValues = {
   klaviyoPublicKey: '',
   klaviyoPrivateKey: '',
+  returnPeriod: 14,
   returnExplainer: '',
   allowAutomaticPayments: true,
+  maxTrialItems: 3,
 };
 
 export default function Settings() {
@@ -79,6 +81,11 @@ export default function Settings() {
                       label="Allow automatic payments"
                       name="allowAutomaticPayments"
                       component={CheckboxField}
+                    />
+                    <Field
+                      label="Max trial items per order"
+                      name="maxTrialItems"
+                      component={TextField}
                     />
                   </FormLayout>
                 </Card>
