@@ -102,7 +102,7 @@
 
     let form;
 
-    if (addToCartButtons.length > 0) {
+    if (addToCartButtons.length > 1) {
       form = e.target.closest('form');
     } else {
       form = document.querySelector('form[action~="/cart/add"]:not(.installment)');
@@ -113,7 +113,14 @@
 
       if (!sellingPlan) return;
       sellingPlan.value = e.target.dataset.sellingPlanId;
-      form.submit();
+
+      const submitButton = form.querySelector('[type="submit"]');
+
+      if (submitButton) {
+        submitButton.click();
+      } else {
+        form.submit();
+      }
     }
   }
 
