@@ -2536,7 +2536,7 @@
           var HostPortal = 4;
           var HostComponent = 5;
           var HostText = 6;
-          var Fragment4 = 7;
+          var Fragment2 = 7;
           var Mode = 8;
           var ContextConsumer = 9;
           var ContextProvider = 10;
@@ -5857,7 +5857,7 @@
               }
             }
             function updateFragment2(returnFiber, current2, fragment, lanes, key) {
-              if (current2 === null || current2.tag !== Fragment4) {
+              if (current2 === null || current2.tag !== Fragment2) {
                 var created = createFiberFromFragment(fragment, returnFiber.mode, lanes, key);
                 created.return = returnFiber;
                 return created;
@@ -6225,7 +6225,7 @@
               while (child !== null) {
                 if (child.key === key) {
                   switch (child.tag) {
-                    case Fragment4: {
+                    case Fragment2: {
                       if (element.type === REACT_FRAGMENT_TYPE) {
                         deleteRemainingChildren(returnFiber, child.sibling);
                         var existing = useFiber(child, element.props.children);
@@ -9937,7 +9937,7 @@
                 var _resolvedProps2 = workInProgress2.elementType === type ? _unresolvedProps2 : resolveDefaultProps(type, _unresolvedProps2);
                 return updateForwardRef(current2, workInProgress2, type, _resolvedProps2, renderLanes2);
               }
-              case Fragment4:
+              case Fragment2:
                 return updateFragment(current2, workInProgress2, renderLanes2);
               case Mode:
                 return updateMode(current2, workInProgress2, renderLanes2);
@@ -10296,7 +10296,7 @@
               case SimpleMemoComponent:
               case FunctionComponent:
               case ForwardRef:
-              case Fragment4:
+              case Fragment2:
               case Mode:
               case Profiler:
               case ContextConsumer:
@@ -14737,7 +14737,7 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
             return fiber;
           }
           function createFiberFromFragment(elements, mode, lanes, key) {
-            var fiber = createFiber(Fragment4, elements, key, mode);
+            var fiber = createFiber(Fragment2, elements, key, mode);
             fiber.lanes = lanes;
             return fiber;
           }
@@ -16720,6 +16720,10 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     const { getSessionToken } = useSessionToken();
     const [trialPlans, setTrialPlans] = (0, import_react15.useState)([]);
     const [selected, setSelected] = (0, import_react15.useState)(null);
+    const options = trialPlans.map(({ id, name }) => ({
+      label: name,
+      value: id
+    }));
     const fetchPlans = (0, import_react15.useCallback)(() => __async(this, null, function* () {
       const token = yield getSessionToken();
       const resp = yield fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups`, {
@@ -16764,12 +16768,9 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       });
     }, [getSessionToken, close, done, setPrimaryAction, setSecondaryAction, selected]);
     (0, import_react15.useEffect)(() => {
-      setSelected(options[0].id);
+      var _a;
+      setSelected((_a = options[0]) == null ? void 0 : _a.value);
     }, [options]);
-    const options = trialPlans.map(({ id, name }) => ({
-      label: name,
-      value: id
-    }));
     return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, {
       children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Select2, {
         label: "Select a trial plan",
@@ -16892,14 +16893,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
       }),
       [onPrimaryAction, close]
     );
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(BlockStack2, {
       children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BlockStack2, {
-          spacing: "none",
-          children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextBlock2, {
-            size: "extraLarge",
-            children: "Create trial plan"
-          })
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextBlock2, {
+          size: "extraLarge",
+          children: "Create trial plan"
         }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card2, {
           title: "Admin Details",
@@ -17091,14 +17089,11 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     (0, import_react17.useEffect)(() => {
       fetchPlan();
     }, []);
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(BlockStack2, {
       children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BlockStack2, {
-          spacing: "none",
-          children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextBlock2, {
-            size: "extraLarge",
-            children: "Update trial plan"
-          })
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TextBlock2, {
+          size: "extraLarge",
+          children: "Update trial plan"
         }),
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card2, {
           title: "Admin Details",

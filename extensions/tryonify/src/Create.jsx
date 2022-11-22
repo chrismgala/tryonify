@@ -133,10 +133,8 @@ export default function Create() {
   );
 
   return (
-    <>
-      <BlockStack spacing="none">
-        <TextBlock size="extraLarge">Create trial plan</TextBlock>
-      </BlockStack>
+    <BlockStack>
+      <TextBlock size="extraLarge">Create trial plan</TextBlock>
 
       <Card title="Admin Details" sectioned>
         <BlockStack>
@@ -197,6 +195,6 @@ export default function Create() {
       </Card>
 
       {cachedActions}
-    </>
+    </BlockStack>
   )
 }

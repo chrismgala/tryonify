@@ -139,10 +139,8 @@ export default function Edit() {
   }, []);
 
   return (
-    <>
-      <BlockStack spacing="none">
-        <TextBlock size="extraLarge">Update trial plan</TextBlock>
-      </BlockStack>
+    <BlockStack>
+      <TextBlock size="extraLarge">Update trial plan</TextBlock>
 
       <Card title="Admin Details" sectioned>
         <BlockStack>
@@ -203,6 +201,6 @@ export default function Edit() {
       </Card>
 
       {cachedActions}
-    </>
+    </BlockStack>
   )
 }

@@ -13,6 +13,11 @@ export default function Add() {
   const [trialPlans, setTrialPlans] = useState([]);
   const [selected, setSelected] = useState(null);
 
+  const options = trialPlans.map(({ id, name }) => ({
+    label: name,
+    value: id,
+  }));
+
   const fetchPlans = useCallback(async () => {
     const token = await getSessionToken();
     const resp = await fetch(`https://web-qla9.onrender.com/api/v1/selling_plan_groups`, {
@@ -65,13 +70,8 @@ export default function Add() {
   }, [getSessionToken, close, done, setPrimaryAction, setSecondaryAction, selected]);
 
   useEffect(() => {
-    setSelected(options[0].id);
+    setSelected(options[0]?.value);
   }, [options])
-
-  const options = trialPlans.map(({ id, name }) => ({
-    label: name,
-    value: id,
-  }));
 
   return (
     <>
