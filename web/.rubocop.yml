@@ -8,6 +8,7 @@ AllCops:
     - "bin/**/*"
     - "test/tmp/**/*"
     - "vendor/bundle/**/*"
+    - "spec/**/stubs.rb"
 
 Style/MethodCallWithArgsParentheses:
   Exclude:

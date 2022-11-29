@@ -47,7 +47,7 @@ class CreatePayment
 
   def can_charge?
     # Check that the due date has passed
-    return false if @order.due_date.after? DateTime.current
+    return false if @order.due_date.after?(DateTime.current)
 
     # Make sure there are no returns that haven't been processed
     returnItem = @order.returns.where(active: true).order(created_at: :desc).first
@@ -55,7 +55,8 @@ class CreatePayment
       # Check if the return grace period has passed
       grace_period = @order.shop.return_period
       deadline = returnItem.created_at + grace_period.days
-      return false unless deadline.before? DateTime.current
+
+      return false unless deadline.before?(DateTime.current)
     end
 
     # Make sure order has actually been fulfilled
@@ -78,22 +79,22 @@ class CreatePayment
     variables = {
       id: "gid://shopify/Order/#{@order.shopify_id}",
       idempotencyKey: @payment.idempotency_key,
-      mandateId: @order.mandate_id
+      mandateId: @order.mandate_id,
     }
 
     response = @client.query(query:, variables:)
 
-    unless response.body.dig('data', 'orderCreateMandatePayment', 'userErrors', 0, 'message').nil?
+    unless response.body.dig("data", "orderCreateMandatePayment", "userErrors", 0, "message").nil?
       raise CreatePayment::UserError,
-            response.body.dig('data', 'orderCreateMandatePayment', 'userErrors', 0, 'message') and return
+        response.body.dig("data", "orderCreateMandatePayment", "userErrors", 0, "message") and return
     end
 
-    unless response.body['errors'].nil?
+    unless response.body["errors"].nil?
       raise CreatePayment::InvalidRequest,
-            response.body.dig('errors', 0, 'message') and return
+        response.body.dig("errors", 0, "message") and return
     end
 
-    payment_reference_id = response.body.dig('data', 'orderCreateMandatePayment', 'paymentReferenceId')
+    payment_reference_id = response.body.dig("data", "orderCreateMandatePayment", "paymentReferenceId")
     @payment.payment_reference_id = payment_reference_id
     @payment.save!
   end

@@ -52,6 +52,13 @@ gem "bootsnap", require: false
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: [:mri, :mingw, :x64_mingw]
+  gem 'rspec-rails', '~> 6.0', '>= 6.0.1'
+  gem 'webmock', '~> 3.18', '>= 3.18.1'
+  gem 'rubocop-rails', '~> 2.15', '>= 2.15.1', require: false
+  gem 'rubocop-rspec', '~> 2.11', '>= 2.11.1'
+  gem 'vcr', '~> 6.1'
+  gem 'factory_bot_rails', '~> 6.2'
+  gem 'faker', '~> 3.0'
 end
 
 group :development do
@@ -66,11 +73,6 @@ group :development do
 
   gem "rubocop"
   gem "rubocop-shopify"
-  gem 'rspec-rails', '~> 5.1', '>= 5.1.2'
-  gem 'rubocop-rails', '~> 2.15', '>= 2.15.1', require: false
-  gem 'rubocop-rspec', '~> 2.11', '>= 2.11.1'
-  gem 'vcr', '~> 6.1'
-  gem 'webmock', '~> 3.14'
 end
 
 group :test do

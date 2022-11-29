@@ -79,18 +79,17 @@ class FetchOrder
 
     variables = {
       id: @id,
-      after: @after
+      after: @after,
     }
 
     response = @client.query(query:, variables:)
 
-    unless response.body['errors'].nil?
+    unless response.body["errors"].nil?
       raise FetchOrder::InvalidRequest,
-            response.body.dig('errors', 0, 'message') and return
+        response.body.dig("errors", 0, "message") and return
     end
 
-    @order = response.body.dig('data', 'order')
-    puts @order.inspect
+    @order = response.body.dig("data", "order")
   rescue ActiveRecord::RecordInvalid, StandardError => e
     Rails.logger.error("[FetchOrder Failed]: #{e.message}")
     @error = e.message
