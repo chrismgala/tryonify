@@ -18,7 +18,7 @@ class FetchAppSubscription
         currentAppInstallation {
           id
           activeSubscriptions {
-            id, name, test
+            id, name, test, trialDays
           }
         }
       }
