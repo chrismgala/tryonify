@@ -21,17 +21,17 @@ class FetchOrders
       before: @pagination[:before],
       after: @pagination[:after],
       query: @pagination[:query],
-      sortKey: @pagination[:sortKey] || 'CREATED_AT'
+      sortKey: @pagination[:sortKey] || "CREATED_AT",
     }
 
     response = @client.query(query:, variables:)
 
-    unless response.body['errors'].nil?
+    unless response.body["errors"].nil?
       raise FetchOrders::InvalidRequest,
-            response.body.dig('errors', 0, 'message') and return
+        response.body.dig("errors", 0, "message") and return
     end
 
-    @orders = response.body.dig('data', 'orders')
+    @orders = response.body.dig("data", "orders")
   rescue ActiveRecord::RecordInvalid, StandardError => e
     Rails.logger.error("[FetchOrders Failed]: #{e.message}")
     @error = e.message
@@ -57,6 +57,12 @@ class FetchOrders
               }
               note
               tags
+              fullyPaid
+              totalOutstandingSet {
+                shopMoney {
+                  amount
+                }
+              }
               paymentTerms {
                 overdue
                 paymentSchedules(first: 1) {

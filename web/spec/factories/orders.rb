@@ -10,6 +10,8 @@ FactoryBot.define do
     shopify_created_at { Time.new }
     shopify_updated_at { Time.new }
     fulfillment_status { "UNFULFILLED" }
+    fully_paid { false }
+    total_outstanding { 231.07 }
     shop
   end
 

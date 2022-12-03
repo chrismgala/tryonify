@@ -75,6 +75,24 @@ RSpec.describe(CreatePayment) do
     end
   end
 
+  context "order is due with no total outstanding" do
+    let(:order) { FactoryBot.create(:order, due_date: 1.day.ago, total_outstanding: 0.0) }
+
+    before do
+      stub = Stubs.new
+      stub.order(order.shopify_id)
+    end
+
+    it "creates a payment" do
+      order.shop.with_shopify_session do
+        service = CreatePayment.new(order.id)
+        service.call
+      end
+
+      expect(Payment.where(order_id: order.id)).to_not(exist)
+    end
+  end
+
   context "order is not due" do
     let(:order) { FactoryBot.create(:order, due_date: 1.day.from_now) }
 

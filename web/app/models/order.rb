@@ -9,19 +9,19 @@ class Order < ApplicationRecord
   has_one :payment
 
   scope :payment_due, lambda {
-                        where('due_date < ?', DateTime.current)
-                          .where(financial_status: %w[PARTIALLY_PAID PENDING])
+                        where("due_date < ?", DateTime.current)
+                          .where("total_outstanding > 0")
                           .where(closed_at: nil)
                       }
   scope :pending, lambda {
-                    where('DATE(due_date) > DATE(?)', DateTime.current)
-                      .where(financial_status: %w[PARTIALLY_PAID PENDING]).where(closed_at: nil)
+                    where("DATE(due_date) > DATE(?)", DateTime.current)
+                      .where("total_outstanding > 0").where(closed_at: nil)
                   }
   scope :pending_returns, -> { includes(:returns).where(returns: { active: true }) }
   scope :failed_payments, lambda {
-                            where(financial_status: %w[PARTIALLY_PAID PENDING])
+                            where("total_outstanding > 0")
                               .where(closed_at: nil)
-                              .joins(:payment).where(payment: { status: 'ERROR' })
+                              .joins(:payment).where(payment: { status: "ERROR" })
                           }
 
   attribute :calculated_due_date, :datetime

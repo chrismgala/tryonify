@@ -1,6 +1,8 @@
-desc 'Update orders from Shopify to persist on local DB'
+# frozen_string_literal: true
+
+desc "Update orders from Shopify to persist on local DB"
 task update_orders: :environment do |_task, _args|
-  puts 'Updating orders...'
+  puts "Updating orders..."
 
   shops = Shop.all
 
@@ -12,5 +14,5 @@ task update_orders: :environment do |_task, _args|
     end
   end
 
-  puts 'done.'
+  puts "done."
 end
