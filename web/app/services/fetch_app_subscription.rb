@@ -18,7 +18,7 @@ class FetchAppSubscription
         currentAppInstallation {
           id
           activeSubscriptions {
-            name, test
+            id, name, test
           }
         }
       }
@@ -26,12 +26,12 @@ class FetchAppSubscription
 
     response = @client.query(query:)
 
-    unless response.body['errors'].nil?
+    unless response.body["errors"].nil?
       raise FetchAppSubscription::InvalidRequest,
-            response.body.dig('errors', 0, 'message') and return
+        response.body.dig("errors", 0, "message") and return
     end
 
-    @app = response.body.dig('data', 'currentAppInstallation')
+    @app = response.body.dig("data", "currentAppInstallation")
   rescue StandardError => e
     Rails.logger.error("[FetchAppSubscription Failed]: #{e.message}")
     @error = e.message
