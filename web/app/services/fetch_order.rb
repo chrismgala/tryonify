@@ -30,6 +30,12 @@ class FetchOrder
             }
             note
             tags
+            fullyPaid
+            totalOutstandingSet {
+              shopMoney {
+                amount
+              }
+            }
             paymentTerms {
               paymentSchedules(first: 1) {
                 edges {

@@ -22,16 +22,18 @@ class UpdateExistingOrdersJob < ActiveJob::Base
 
       service.orders.each do |order|
         order_array.push({
-                           name: order.dig('name'),
-                           shopify_id: order.dig('legacyResourceId'),
-                           due_date: order.dig('paymentTerms', 'paymentSchedules', 'nodes', 0, 'dueAt'),
-                           shopify_created_at: order.dig('createdAt'),
-                           shopify_updated_at: order.dig('updatedAt'),
-                           shop_id: shop.id,
-                           financial_status: order.dig('displayFinancialStatus'),
-                           email: order.dig('customer', 'email'),
-                           closed_at: order.dig('closedAt')
-                         })
+          name: order.dig("name"),
+          shopify_id: order.dig("legacyResourceId"),
+          due_date: order.dig("paymentTerms", "paymentSchedules", "nodes", 0, "dueAt"),
+          shopify_created_at: order.dig("createdAt"),
+          shopify_updated_at: order.dig("updatedAt"),
+          shop_id: shop.id,
+          financial_status: order.dig("displayFinancialStatus"),
+          email: order.dig("customer", "email"),
+          closed_at: order.dig("closedAt"),
+          fully_paid: order.dig("fullyPaid"),
+          total_outstanding: order.dig("totalOutstandingSet", "shopMoney", "amount"),
+        })
       end
 
       if order_array.length > 0

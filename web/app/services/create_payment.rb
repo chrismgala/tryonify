@@ -65,6 +65,9 @@ class CreatePayment
     # Order is not closed
     return false if @order.closed_at
 
+    # Order has no total outstanding
+    return false if @order.total_outstanding && @order.total_outstanding <= 0
+
     true
   end
 

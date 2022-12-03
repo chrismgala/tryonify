@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_07_210313) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_03_173135) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -29,8 +29,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_07_210313) do
     t.string "fulfillment_status", default: "UNFULFILLED"
     t.datetime "closed_at"
     t.datetime "shopify_updated_at"
+    t.boolean "fully_paid", default: false
+    t.decimal "total_outstanding"
     t.index ["shop_id"], name: "index_orders_on_shop_id"
-    t.index ["shopify_id"], name: "index_orders_on_shopify_id", unique: true
+    t.index ["shopify_id"], name: "unique_shopify_ids", unique: true
   end
 
   create_table "payments", force: :cascade do |t|

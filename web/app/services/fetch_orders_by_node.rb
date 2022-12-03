@@ -22,6 +22,12 @@ class FetchOrdersByNode
           }
           note
           tags
+          fullyPaid
+          totalOutstandingSet {
+            shopMoney {
+              amount
+            }
+          }
           paymentTerms {
             overdue
             paymentSchedules(first: 1) {
@@ -43,17 +49,17 @@ class FetchOrdersByNode
 
   def call
     variables = {
-      ids: @ids
+      ids: @ids,
     }
 
     response = @client.query(query: QUERY_ORDER_NODES, variables:)
 
-    unless response.body['errors'].nil?
+    unless response.body["errors"].nil?
       raise FetchOrdersByNode::InvalidRequest,
-            response.body.dig('errors', 0, 'message') and return
+        response.body.dig("errors", 0, "message") and return
     end
 
-    @orders = response.body.dig('data', 'nodes')
+    @orders = response.body.dig("data", "nodes")
   rescue ActiveRecord::RecordInvalid, StandardError => e
     Rails.logger.error("[FetchOrdersByNode Failed]: #{e.message}")
     @error = e.message

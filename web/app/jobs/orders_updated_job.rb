@@ -18,18 +18,20 @@ class OrdersUpdatedJob < ApplicationJob
     end
 
     shop.with_shopify_session do
-      order = Order.find_by(shopify_id: webhook['id'])
+      order = Order.find_by(shopify_id: webhook["id"])
 
       if order
         order.update!({
-                        name: webhook.dig('name'),
-                        email: webhook.dig('customer', 'email'),
-                        due_date: webhook.dig('payment_terms', 'payment_schedules', 0, 'due_at'),
-                        shopify_updated_at: webhook.dig('updated_at'),
-                        closed_at: webhook.dig('closed_at'),
-                        financial_status: webhook.dig('financial_status')&.upcase,
-                        fulfillment_status: webhook.dig('fulfillment_status')&.upcase
-                      })
+          name: webhook.dig("name"),
+          email: webhook.dig("customer", "email"),
+          due_date: webhook.dig("payment_terms", "payment_schedules", 0, "due_at"),
+          shopify_updated_at: webhook.dig("updated_at"),
+          closed_at: webhook.dig("closed_at"),
+          financial_status: webhook.dig("financial_status")&.upcase,
+          fulfillment_status: webhook.dig("fulfillment_status")&.upcase,
+          fully_paid: webhook.dig("financial_status")&.upcase == "PAID" ? true : false,
+          total_outstanding: webhook.dig("total_outstanding"),
+        })
 
         service = ProcessReturnFromWebhook.new(webhook)
         service.call
