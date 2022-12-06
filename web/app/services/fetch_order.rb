@@ -22,6 +22,7 @@ class FetchOrder
             legacyResourceId
             createdAt
             closedAt
+            cancelledAt
             name
             displayFinancialStatus
             displayFulfillmentStatus

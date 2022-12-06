@@ -33,6 +33,7 @@ class CreateOrUpdateOrder
       name: @order.dig("name"),
       due_date: @order.dig("paymentTerms", "paymentSchedules", "edges", 0, "node", "dueAt"),
       closed_at: @order.dig("closedAt"),
+      cancelled_at: @order.dig("cancelledAt"),
       financial_status: @order["displayFinancialStatus"],
       fulfillment_status: @order["displayFulfillmentStatus"],
       email: @order.dig("customer", "email"),

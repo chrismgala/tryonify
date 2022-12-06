@@ -26,6 +26,7 @@ class OrdersEditedJob < ApplicationJob
           email: webhook.dig("customer", "email"),
           due_date: webhook.dig("payment_terms", "payment_schedules", 0, "due_at"),
           closed_at: webhook.dig("closed_at"),
+          cancelled_at: webhook.dig("cancelled_at"),
           financial_status: webhook.dig("financial_status")&.upcase,
           fulfillment_status: webhook.dig("fulfillment_status")&.upcase,
           fully_paid: webhook.dig("fulfillment_status")&.upcase == "PAID" ? true : false,
