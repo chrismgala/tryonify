@@ -15,6 +15,7 @@ class FetchOrdersByNode
           createdAt
           updatedAt
           closedAt
+          cancelledAt
           displayFinancialStatus
           displayFulfillmentStatus
           customer {

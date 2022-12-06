@@ -31,6 +31,7 @@ class UpdateExistingOrdersJob < ActiveJob::Base
           financial_status: order.dig("displayFinancialStatus"),
           email: order.dig("customer", "email"),
           closed_at: order.dig("closedAt"),
+          cancelled_at: order.dig("cancelledAt"),
           fully_paid: order.dig("fullyPaid"),
           total_outstanding: order.dig("totalOutstandingSet", "shopMoney", "amount"),
         })

@@ -50,6 +50,7 @@ class FetchOrders
               createdAt
               updatedAt
               closedAt
+              cancelledAt
               displayFinancialStatus
               displayFulfillmentStatus
               customer {

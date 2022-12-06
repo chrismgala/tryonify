@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_03_173135) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_06_175230) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -31,6 +31,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_03_173135) do
     t.datetime "shopify_updated_at"
     t.boolean "fully_paid", default: false
     t.decimal "total_outstanding"
+    t.datetime "cancelled_at"
     t.index ["shop_id"], name: "index_orders_on_shop_id"
     t.index ["shopify_id"], name: "unique_shopify_ids", unique: true
   end
