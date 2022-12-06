@@ -21,27 +21,24 @@ class UpdateExistingOrdersJob < ActiveJob::Base
       order_array = []
 
       service.orders.each do |order|
-        order_array.push({
-          name: order.dig("name"),
-          shopify_id: order.dig("legacyResourceId"),
-          due_date: order.dig("paymentTerms", "paymentSchedules", "nodes", 0, "dueAt"),
-          shopify_created_at: order.dig("createdAt"),
-          shopify_updated_at: order.dig("updatedAt"),
-          shop_id: shop.id,
-          financial_status: order.dig("displayFinancialStatus"),
-          email: order.dig("customer", "email"),
-          closed_at: order.dig("closedAt"),
-          cancelled_at: order.dig("cancelledAt"),
-          fully_paid: order.dig("fullyPaid"),
-          total_outstanding: order.dig("totalOutstandingSet", "shopMoney", "amount"),
-        })
-      end
+        persisted_order = Order.find_by(shopify_id: order.dig("legacyResourceId"))
 
-      if order_array.length > 0
-        Order.upsert_all(
-          order_array,
-          unique_by: :shopify_id
-        )
+        next unless persisted_order
+
+        persisted_order.name = order.dig("name")
+        persisted_order.shopify_id = order.dig("legacyResourceId")
+        persisted_order.due_date = order.dig("paymentTerms", "paymentSchedules", "nodes", 0, "dueAt")
+        persisted_order.shopify_created_at = order.dig("createdAt")
+        persisted_order.shopify_updated_at = order.dig("updatedAt")
+        persisted_order.shop_id = shop.id
+        persisted_order.financial_status = order.dig("displayFinancialStatus")
+        persisted_order.email = order.dig("customer", "email")
+        persisted_order.closed_at = order.dig("closedAt")
+        persisted_order.cancelled_at = order.dig("cancelledAt")
+        persisted_order.fully_paid = order.dig("fullyPaid")
+        persisted_order.total_outstanding = order.dig("totalOutstandingSet", "shopMoney", "amount")
+
+        persisted_order.save!
       end
     end
   end
