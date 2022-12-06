@@ -63,7 +63,7 @@ class CreatePayment
     # return false if @order.fulfillment_status != 'FULFILLED'
 
     # Order is not closed
-    return false if @order.closed_at
+    return false if @order.cancelled_at
 
     # Order has no total outstanding
     return false if @order.total_outstanding && @order.total_outstanding <= 0
