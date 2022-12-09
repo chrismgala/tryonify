@@ -5,13 +5,13 @@ import {
   FormLayout,
   Page,
   Layout,
+  Link
 } from '@shopify/polaris';
 import { useToast } from '@shopify/app-bridge-react';
 import { Formik, Field } from 'formik';
 import { useMutation, useQueryClient } from 'react-query';
 import { useAppQuery, useAuthenticatedFetch } from '../../hooks';
 import SaveBar from '../../components/save-bar';
-import Klaviyo from '../../components/klaviyo';
 import TextField from '../../components/text-field';
 import CheckboxField from '../../components/checkbox-field';
 
@@ -116,7 +116,28 @@ export default function Settings() {
                 title="Integrations"
                 description="Connect TryOnify with other applications you use."
               >
-                <Klaviyo />
+                <Card title="Klaviyo" sectioned>
+                  <FormLayout>
+                    <Field
+                      label="Public Key"
+                      name="klaviyoPublicKey"
+                      component={TextField}
+                    />
+                    <Field
+                      label="Private Key"
+                      name="klaviyoPrivateKey"
+                      component={TextField}
+                      type="password"
+                    />
+                  </FormLayout>
+                </Card>
+                <Card title="Slack" sectioned>
+                  {data?.shop?.slackToken ? (
+                    <span>Installed</span>
+                  ) : (
+                    <Link external url={`https://slack.com/oauth/v2/authorize?scope=incoming-webhook&client_id=4470812349095.4470845636199&redirect_uri=${encodeURIComponent(`https://tryonify.ngrok.io/api/v1/slack`)}&state=${data?.shop?.shopifyDomain}:${data?.shop?.key}`}>Add to Slack</Link>
+                  )}
+                </Card>
               </Layout.AnnotatedSection>
             </Layout>
           </Form>

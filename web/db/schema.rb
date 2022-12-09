@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_06_175230) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_07_024124) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -121,6 +121,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_06_175230) do
     t.text "return_explainer"
     t.boolean "allow_automatic_payments", default: true
     t.integer "max_trial_items", default: 3
+    t.string "slack_token"
     t.index ["plan_id"], name: "index_shops_on_plan_id"
     t.index ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
   end

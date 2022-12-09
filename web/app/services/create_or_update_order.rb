@@ -51,6 +51,9 @@ class CreateOrUpdateOrder
       order_attributes[:shop_id] = @shop_id
       new_order = Order.create!(order_attributes)
 
+      validator = ValidateOrder.new(new_order)
+      validator.validate
+
       if new_order
         shop = Shop.find(@shop_id)
         KlaviyoEvent.new(shop).call(

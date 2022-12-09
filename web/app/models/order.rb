@@ -26,6 +26,14 @@ class Order < ApplicationRecord
 
   attribute :calculated_due_date, :datetime
 
+  def pending?
+    return false if calculated_due_date.before?(DateTime.current)
+    return false if cancelled_at
+    return false if total_outstanding <= 0
+
+    true
+  end
+
   def calculated_due_date
     latest_return = returns.where(active: true).order(created_at: :desc).first
 
