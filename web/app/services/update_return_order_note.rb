@@ -15,43 +15,42 @@ class UpdateReturnOrderNote
   end
 
   def call
-    begin
-      query = <<~QUERY
-        mutation updateOrder($input: OrderInput!) {
-          orderUpdate(input: $input) {
-            userErrors {
-              message
-              field
-            }
+    query = <<~QUERY
+      mutation updateOrder($input: OrderInput!) {
+        orderUpdate(input: $input) {
+          userErrors {
+            message
+            field
           }
         }
-      QUERY
-
-      existing_order = fetch_order
-      existing_note = existing_order.dig('note')
-
-      variables = {
-        input: {
-          id: "gid://shopify/Order/#{@return.order.shopify_id}",
-          note: "#{existing_note == "" ? "" : "#{existing_note}\n"}[Return Requested: #{@return.title} - #{@return.created_at.strftime('%m/%d/%Y')}]"
-        }
       }
+    QUERY
 
-      response = @client.query(query: query, variables: variables)
+    existing_order = fetch_order
+    existing_note = existing_order.dig("note")
 
-      raise UpdateReturnOrderNote::InvalidRequest, response.body.dig('errors', 0, 'message') and return unless response.body['errors'].nil?
+    variables = {
+      input: {
+        id: "gid://shopify/Order/#{@return.order.shopify_id}",
+        note: "#{existing_note == "" ? "" : "#{existing_note}\n"}[Return Requested: #{@return.title} - #{@return.created_at.strftime("%m/%d/%Y")}]",
+      },
+    }
 
-      @order = response.body.dig('data', 'order')
-    rescue StandardError => e
-      Rails.logger.error("[UpdateReturnOrderNote Failed]: #{e}")
-      @error = e
-    end
+    response = @client.query(query: query, variables: variables)
+
+    raise UpdateReturnOrderNote::InvalidRequest,
+      response.body.dig("errors", 0, "message") and return unless response.body["errors"].nil?
+
+    @order = response.body.dig("data", "order")
+  rescue StandardError => e
+    Rails.logger.error("[UpdateReturnOrderNote Failed]: #{e}")
+    @error = e
   end
 
   def fetch_order
-    service = FetchOrder.new("gid://shopify/Order/#{@return.order.shopify_id}")
+    service = FetchOrder.new(id: "gid://shopify/Order/#{@return.order.shopify_id}")
     service.call
 
-    return service.order
+    service.order
   end
 end

@@ -12,7 +12,7 @@ class Api::V1::SlackController < ApplicationController
       json = JSON.parse(response)
 
       state = params[:state].split(":")
-      puts json
+
       if json["ok"]
         shop = Shop.find_by!(shopify_domain: state[0])
 
@@ -20,14 +20,12 @@ class Api::V1::SlackController < ApplicationController
 
         if valid_key == state[1]
           shop.slack_token = json["access_token"]
-          redirect_to("https://#{shop.shopify_domain}/admin/apps/#{ENV.fetch("APP_NAME")}/settings",
-            allow_other_host: true) and return if shop.save!
+          shop.save!
         end
       end
-
-      render_errors("Unable to install Slack application")
     end
 
-    head(:ok)
+    redirect_to("https://#{shop.shopify_domain}/admin/apps/#{ENV.fetch("APP_NAME")}/settings",
+      allow_other_host: true)
   end
 end
