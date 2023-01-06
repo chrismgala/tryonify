@@ -13,6 +13,24 @@ import createQueryString from '../lib/utils';
 import { useAppQuery, useAuthenticatedFetch } from '../hooks';
 import PaymentStatus from './payment-status';
 
+const getPaymentDueStatus = order => {
+  const { totalOutstanding, calculatedDueDate } = order;
+
+  if (totalOutstanding <= 0) return null;
+
+  const dt = DateTime.fromISO(calculatedDueDate); 4
+
+  if (dt.toISODate() === DateTime.utc().toISODate()) {
+    return 'DUE';
+  }
+
+  if (dt < DateTime.utc()) {
+    return 'OVERDUE';
+  }
+
+  return null;
+}
+
 export default function OrderList({ query }) {
   const navigate = useNavigate();
   const fetch = useAuthenticatedFetch();
@@ -33,16 +51,15 @@ export default function OrderList({ query }) {
   const rowMarkup = data?.map(
     (order, index) => {
       const {
-        id, shopifyId, name, shopifyCreatedAt, financialStatus, dueDate, calculatedDueDate, returns,
+        id,
+        shopifyId,
+        name,
+        shopifyCreatedAt,
+        financialStatus,
+        calculatedDueDate,
+        returns,
       } = order;
-      const dt = DateTime.fromISO(calculatedDueDate);
-      const tz = dt.zoneName;
-      let overdue = false;
-
-      if ((dt <= DateTime.now().setZone(tz)) && financialStatus !== 'PAID') {
-        overdue = true;
-      }
-
+      const paymentDueStatus = getPaymentDueStatus(order);
       const activeReturns = returns.filter(returnItem => returnItem.active).length
 
       return (
@@ -68,7 +85,7 @@ export default function OrderList({ query }) {
           <IndexTable.Cell>
             <Stack spacing="extraTight">
               <PaymentStatus status={financialStatus} />
-              {overdue && <PaymentStatus status="OVERDUE" />}
+              {paymentDueStatus && <PaymentStatus status={paymentDueStatus} />}
               {activeReturns > 0 && <Badge status='critical'>Returns</Badge>}
             </Stack>
           </IndexTable.Cell>
