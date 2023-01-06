@@ -30,7 +30,7 @@ class ExtendTrial
     raise "No subscription found" unless service.app
 
     variables = {
-      days: 60,
+      days: 30,
       id: service.app.dig("activeSubscriptions", 0, "id"),
     }
 
