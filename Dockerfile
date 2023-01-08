@@ -1,10 +1,10 @@
-FROM ruby:3.1.2-alpine
+FROM ruby:3.1-alpine
 
 ARG SHOPIFY_API_KEY
 ARG RAILS_MASTER_KEY
 ENV SHOPIFY_API_KEY=$SHOPIFY_API_KEY
 
-RUN apk update && apk add nodejs npm git build-base sqlite-dev gcompat bash libpq-dev
+RUN apk update && apk add nodejs npm git build-base sqlite-dev gcompat bash
 WORKDIR /app
 
 COPY web .
