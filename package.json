@@ -16,7 +16,6 @@
     "@shopify/app": "^3.31.1",
     "@shopify/checkout-ui-extensions-react": "^0.20.0",
     "@shopify/cli": "^3.31.1",
-    "@shopify/react-i18n": "^7.5.1",
     "iso8601-duration": "^2.1.1",
     "react": "^17.0.0"
   },
