@@ -18,10 +18,10 @@ const getPaymentDueStatus = order => {
 
   if (totalOutstanding <= 0) return null;
 
-  const dt = DateTime.fromISO(calculatedDueDate); 4
+  const dt = DateTime.fromISO(calculatedDueDate);
 
   if (dt.toISODate() === DateTime.utc().toISODate()) {
-    return 'DUE';
+    return 'DUE_TODAY';
   }
 
   if (dt < DateTime.utc()) {

@@ -8,7 +8,7 @@ export default function PaymentStatus({ status }) {
     case 'PENDING':
       badgeStatus = 'warning';
       break;
-    case 'DUE':
+    case 'DUE_TODAY':
       badgeStatus = 'warning';
       break;
     case 'OVERDUE':
