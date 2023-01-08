@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import {
   Layout,
@@ -9,6 +9,7 @@ import {
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import TextField from './text-field';
+import CurrencyField from './currency-field';
 import SaveBar from './save-bar';
 
 const validationSchema = Yup.object().shape({
@@ -83,8 +84,7 @@ export default function SellingPlanForm({
                   <Field
                     label="Pre-paid Amount"
                     name="sellingPlanAttributes.prepay"
-                    type="number"
-                    component={TextField}
+                    component={CurrencyField}
                   />
 
                   <Field

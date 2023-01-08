@@ -9,15 +9,16 @@ class AfterAuthenticateJob < ActiveJob::Base
       shop.email = shopify_shop.email
       shop.order_number_format_prefix = shopify_shop.order_number_format_prefix
       shop.order_number_format_suffix = shopify_shop.order_number_format_suffix
+      shop.currency_code = shopify_shop.currency_code
       shop.save!
 
       # Set max trial metafield
       service = CreateMetafield.new({
-                                      key: 'maxTrialItems',
-                                      namespace: 'settings',
-                                      type: 'number_integer',
-                                      value: shop.max_trial_items
-                                    })
+        key: "maxTrialItems",
+        namespace: "settings",
+        type: "number_integer",
+        value: shop.max_trial_items,
+      })
       service.call
     end
 
