@@ -3,12 +3,14 @@
 class FetchOrder
   class InvalidRequest < StandardError; end
 
-  attr_accessor :order, :error
+  attr_accessor :order, :has_selling_plan, :error
 
-  def initialize(id, after = nil)
+  def initialize(id:, after: nil, check_selling_plan: false)
     @id = id
     @after = after
+    @check_selling_plan = check_selling_plan
     @order = nil
+    @has_selling_plan = false
     @session = ShopifyAPI::Context.active_session
     @client = ShopifyAPI::Clients::Graphql::Admin.new(session: @session)
   end
@@ -97,9 +99,37 @@ class FetchOrder
     end
 
     @order = response.body.dig("data", "order")
+
+    has_selling_plan? if @check_selling_plan
   rescue ActiveRecord::RecordInvalid, StandardError => e
     Rails.logger.error("[FetchOrder Failed]: #{e.message}")
     @error = e.message
     raise e
+  end
+
+  private
+
+  # Page through line items looking for selling plan
+  def has_selling_plan?
+    line_items = @order.dig("lineItems", "edges")
+    selling_plan_ids = line_items.select { |x| x.dig("node", "sellingPlan", "sellingPlanId") }
+      .map { |x| x.dig("node", "sellingPlan", "sellingPlanId") }
+
+    if selling_plan_ids.length.positive? && SellingPlan.where(shopify_id: selling_plan_ids).any?
+      @has_selling_plan = true
+    elsif @order.dig("lineItems", "pageInfo", "hasNextPage")
+      service = FetchOrder.new(id: @id, after: @order.dig("lineItems", "pageInfo", "endCursor"),
+        check_selling_plan: true)
+      service.call
+
+      if service.order
+        @order = service.order
+        has_selling_plan?
+      else
+        raise "Could not fetch order #{@id}"
+      end
+    else
+      @has_selling_plan = false
+    end
   end
 end

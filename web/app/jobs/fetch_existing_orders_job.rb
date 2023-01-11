@@ -33,19 +33,22 @@ class FetchExistingOrdersJob < ActiveJob::Base
       order_edges.each do |order|
         next unless has_selling_plan?(order["node"])
 
-        Order.find_or_create_by(shopify_id: order.dig("node", "legacyResourceId")) do |created_order|
-          created_order.shopify_id = order.dig("node", "legacyResourceId")
-          created_order.name = order.dig("node", "name")
-          created_order.due_date = order.dig("node", "paymentTerms", "paymentSchedules", "nodes", 0, "dueAt")
-          created_order.shopify_created_at = order.dig("node", "createdAt")
-          created_order.shopify_updated_at = order.dig("node", "updatedAt")
-          created_order.shop_id = shop.id
-          created_order.financial_status = order.dig("node", "displayFinancialStatus")
-          created_order.email = order.dig("node", "customer", "email")
-          created_order.closed_at = order.dig("node", "closedAt")
-          created_order.fully_paid = order.dig("node", "fullyPaid")
-          created_order.total_outstanding = order.dig("node", "totalOutstandingSet", "shopMoney", "amount")
-        end
+        order_attributes = {
+          shopify_id: order.dig("node", "legacyResourceId"),
+          name: order.dig("node", "name"),
+          due_date: order.dig("node", "paymentTerms", "paymentSchedules", "nodes", 0, "dueAt"),
+          shopify_created_at: order.dig("node", "createdAt"),
+          shopify_updated_at: order.dig("node", "updatedAt"),
+          shop_id: shop.id,
+          financial_status: order.dig("node", "displayFinancialStatus"),
+          email: order.dig("node", "customer", "email"),
+          closed_at: order.dig("node", "closedAt"),
+          fully_paid: order.dig("node", "fullyPaid"),
+          total_outstanding: order.dig("node", "totalOutstandingSet", "shopMoney", "amount"),
+        }
+
+        update_service = CreateOrUpdateOrder.new(order_attributes, order.dig("node", "tags"))
+        update_service.call
       end
 
       # Create a job for the next page of orders
@@ -67,7 +70,7 @@ class FetchExistingOrdersJob < ActiveJob::Base
     if selling_plan_ids.length.positive? && SellingPlan.where(shopify_id: selling_plan_ids).any?
       true
     elsif order.dig("lineItems", "pageInfo", "hasNextPage")
-      service = FetchOrder.new(order.dig("id"), order.dig("lineItems", "pageInfo", "endCursor"))
+      service = FetchOrder.new(id: order.dig("id"), after: order.dig("lineItems", "pageInfo", "endCursor"))
       service.call
 
       if service.order

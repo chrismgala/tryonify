@@ -6,10 +6,9 @@ class UpdateOrderTag
 
   attr_accessor :order, :error
 
-  # Uses GraphQL Order object from Shopify
-  def initialize(shop_id, shopify_order)
-    @shop = Shop.find(shop_id)
-    @shopify_order = shopify_order
+  def initialize(order_id, existing_tags = [])
+    @order_id = order_id
+    @existing_tags = existing_tags
     @session = ShopifyAPI::Context.active_session
     @client = ShopifyAPI::Clients::Graphql::Admin.new(session: @session)
   end
@@ -26,20 +25,18 @@ class UpdateOrderTag
       }
     QUERY
 
-    existing_tags = @shopify_order.dig('tags')
-
     variables = {
       input: {
-        id: @shopify_order.dig('id'),
-        tags: existing_tags << 'TryOnify Order'
-      }
+        id: @order_id,
+        tags: @existing_tags << "TryOnify Order",
+      },
     }
 
     response = @client.query(query:, variables:)
 
-    unless response.body['errors'].nil?
+    unless response.body["errors"].nil?
       raise UpdateOrderTag::InvalidRequest,
-            response.body.dig('errors', 0, 'message') and return
+        response.body.dig("errors", 0, "message") and return
     end
   rescue StandardError => e
     Rails.logger.error("[UpdateOrderTag Failed]: #{e.message}")

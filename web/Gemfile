@@ -89,6 +89,9 @@ gem 'sidekiq', '~> 6.5', '>= 6.5.1'
 # Klaviyo integration
 gem 'klaviyo', '~> 2.4'
 
+# Slack Integration
+gem 'slack-ruby-client', '~> 2.0'
+
 # ActiveRecord Pagination
 gem 'kaminari', '~> 1.2', '>= 1.2.2'
 
