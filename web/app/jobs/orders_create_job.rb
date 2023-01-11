@@ -42,7 +42,7 @@ class OrdersCreateJob < ApplicationJob
         total_outstanding: order.dig("totalOutstandingSet", "shopMoney", "amount"),
       }
 
-      service = CreateOrUpdateOrder.new(order_attributes, @order.dig("tags"))
+      service = CreateOrUpdateOrder.new(order_attributes, order.dig("tags"))
       service.call
     end
   end

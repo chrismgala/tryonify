@@ -50,7 +50,7 @@ class CreateOrUpdateOrder
   end
 
   def tag_order
-    service = UpdateOrderTag.new(@order.shopify_id, @tags)
+    service = UpdateOrderTag.new("gid://shopify/Order/#{@order.shopify_id}", @tags)
     service.call
   end
 end
