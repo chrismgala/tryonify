@@ -103,7 +103,28 @@ class CreatePayment
   end
 
   def update_order
-    service = CreateOrUpdateOrder.new(shop_id: @order.shop_id, order_id: @order.shopify_id)
+    fetch_order = FetchOrder.new(id: "gid://shopify/Order/#{@order.shopify_id}")
+    fetch_order.call
+
+    order = fetch_order.order
+
+    order_attributes = {
+      shopify_id: order.dig("legacyResourceId"),
+      shopify_created_at: order.dig("createdAt"),
+      shopify_updated_at: order.dig("updatedAt"),
+      name: order.dig("name"),
+      due_date: order.dig("paymentTerms", "paymentSchedules", "edges", 0, "node", "dueAt"),
+      closed_at: order.dig("closedAt"),
+      cancelled_at: order.dig("cancelledAt"),
+      financial_status: order["displayFinancialStatus"],
+      fulfillment_status: order["displayFulfillmentStatus"],
+      email: order.dig("customer", "email"),
+      mandate_id: order.dig("paymentCollectionDetails", "vaultedPaymentMethods", 0, "id"),
+      fully_paid: order.dig("fullyPaid"),
+      total_outstanding: order.dig("totalOutstandingSet", "shopMoney", "amount"),
+    }
+
+    service = CreateOrUpdateOrder.new(order_attributes, order.dig("tags"))
     service.call
 
     @order.reload

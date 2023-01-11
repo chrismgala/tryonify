@@ -6,14 +6,14 @@ class CreateOrUpdateOrder
 
   attr_accessor :order, :error
 
-  def initialize(order_attributes)
+  def initialize(order_attributes, tags = [])
     @order_attributes = order_attributes
+    @tags = tags
     @order = nil
   end
 
   def call
-    return unless @order_attributes[:shop_id]
-
+    puts @order_attributes[:shopify_id]
     @order = Order.find_by(shopify_id: @order_attributes[:shopify_id])
 
     update_order and return if @order
@@ -31,13 +31,11 @@ class CreateOrUpdateOrder
     @order = Order.create!(@order_attributes)
 
     tag_order
-
     validator = ValidateOrder.new(@order)
-    validator.validate
+    validator.call
 
     if @order
-      shop = Shop.find(@shop_id)
-      KlaviyoEvent.new(shop).call(
+      KlaviyoEvent.new(@order.shop).call(
         event: "TryOnify Order Created",
         email: @order.email,
         properties: {
@@ -52,7 +50,7 @@ class CreateOrUpdateOrder
   end
 
   def tag_order
-    service = UpdateOrderTag.new(@order.shop_id, @order)
+    service = UpdateOrderTag.new(@order.shopify_id, @tags)
     service.call
   end
 end

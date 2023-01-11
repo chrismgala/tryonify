@@ -133,7 +133,7 @@ export default function Settings() {
                 </Card>
                 <Card title="Slack" sectioned>
                   <a
-                    href={`https://slack.com/oauth/v2/authorize?scope=incoming-webhook&redirect_uri=${encodeURIComponent(process.env.HOST)}%2Fapi%2Fv1%2Fslack&client_id=4470812349095.4470845636199&state=${encodeURIComponent(`${data?.shop?.shopifyDomain}:${data?.shop?.key}`)})}`}
+                    href={`https://slack.com/oauth/v2/authorize?scope=channels:read,chat:write&redirect_uri=${encodeURIComponent(process.env.HOST)}%2Fapi%2Fv1%2Fslack&client_id=4470812349095.4470845636199&state=${encodeURIComponent(`${data?.shop?.shopifyDomain}:${data?.shop?.key}`)})}`}
                     style={{
                       alignItems: 'center',
                       color: '#000',

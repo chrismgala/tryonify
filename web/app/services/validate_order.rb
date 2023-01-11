@@ -7,9 +7,11 @@ class ValidateOrder
   end
 
   def call
+    validate
+
     unless @errors.length.zero?
-      if @order.shop.slack_token && @order.shop.slack_channel
-        service = SlackMessage.new(@order.shop.slack_token)
+      if @order.shop.slack_token
+        service = SlackMessage.new(@order.shop)
 
         message = "*Invalid Order #{@order.name}*\n\n"
 

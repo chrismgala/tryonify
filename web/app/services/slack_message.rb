@@ -13,9 +13,9 @@ class SlackMessage
   end
 
   def send(message)
-    raise "No Slack channel" and return if @shop.slack_channel.blank?
-
-    @client.chat_postMessage(channel: @shop.slack_channel, text: message, as_user: true)
+    conversations = @client.conversations_list.channels
+    channel = conversations.detect(&:is_member)
+    @client.chat_postMessage(text: message, channel: channel.id, as_user: true)
   rescue StandardError => e
     Rails.logger.error("[Slack Message Failed]: #{e.message}")
   end

@@ -47,7 +47,7 @@ class FetchExistingOrdersJob < ActiveJob::Base
           total_outstanding: order.dig("node", "totalOutstandingSet", "shopMoney", "amount"),
         }
 
-        update_service = CreateOrUpdateOrder.new(order_attributes)
+        update_service = CreateOrUpdateOrder.new(order_attributes, order.dig("node", "tags"))
         update_service.call
       end
 
