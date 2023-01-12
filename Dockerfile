@@ -3,6 +3,7 @@ FROM ruby:3.1.2-alpine
 ARG SHOPIFY_API_KEY
 ARG RAILS_MASTER_KEY
 ENV SHOPIFY_API_KEY=$SHOPIFY_API_KEY
+ENV VITE_HOST=$VITE_HOST
 
 RUN apk update && apk add nodejs npm git build-base sqlite-dev gcompat bash libpq-dev
 WORKDIR /app
