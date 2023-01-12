@@ -42,6 +42,7 @@ export default function Settings() {
       queryClient.setQueryData("/api/v1/shop", response);
     },
   });
+  const redirectHost = process.env.HOST;
 
   const onSubmit = useCallback(async (values, { resetForm }) => {
     await saveMutation.mutate(values);
@@ -133,7 +134,7 @@ export default function Settings() {
                 </Card>
                 <Card title="Slack" sectioned>
                   <a
-                    href={`https://slack.com/oauth/v2/authorize?scope=channels:read,chat:write&redirect_uri=${encodeURIComponent(import.meta.env.VITE_HOST)}%2Fapi%2Fv1%2Fslack&client_id=4470812349095.4470845636199&state=${encodeURIComponent(`${data?.shop?.shopifyDomain}:${data?.shop?.key}`)})}`}
+                    href={`https://slack.com/oauth/v2/authorize?scope=channels:read,chat:write&redirect_uri=${encodeURIComponent(redirectHost)}%2Fapi%2Fv1%2Fslack&client_id=4470812349095.4470845636199&state=${encodeURIComponent(`${data?.shop?.shopifyDomain}:${data?.shop?.key}`)})}`}
                     style={{
                       alignItems: 'center',
                       color: '#000',
