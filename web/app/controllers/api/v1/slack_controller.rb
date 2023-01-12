@@ -7,15 +7,17 @@ class Api::V1::SlackController < ApplicationController
   def index
     if params[:code]
       response = RestClient.post("https://slack.com/api/oauth.v2.access", { "code" => params[:code], "client_id" => ENV.fetch("SLACK_CLIENT_ID", ""),
-          "client_secret" => ENV.fetch("SLACK_CLIENT_SECRET"), "redirect_uri" => "https://tryonify.ngrok.io/api/v1/slack", })
+          "client_secret" => ENV.fetch("SLACK_CLIENT_SECRET"), "redirect_uri" => "https://#{ENV.fetch("HOST", "").presence}/api/v1/slack", })
 
       json = JSON.parse(response)
 
       state = params[:state].split(":")
 
-      if json["ok"]
-        shop = Shop.find_by!(shopify_domain: state[0])
+      shop = Shop.find_by!(shopify_domain: state[0])
 
+      render(json: { message: "Shop not found" }) and return unless shop
+
+      if json["ok"]
         valid_key = Digest::MD5.hexdigest("#{shop.id}#{shop.shopify_domain}")
 
         if valid_key == state[1]
