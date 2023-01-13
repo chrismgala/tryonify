@@ -9,6 +9,7 @@ class Api::V1::SlackController < ApplicationController
       response = RestClient.post("https://slack.com/api/oauth.v2.access", { "code" => params[:code], "client_id" => ENV.fetch("SLACK_CLIENT_ID", ""),
           "client_secret" => ENV.fetch("SLACK_CLIENT_SECRET"), "redirect_uri" => "https://#{ENV.fetch("HOST", "").presence}/api/v1/slack", })
 
+      puts "https://#{ENV.fetch("HOST", "").presence}/api/v1/slack"
       json = JSON.parse(response)
       puts json.inspect
       state = params[:state].split(":")
