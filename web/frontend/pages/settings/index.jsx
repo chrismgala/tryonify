@@ -162,6 +162,7 @@ export default function Settings() {
                   </a>
                 </Card>
               </Layout.AnnotatedSection>
+              <Layout.Section />
             </Layout>
           </Form>
         )}

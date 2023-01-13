@@ -10,7 +10,7 @@ class Api::V1::SlackController < ApplicationController
           "client_secret" => ENV.fetch("SLACK_CLIENT_SECRET"), "redirect_uri" => "https://#{ENV.fetch("HOST", "").presence}/api/v1/slack", })
 
       json = JSON.parse(response)
-
+      puts json.inspect
       state = params[:state].split(":")
 
       shop = Shop.find_by!(shopify_domain: state[0])
