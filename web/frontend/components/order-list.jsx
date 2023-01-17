@@ -14,9 +14,9 @@ import { useAppQuery, useAuthenticatedFetch } from '../hooks';
 import PaymentStatus from './payment-status';
 
 const getPaymentDueStatus = order => {
-  const { totalOutstanding, calculatedDueDate } = order;
+  const { totalOutstanding, calculatedDueDate, fullyPaid } = order;
 
-  if (totalOutstanding <= 0) return null;
+  if (totalOutstanding <= 0 || fullyPaid) return null;
 
   const dt = DateTime.fromISO(calculatedDueDate);
 
