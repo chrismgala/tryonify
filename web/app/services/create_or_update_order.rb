@@ -13,7 +13,6 @@ class CreateOrUpdateOrder
   end
 
   def call
-    puts @order_attributes[:shopify_id]
     @order = Order.find_by(shopify_id: @order_attributes[:shopify_id])
 
     update_order and return if @order
