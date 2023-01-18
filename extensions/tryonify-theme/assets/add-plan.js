@@ -75,6 +75,21 @@
     return inputs;
   }
 
+  async function handleVariantChange(e) {
+    const price = document.querySelector('.tryonify-buy-now-price');
+
+    const response = await fetch(window.location.origin + window.location.pathname + '.json')
+
+    if (response.ok) {
+      const json = await response.json();
+      const variant = json?.product?.variants.find(variant => variant.id === parseInt(e.target.value));
+
+      if (variant) {
+        price.innerHTML = new Intl.NumberFormat('default', { style: 'currency', currency: window.Shopify.currency.active }).format(variant.price);
+      }
+    }
+  }
+
   function createInput() {
     const queryString = window.location.search;
     const params = new URLSearchParams(queryString);
@@ -134,6 +149,11 @@
 
     triggers = document.querySelectorAll('.tryonify-selling-plan-option');
     addToCartButtons = document.querySelectorAll('.tryonify-add-to-cart');
+
+    forms.forEach((form) => {
+      const idInput = form.querySelector('input[name="id"]');
+      idInput.addEventListener('change', handleVariantChange)
+    })
 
     triggers.forEach((trigger) => {
       trigger.addEventListener('change', handleChange);

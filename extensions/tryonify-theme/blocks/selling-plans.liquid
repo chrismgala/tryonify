@@ -9,7 +9,7 @@
 %}
 <div class="tryonify-selling-plan-wrapper">
   {% if block.settings.style == 'expanded' %}
-    {% render 'expanded', variable: cart_trial_items %}
+    {% render 'expanded', cart_trial_items: cart_trial_items, show_buy_now_price: block.settings.show_buy_now_price %}
   {% endif %}
 
   {% if block.settings.style == 'compact' %}
@@ -39,6 +39,16 @@
           "label": "Compact"
         }
       ]
+    },
+    {
+      "type": "header",
+      "content": "Expanded Styling"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_buy_now_price",
+      "label": "Show Buy Now price",
+      "default": false
     },
     {
       "type": "header",
