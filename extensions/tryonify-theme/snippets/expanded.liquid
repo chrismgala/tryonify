@@ -25,6 +25,9 @@
           <div class="tryonify-selling-plan-name">
             Buy Now
           </div>
+          {% if show_buy_now_price %}
+            <div class="tryonify-selling-plan-option-charge tryonify-buy-now-price">{{ product.selected_or_first_available_variant.price | money }}</div>
+          {% endif %}
         </div>
       </label>
     {% endif %}
