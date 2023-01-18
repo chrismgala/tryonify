@@ -35,8 +35,8 @@ class CreateOrUpdateOrder
     shipping_address.save!
 
     tag_order
-    validator = ValidateOrder.new(@order)
-    validator.call
+
+    ValidateOrderJob.perform_later(@order.id)
 
     if @order
       KlaviyoEvent.new(@order.shop).call(
