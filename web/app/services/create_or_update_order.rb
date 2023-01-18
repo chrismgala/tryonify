@@ -6,8 +6,9 @@ class CreateOrUpdateOrder
 
   attr_accessor :order, :error
 
-  def initialize(order_attributes, tags = [])
+  def initialize(order_attributes, shipping_address, tags = [])
     @order_attributes = order_attributes
+    @shipping_address = shipping_address
     @tags = tags
     @order = nil
   end
@@ -28,6 +29,10 @@ class CreateOrUpdateOrder
 
   def create_order
     @order = Order.create!(@order_attributes)
+
+    shipping_address = ShippingAddress.new(@shipping_address)
+    shipping_address.order = @order
+    shipping_address.save!
 
     tag_order
     validator = ValidateOrder.new(@order)

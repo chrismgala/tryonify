@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
 class Order < ApplicationRecord
+  include PgSearch::Model
+
   validates :shopify_id, :email, :financial_status, presence: true
   validates :shopify_id, uniqueness: true
 
   belongs_to :shop
   has_many :returns
   has_one :payment
+  has_one :shipping_address
 
   scope :payment_due, lambda {
                         where("due_date < ?", DateTime.current)
@@ -25,6 +28,10 @@ class Order < ApplicationRecord
                           }
 
   attribute :calculated_due_date, :datetime
+
+  pg_search_scope :address_search, associated_against: {
+    shipping_address: [:city, :address1, :address2, :zip],
+  }, using: :trigram
 
   def pending?
     return false if calculated_due_date.before?(DateTime.current)

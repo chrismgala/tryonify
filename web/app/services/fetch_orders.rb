@@ -53,6 +53,7 @@ class FetchOrders
               cancelledAt
               displayFinancialStatus
               displayFulfillmentStatus
+              clientIp
               customer {
                 email
               }
@@ -84,6 +85,16 @@ class FetchOrders
                   hasNextPage
                   endCursor
                 }
+              }
+              shippingAddress {
+                address1
+                address2
+                city
+                country
+                countryCodeV2
+                province
+                provinceCode
+                zip
               }
             }
           }

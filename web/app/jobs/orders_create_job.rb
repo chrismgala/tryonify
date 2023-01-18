@@ -40,9 +40,21 @@ class OrdersCreateJob < ApplicationJob
         mandate_id: order.dig("paymentCollectionDetails", "vaultedPaymentMethods", 0, "id"),
         fully_paid: order.dig("fullyPaid"),
         total_outstanding: order.dig("totalOutstandingSet", "shopMoney", "amount"),
+        ip_address: order.dig("clientIp"),
       }
 
-      service = CreateOrUpdateOrder.new(order_attributes, order.dig("tags"))
+      shipping_address = {
+        address1: order.dig("shippingAddress", "address1"),
+        address2: order.dig("shippingAddress", "address2"),
+        city: order.dig("shippingAddress", "city"),
+        country: order.dig("shippingAddress", "country"),
+        country_code: order.dig("shippingAddress", "countryCodeV2"),
+        province: order.dig("shippingAddress", "province"),
+        province_code: order.dig("shippingAddress", "provinceCode"),
+        zip: order.dig("shippingAddress", "zip"),
+      }
+
+      service = CreateOrUpdateOrder.new(order_attributes, shipping_address, order.dig("tags"))
       service.call
     end
   end

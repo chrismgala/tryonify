@@ -25,6 +25,7 @@ class FetchOrder
             createdAt
             closedAt
             cancelledAt
+            clientIp
             name
             displayFinancialStatus
             displayFulfillmentStatus
@@ -80,6 +81,16 @@ class FetchOrder
               shopMoney {
                 amount
               }
+            }
+            shippingAddress {
+              address1
+              address2
+              city
+              country
+              countryCodeV2
+              province
+              provinceCode
+              zip
             }
           }
         }

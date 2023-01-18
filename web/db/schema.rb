@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_17_192128) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_18_174525) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_trgm"
   enable_extension "plpgsql"
 
   create_table "orders", force: :cascade do |t|
@@ -47,6 +48,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_17_192128) do
     t.datetime "updated_at", null: false
     t.index ["idempotency_key"], name: "index_payments_on_idempotency_key", unique: true
     t.index ["order_id"], name: "index_payments_on_order_id"
+  end
+
+  create_table "pg_search_documents", force: :cascade do |t|
+    t.text "content"
+    t.string "searchable_type"
+    t.bigint "searchable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
   end
 
   create_table "plans", force: :cascade do |t|
@@ -105,7 +115,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_17_192128) do
     t.index ["shopify_id"], name: "index_selling_plans_on_shopify_id", unique: true
   end
 
-  create_table "shipping_address_tables", force: :cascade do |t|
+  create_table "shipping_addresses", force: :cascade do |t|
     t.bigint "order_id"
     t.string "first_name"
     t.string "last_name"
@@ -119,7 +129,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_17_192128) do
     t.string "province_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["order_id"], name: "index_shipping_address_tables_on_order_id"
+    t.index ["order_id"], name: "index_shipping_addresses_on_order_id"
   end
 
   create_table "shops", force: :cascade do |t|

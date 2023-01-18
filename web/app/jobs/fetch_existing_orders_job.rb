@@ -42,12 +42,24 @@ class FetchExistingOrdersJob < ActiveJob::Base
           shop_id: shop.id,
           financial_status: order.dig("node", "displayFinancialStatus"),
           email: order.dig("node", "customer", "email"),
+          ip_address: order.dig("node", "clientIp"),
           closed_at: order.dig("node", "closedAt"),
           fully_paid: order.dig("node", "fullyPaid"),
           total_outstanding: order.dig("node", "totalOutstandingSet", "shopMoney", "amount"),
         }
 
-        update_service = CreateOrUpdateOrder.new(order_attributes, order.dig("node", "tags"))
+        shipping_address = {
+          address1: order.dig("node", "shippingAddress", "address1"),
+          address2: order.dig("node", "shippingAddress", "address2"),
+          city: order.dig("node", "shippingAddress", "city"),
+          country: order.dig("node", "shippingAddress", "country"),
+          country_code: order.dig("node", "shippingAddress", "countryCodeV2"),
+          province: order.dig("node", "shippingAddress", "province"),
+          province_code: order.dig("node", "shippingAddress", "provinceCode"),
+          zip: order.dig("node", "shippingAddress", "zip"),
+        }
+
+        update_service = CreateOrUpdateOrder.new(order_attributes, shipping_address, order.dig("node", "tags"))
         update_service.call
       end
 

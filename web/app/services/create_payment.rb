@@ -119,6 +119,7 @@ class CreatePayment
       due_date: order.dig("paymentTerms", "paymentSchedules", "edges", 0, "node", "dueAt"),
       closed_at: order.dig("closedAt"),
       cancelled_at: order.dig("cancelledAt"),
+      ip_address: order.dig("clientIp"),
       financial_status: order["displayFinancialStatus"],
       fulfillment_status: order["displayFulfillmentStatus"],
       email: order.dig("customer", "email"),
@@ -127,7 +128,18 @@ class CreatePayment
       total_outstanding: order.dig("totalOutstandingSet", "shopMoney", "amount"),
     }
 
-    service = CreateOrUpdateOrder.new(order_attributes, order.dig("tags"))
+    shipping_address = {
+      address1: order.dig("shippingAddress", "address1"),
+      address2: order.dig("shippingAddress", "address2"),
+      city: order.dig("shippingAddress", "city"),
+      country: order.dig("shippingAddress", "country"),
+      country_code: order.dig("shippingAddress", "countryCodeV2"),
+      province: order.dig("shippingAddress", "province"),
+      province_code: order.dig("shippingAddress", "provinceCode"),
+      zip: order.dig("shippingAddress", "zip"),
+    }
+
+    service = CreateOrUpdateOrder.new(order_attributes, shipping_address, order.dig("tags"))
     service.call
 
     @order.reload

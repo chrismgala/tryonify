@@ -2,7 +2,7 @@
 
 class CreateShippingAddressTable < ActiveRecord::Migration[7.0]
   def change
-    create_table(:shipping_address_tables) do |t|
+    create_table(:shipping_addresses) do |t|
       t.references(:order, on_delete: :cascade)
       t.string(:first_name)
       t.string(:last_name)

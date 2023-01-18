@@ -108,3 +108,6 @@ gem 'postmark-rails', '~> 0.22.1'
 gem "sentry-ruby"
 gem "sentry-rails"
 gem 'rest-client', '~> 2.1'
+
+# DB Search
+gem 'pg_search', '~> 2.3', '>= 2.3.6'
