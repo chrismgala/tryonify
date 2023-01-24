@@ -17,7 +17,7 @@ module Api
           current_user.orders.order(shopify_created_at: :desc)
         end
 
-        paginated_orders = orders.page(params[:page])
+        paginated_orders = orders.page(pagination_params[:page])
 
         payload = {
           results: paginated_orders,
@@ -49,10 +49,7 @@ module Api
       def pagination_params
         params.permit(
           :query,
-          :first,
-          :last,
-          :before,
-          :after
+          :page,
         )
       end
     end
