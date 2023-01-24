@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Badge,
+  Card,
   Link,
   IndexTable,
+  Pagination,
   Stack,
   TextStyle,
 } from '@shopify/polaris';
@@ -36,19 +38,26 @@ export default function OrderList({ query }) {
   const fetch = useAuthenticatedFetch();
   const queryClient = useQueryClient();
   const [pagination, setPagination] = useState({
-    first: 20,
+    page: 1,
     query,
   });
   const { isLoading, error, data } = useAppQuery({
     url: `/api/v1/orders?${createQueryString(pagination)}`
   });
 
+  const handlePage = useCallback((page) => {
+    setPagination(prevValue => ({
+      ...prevValue,
+      page,
+    }))
+  }, []);
+
   const resourceName = {
     singular: 'order',
     plural: 'orders',
   };
 
-  const rowMarkup = data?.map(
+  const rowMarkup = data?.results?.map(
     (order, index) => {
       const {
         id,
@@ -94,20 +103,37 @@ export default function OrderList({ query }) {
     },
   );
 
+  const { totalPages, currentPage, nextPage, prevPage } = data?.pagination ?? {}
+
   return (
-    <IndexTable
-      resourceName={resourceName}
-      loading={isLoading}
-      headings={[
-        { title: 'Order' },
-        { title: 'Created at' },
-        { title: 'Due date' },
-        { title: 'Status' },
-      ]}
-      itemCount={data?.length || 0}
-      selectable={false}
-    >
-      {rowMarkup}
-    </IndexTable>
+    <>
+      <IndexTable
+        resourceName={resourceName}
+        loading={isLoading}
+        headings={[
+          { title: 'Order' },
+          { title: 'Created at' },
+          { title: 'Due date' },
+          { title: 'Status' },
+        ]}
+        itemCount={data?.results?.length || 0}
+        selectable={false}
+      >
+        {rowMarkup}
+      </IndexTable>
+      <Card.Section>
+        <Stack distribution="center" wrap={false}>
+          {totalPages > 0 &&
+            <Pagination
+              label={`Page ${currentPage} of ${totalPages}`}
+              onNext={() => handlePage(nextPage)}
+              hasNext={nextPage}
+              onPrevious={() => handlePage(prevPage)}
+              hasPrevious={prevPage}
+            />
+          }
+        </Stack>
+      </Card.Section>
+    </>
   );
 }

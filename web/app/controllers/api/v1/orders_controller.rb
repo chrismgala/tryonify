@@ -17,7 +17,19 @@ module Api
           current_user.orders.order(shopify_created_at: :desc)
         end
 
-        render(json: orders, include: ["returns"])
+        paginated_orders = orders.page(params[:page])
+
+        payload = {
+          results: paginated_orders,
+          pagination: {
+            total_pages: paginated_orders.total_pages,
+            current_page: paginated_orders.current_page,
+            next_page: paginated_orders.next_page,
+            prev_page: paginated_orders.prev_page,
+          },
+        }
+
+        render(json: payload, include: ["returns"])
       end
 
       def show
