@@ -3,13 +3,17 @@ import {
   Card,
   Page,
   Layout,
-  Tabs
+  Tabs,
+  TextField
 } from '@shopify/polaris';
+import { debounce } from 'lodash'
 import OrderList from '../components/order-list';
 
 export default function Home() {
   const [selected, setSelected] = useState(0);
+  const [query, setQuery] = useState('')
 
+  const handleQueryChange = useCallback(value => setQuery(value), []);
   const handleTabChange = useCallback((selectedTabIndex) => setSelected(selectedTabIndex), []);
 
   const tabs = [
@@ -50,8 +54,11 @@ export default function Home() {
       <Layout>
         <Layout.Section>
           <Card>
+            <Card.Section>
+              <TextField name="query" placeholder="Search..." value={query} onChange={handleQueryChange} />
+            </Card.Section>
             <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange}>
-              <OrderList query={tabs[selected].id} />
+              <OrderList query={query} status={tabs[selected].id} />
             </Tabs>
           </Card>
         </Layout.Section>

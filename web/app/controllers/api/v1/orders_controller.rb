@@ -4,7 +4,7 @@ module Api
   module V1
     class OrdersController < AuthenticatedController
       def index
-        orders = case pagination_params[:query]
+        orders = case pagination_params[:status]
         when "overdue"
           current_user.orders.payment_due.order(shopify_created_at: :desc)
         when "pending"
@@ -17,7 +17,7 @@ module Api
           current_user.orders.order(shopify_created_at: :desc)
         end
 
-        paginated_orders = orders.page(pagination_params[:page])
+        paginated_orders = orders.search(params[:query]).page(pagination_params[:page])
 
         payload = {
           results: paginated_orders,
@@ -49,6 +49,7 @@ module Api
       def pagination_params
         params.permit(
           :query,
+          :status,
           :page,
         )
       end

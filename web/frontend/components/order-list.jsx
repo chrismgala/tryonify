@@ -6,6 +6,7 @@ import {
   IndexTable,
   Pagination,
   Stack,
+  TextField,
   TextStyle,
 } from '@shopify/polaris';
 import { useNavigate } from '@shopify/app-bridge-react';
@@ -33,16 +34,17 @@ const getPaymentDueStatus = order => {
   return null;
 }
 
-export default function OrderList({ query }) {
-  const navigate = useNavigate();
-  const fetch = useAuthenticatedFetch();
-  const queryClient = useQueryClient();
+export default function OrderList({ status, query }) {
   const [pagination, setPagination] = useState({
     page: 1,
-    query,
   });
   const { isLoading, error, data } = useAppQuery({
-    url: `/api/v1/orders?${createQueryString(pagination)}`
+    url: `/api/v1/orders?${createQueryString({
+      ...pagination,
+      query,
+      status,
+    })}`,
+    debounceWait: 300
   });
 
   const handlePage = useCallback((page) => {
