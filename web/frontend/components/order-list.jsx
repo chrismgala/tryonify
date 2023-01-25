@@ -6,14 +6,11 @@ import {
   IndexTable,
   Pagination,
   Stack,
-  TextField,
   TextStyle,
 } from '@shopify/polaris';
-import { useNavigate } from '@shopify/app-bridge-react';
-import { useQueryClient } from 'react-query';
 import { DateTime } from 'luxon';
 import createQueryString from '../lib/utils';
-import { useAppQuery, useAuthenticatedFetch } from '../hooks';
+import { useAppQuery } from '../hooks';
 import PaymentStatus from './payment-status';
 
 const getPaymentDueStatus = order => {

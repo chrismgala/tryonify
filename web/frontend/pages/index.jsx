@@ -6,7 +6,6 @@ import {
   Tabs,
   TextField
 } from '@shopify/polaris';
-import { debounce } from 'lodash'
 import OrderList from '../components/order-list';
 
 export default function Home() {
