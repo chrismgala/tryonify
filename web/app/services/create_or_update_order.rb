@@ -6,8 +6,9 @@ class CreateOrUpdateOrder
 
   attr_accessor :order, :error
 
-  def initialize(order_attributes, shipping_address, tags = [])
+  def initialize(order_attributes, line_item_attributes, shipping_address, tags = [])
     @order_attributes = order_attributes
+    @line_item_attributes = line_item_attributes
     @shipping_address = shipping_address
     @tags = tags
     @order = nil
@@ -19,6 +20,7 @@ class CreateOrUpdateOrder
     update_order and return if @order
 
     create_order
+    create_or_update_line_items
   rescue StandardError => e
     Rails.logger.error("[CreateOrUpdateOrder Failed]: #{e}")
     @error = e
@@ -51,6 +53,24 @@ class CreateOrUpdateOrder
 
   def update_order
     @order.update(@order_attributes)
+  end
+
+  def create_or_update_line_items
+    @line_item_attributes.each do |item|
+      line_item = LineItem.find_or_create_by!(shopify_id: item[:shopify_id]) do |created_line_item|
+        created_line_item.order_id = @order.id
+        created_line_item.selling_plan_id = item[:selling_plan_id]
+      end
+
+      line_item.title = item[:title]
+      line_item.variant_title = item[:variant_title]
+      line_item.image_url = item[:image_url]
+      line_item.quantity = item[:quantity]
+      line_item.unfulfilled_quantity = item[:unfulfilled_quantity]
+      line_item.restockable = item[:restockable]
+
+      line_item.save!
+    end
   end
 
   def tag_order
