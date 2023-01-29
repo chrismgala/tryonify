@@ -1,12 +1,29 @@
 {% liquid
   assign cart_trial_items = 0
+  assign allowed_trial = true
+  assign allowed_tags = app.metafields.settings.allowedTags | split: ","
 
   for item in cart.items 
     if item.selling_plan_allocation
       assign cart_trial_items = cart_trial_items | plus: item.quantity
     endif
   endfor
+
+  if allowed_tags.size > 0
+    assign allowed_trial = false
+    if customer.id
+      if customer.tags.size > 0
+        for tag in customer.tags
+          if allowed_tags contains tag
+            assign allowed_trial = true
+          endif
+        endfor
+      endif
+    endif
+  endif
 %}
+
+{% if allowed_trial %}
 <div class="tryonify-selling-plan-wrapper">
   {% if block.settings.style == 'expanded' %}
     {% render 'expanded', cart_trial_items: cart_trial_items, show_buy_now_price: block.settings.show_buy_now_price %}
@@ -16,6 +33,7 @@
     {% render 'compact', cart_trial_items: cart_trial_items, button_text: block.settings.button_text, button_class: block.settings.button_class %}
   {% endif %}
 </div>
+{% endif %}
 
 {% schema %}
 {
