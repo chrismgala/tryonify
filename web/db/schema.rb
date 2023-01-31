@@ -10,10 +10,41 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_18_174525) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_28_190722) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
+
+  create_table "line_items", force: :cascade do |t|
+    t.bigint "order_id"
+    t.bigint "selling_plan_id"
+    t.string "shopify_id"
+    t.string "title", default: "", null: false
+    t.string "variant_title", default: "", null: false
+    t.string "image_url"
+    t.integer "quantity", default: 0, null: false
+    t.integer "unfulfilled_quantity", default: 0, null: false
+    t.integer "status", default: 0, null: false
+    t.boolean "restockable", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_line_items_on_order_id"
+    t.index ["selling_plan_id"], name: "index_line_items_on_selling_plan_id"
+    t.index ["shopify_id"], name: "index_line_items_on_shopify_id", unique: true
+  end
+
+  create_table "metafields", force: :cascade do |t|
+    t.bigint "shop_id"
+    t.string "shopify_id"
+    t.string "namespace", null: false
+    t.string "key", null: false
+    t.string "type", null: false
+    t.string "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shop_id"], name: "index_metafields_on_shop_id"
+    t.index ["shopify_id"], name: "index_metafields_on_shopify_id", unique: true
+  end
 
   create_table "orders", force: :cascade do |t|
     t.bigint "shop_id"
@@ -156,6 +187,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_18_174525) do
     t.index ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
   end
 
+  add_foreign_key "line_items", "orders"
   add_foreign_key "orders", "shops", on_delete: :cascade
   add_foreign_key "payments", "orders"
   add_foreign_key "products", "shops", on_delete: :cascade
