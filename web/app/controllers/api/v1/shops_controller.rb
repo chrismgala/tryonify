@@ -5,23 +5,38 @@ module Api
     class ShopsController < AuthenticatedController
       def show
         @shop = current_user
+        puts "HERE"
+        puts @shop.max_trial_items.inspect
       end
 
       def update
         @shop = current_user
 
-        if @shop.max_trial_items != shop_params[:max_trial_items].to_i
-          # Set max trial metafield
-          service = CreateMetafield.new({
-                                          key: 'maxTrialItems',
-                                          namespace: 'settings',
-                                          type: 'number_integer',
-                                          value: shop_params[:max_trial_items].to_i
-                                        })
-          service.call
+        render_errors(@shop) and return unless @shop.update(shop_params)
+
+        service = CreateMetafield.new
+
+        if params[:max_trial_items].to_i != @shop.get_metafield("maxTrialItems")&.value
+          service.call({
+            key: "maxTrialItems",
+            namespace: "settings",
+            type: "number_integer",
+            value: params[:max_trial_items].to_i,
+          })
         end
 
-        render_errors @shop and return unless @shop.update(shop_params)
+        if params[:allowed_tags] != @shop.get_metafield("allowedTags")&.value&.split(",")
+          if params[:allowed_tags].length > 0
+            service.call({
+              key: "allowedTags",
+              namespace: "settings",
+              type: "single_line_text_field",
+              value: params[:allowed_tags].join(","),
+            })
+          elsif @shop.get_metafield("allowedTags")
+            DeleteMetafield.new.call(@shop.get_metafield("allowedTags").shopify_id)
+          end
+        end
       end
 
       private
@@ -33,8 +48,7 @@ module Api
           :onboarded,
           :return_explainer,
           :allow_automatic_payments,
-          :return_period,
-          :max_trial_items
+          :return_period
         )
       end
     end
