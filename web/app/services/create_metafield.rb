@@ -24,14 +24,13 @@ class CreateMetafield
   QUERY
 
   # attributes - Metafield attributes https://shopify.dev/api/admin-graphql/2022-10/mutations/metafieldDefinitionUpdate
-  def initialize(attributes)
-    session = ShopifyAPI::Context.active_session
-    @client = ShopifyAPI::Clients::Graphql::Admin.new(session:)
-    @attributes = attributes
+  def initialize
+    @session = ShopifyAPI::Context.active_session
+    @client = ShopifyAPI::Clients::Graphql::Admin.new(session: @session)
     @error = nil
   end
 
-  def call
+  def call(attributes)
     service = FetchAppSubscription.new
     service.call
 
@@ -39,20 +38,31 @@ class CreateMetafield
 
     variables = {
       metafields: [{
-        key: @attributes[:key],
-        namespace: @attributes[:namespace],
-        ownerId: service.app['id'], # App owned metafield
-        type: @attributes[:type],
-        value: @attributes[:value].to_s
-      }]
+        key: attributes[:key],
+        namespace: attributes[:namespace],
+        ownerId: service.app["id"], # App owned metafield
+        type: attributes[:type],
+        value: attributes[:value].to_s,
+      }],
     }
 
     response = @client.query(query: CREATE_METAFIELD_QUERY, variables:)
 
-    unless response.body['errors'].nil?
+    unless response.body["errors"].nil?
       raise CreateMetafield::InvalidRequest,
-            response.body.dig('errors', 0, 'message') and return
+        response.body.dig("errors", 0, "message") and return
     end
+
+    shop = Shop.find_by!(shopify_domain: @session.shop)
+    metafield = Metafield.find_or_create_by(shop_id: shop.id, key: attributes[:key],
+      namespace: attributes[:namespace]) do |metafield|
+      metafield.shop_id = shop.id
+      metafield.key = attributes[:key]
+      metafield.namespace = attributes[:namespace]
+    end
+    metafield.shopify_id = response.body.dig("data", "metafieldsSet", "metafields", 0, "id")
+    metafield.value = attributes[:value]
+    metafield.save!
   rescue StandardError => e
     Rails.logger.error("[CreateMetafield Failed]: #{e.message}")
     @error = e

@@ -13,13 +13,15 @@ class AfterAuthenticateJob < ActiveJob::Base
       shop.save!
 
       # Set max trial metafield
-      service = CreateMetafield.new({
-        key: "maxTrialItems",
-        namespace: "settings",
-        type: "number_integer",
-        value: shop.max_trial_items,
-      })
-      service.call
+      if shop.max_trial_items.blank?
+        service = CreateMetafield.new({
+          key: "maxTrialItems",
+          namespace: "settings",
+          type: "number_integer",
+          value: 3,
+        })
+        service.call
+      end
     end
 
     FetchExistingOrdersJob.perform_later(shop.id, nil)

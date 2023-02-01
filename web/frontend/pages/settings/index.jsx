@@ -1,14 +1,17 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
+  Button,
   Card,
   Form,
   FormLayout,
   Page,
   Layout,
-  Link
+  Stack,
+  Tag,
+  TextField as InputField,
 } from '@shopify/polaris';
 import { useToast } from '@shopify/app-bridge-react';
-import { Formik, Field } from 'formik';
+import { Formik, Field, FieldArray } from 'formik';
 import { useMutation, useQueryClient } from 'react-query';
 import { useAppQuery, useAuthenticatedFetch } from '../../hooks';
 import SaveBar from '../../components/save-bar';
@@ -21,13 +24,13 @@ const initialValues = {
   returnPeriod: 14,
   returnExplainer: '',
   allowAutomaticPayments: true,
-  maxTrialItems: 3,
 };
 
 export default function Settings() {
   const toast = useToast();
   const fetch = useAuthenticatedFetch();
   const queryClient = useQueryClient();
+  const [tag, setTag] = useState('');
   const { isLoading, error, data } = useAppQuery({
     url: "/api/v1/shop"
   });
@@ -49,6 +52,15 @@ export default function Settings() {
     resetForm({ values });
   }, [saveMutation]);
 
+  const handleTagChange = useCallback((value) => {
+    setTag(value);
+  }, []);
+
+  const handleTagAdd = useCallback(arrayHelpers => {
+    arrayHelpers.push(tag);
+    setTag('');
+  }, [tag])
+
   useEffect(() => {
     if (saveMutation.isSuccess) toast.show('Save successful!', { duration: 2000 })
   }, [saveMutation.isSuccess])
@@ -67,7 +79,7 @@ export default function Settings() {
         onSubmit={onSubmit}
       >
         {({
-          handleSubmit, resetForm, submitForm, dirty,
+          handleSubmit, resetForm, submitForm, dirty, values,
         }) => (
           <Form onSubmit={handleSubmit}>
             <SaveBar dirty={dirty} submitForm={submitForm} resetForm={resetForm} />
@@ -86,8 +98,31 @@ export default function Settings() {
                     <Field
                       label="Max trial items per order"
                       name="maxTrialItems"
+                      autoComplete="off"
                       component={TextField}
                     />
+                    <FieldArray name="allowedTags">
+                      {arrayHelpers => (
+                        <Stack vertical>
+                          <InputField
+                            label="Restrict trials to customers with allowed tags"
+                            autoComplete="off"
+                            onChange={handleTagChange}
+                            value={tag}
+                            verticalContent={
+                              (values?.allowedTags && values?.allowedTags.length > 0) ?
+                                <Stack spacing="extraTight" alignment="center">
+                                  {values?.allowedTags?.map((tag, index) =>
+                                    <Tag key={tag} onRemove={() => arrayHelpers.remove(index)}>{tag}</Tag>
+                                  )}
+                                </Stack>
+                                : null
+                            }
+                          />
+                          <Button type="button" onClick={() => handleTagAdd(arrayHelpers)}>Add Tag</Button>
+                        </Stack>
+                      )}
+                    </FieldArray>
                   </FormLayout>
                 </Card>
               </Layout.AnnotatedSection>

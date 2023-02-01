@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,168 +12,180 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_24_045642) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_31_182708) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
 
   create_table "line_items", force: :cascade do |t|
-    t.bigint "order_id"
-    t.bigint "selling_plan_id"
-    t.string "shopify_id"
-    t.string "title", default: "", null: false
-    t.string "variant_title", default: "", null: false
-    t.string "image_url"
-    t.integer "quantity", default: 0, null: false
-    t.integer "unfulfilled_quantity", default: 0, null: false
-    t.integer "status", default: 0, null: false
-    t.boolean "restockable", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["order_id"], name: "index_line_items_on_order_id"
-    t.index ["selling_plan_id"], name: "index_line_items_on_selling_plan_id"
-    t.index ["shopify_id"], name: "index_line_items_on_shopify_id", unique: true
+    t.bigint("order_id")
+    t.bigint("selling_plan_id")
+    t.string("shopify_id")
+    t.string("title", default: "", null: false)
+    t.string("variant_title", default: "", null: false)
+    t.string("image_url")
+    t.integer("quantity", default: 0, null: false)
+    t.integer("unfulfilled_quantity", default: 0, null: false)
+    t.integer("status", default: 0, null: false)
+    t.boolean("restockable", default: false)
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["order_id"], name: "index_line_items_on_order_id")
+    t.index(["selling_plan_id"], name: "index_line_items_on_selling_plan_id")
+    t.index(["shopify_id"], name: "index_line_items_on_shopify_id", unique: true)
+  end
+
+  create_table "metafields", force: :cascade do |t|
+    t.bigint("shop_id")
+    t.string("shopify_id")
+    t.string("namespace", null: false)
+    t.string("key", null: false)
+    t.string("value")
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["shop_id"], name: "index_metafields_on_shop_id")
+    t.index(["shopify_id"], name: "index_metafields_on_shopify_id", unique: true)
   end
 
   create_table "orders", force: :cascade do |t|
-    t.bigint "shop_id"
-    t.string "shopify_id"
-    t.datetime "due_date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "name", null: false
-    t.string "financial_status", null: false
-    t.string "email", null: false
-    t.datetime "shopify_created_at"
-    t.integer "returns_count"
-    t.string "mandate_id"
-    t.string "fulfillment_status", default: "UNFULFILLED"
-    t.datetime "closed_at"
-    t.datetime "shopify_updated_at"
-    t.boolean "fully_paid", default: false
-    t.decimal "total_outstanding"
-    t.datetime "cancelled_at"
-    t.string "ip_address"
-    t.index ["shop_id"], name: "index_orders_on_shop_id"
-    t.index ["shopify_id"], name: "unique_shopify_ids", unique: true
+    t.bigint("shop_id")
+    t.string("shopify_id")
+    t.datetime("due_date")
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.string("name", null: false)
+    t.string("financial_status", null: false)
+    t.string("email", null: false)
+    t.datetime("shopify_created_at")
+    t.integer("returns_count")
+    t.string("mandate_id")
+    t.string("fulfillment_status", default: "UNFULFILLED")
+    t.datetime("closed_at")
+    t.datetime("shopify_updated_at")
+    t.boolean("fully_paid", default: false)
+    t.decimal("total_outstanding")
+    t.datetime("cancelled_at")
+    t.string("ip_address")
+    t.index(["shop_id"], name: "index_orders_on_shop_id")
+    t.index(["shopify_id"], name: "unique_shopify_ids", unique: true)
   end
 
   create_table "payments", force: :cascade do |t|
-    t.string "idempotency_key", null: false
-    t.string "payment_reference_id"
-    t.string "error"
-    t.string "status", default: "PENDING"
-    t.bigint "order_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["idempotency_key"], name: "index_payments_on_idempotency_key", unique: true
-    t.index ["order_id"], name: "index_payments_on_order_id"
+    t.string("idempotency_key", null: false)
+    t.string("payment_reference_id")
+    t.string("error")
+    t.string("status", default: "PENDING")
+    t.bigint("order_id")
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["idempotency_key"], name: "index_payments_on_idempotency_key", unique: true)
+    t.index(["order_id"], name: "index_payments_on_order_id")
   end
 
   create_table "pg_search_documents", force: :cascade do |t|
-    t.text "content"
-    t.string "searchable_type"
-    t.bigint "searchable_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
+    t.text("content")
+    t.string("searchable_type")
+    t.bigint("searchable_id")
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable")
   end
 
   create_table "plans", force: :cascade do |t|
-    t.string "name", null: false
-    t.integer "trial_days", default: 0
-    t.decimal "price", precision: 8, scale: 2, null: false
-    t.boolean "active", default: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "interval", default: 0, null: false
+    t.string("name", null: false)
+    t.integer("trial_days", default: 0)
+    t.decimal("price", precision: 8, scale: 2, null: false)
+    t.boolean("active", default: true)
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.integer("interval", default: 0, null: false)
   end
 
   create_table "products", force: :cascade do |t|
-    t.string "shopify_id", null: false
-    t.bigint "shop_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["shop_id"], name: "index_products_on_shop_id"
-    t.index ["shopify_id"], name: "index_products_on_shopify_id", unique: true
+    t.string("shopify_id", null: false)
+    t.bigint("shop_id")
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["shop_id"], name: "index_products_on_shop_id")
+    t.index(["shopify_id"], name: "index_products_on_shopify_id", unique: true)
   end
 
   create_table "returns", force: :cascade do |t|
-    t.bigint "shop_id"
-    t.bigint "order_id"
-    t.string "shopify_id"
-    t.string "title"
-    t.boolean "active", default: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["order_id"], name: "index_returns_on_order_id"
-    t.index ["shop_id"], name: "index_returns_on_shop_id"
-    t.index ["shopify_id"], name: "index_returns_on_shopify_id", unique: true
+    t.bigint("shop_id")
+    t.bigint("order_id")
+    t.string("shopify_id")
+    t.string("title")
+    t.boolean("active", default: true)
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["order_id"], name: "index_returns_on_order_id")
+    t.index(["shop_id"], name: "index_returns_on_shop_id")
+    t.index(["shopify_id"], name: "index_returns_on_shopify_id", unique: true)
   end
 
   create_table "selling_plan_groups", force: :cascade do |t|
-    t.string "shopify_id", null: false
-    t.string "name", default: "Free trial", null: false
-    t.text "description", default: "Your free trial program"
-    t.bigint "shop_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["shop_id"], name: "index_selling_plan_groups_on_shop_id"
-    t.index ["shopify_id"], name: "index_selling_plan_groups_on_shopify_id", unique: true
+    t.string("shopify_id", null: false)
+    t.string("name", default: "Free trial", null: false)
+    t.text("description", default: "Your free trial program")
+    t.bigint("shop_id", null: false)
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["shop_id"], name: "index_selling_plan_groups_on_shop_id")
+    t.index(["shopify_id"], name: "index_selling_plan_groups_on_shopify_id", unique: true)
   end
 
   create_table "selling_plans", force: :cascade do |t|
-    t.string "shopify_id"
-    t.string "name", default: "Free trial", null: false
-    t.text "description", default: "Try this product free for 14 days"
-    t.integer "prepay", default: 0
-    t.integer "trial_days", default: 14
-    t.bigint "selling_plan_group_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["selling_plan_group_id"], name: "index_selling_plans_on_selling_plan_group_id"
-    t.index ["shopify_id"], name: "index_selling_plans_on_shopify_id", unique: true
+    t.string("shopify_id")
+    t.string("name", default: "Free trial", null: false)
+    t.text("description", default: "Try this product free for 14 days")
+    t.decimal("prepay", precision: 5, scale: 3, default: "0.0")
+    t.integer("trial_days", default: 14)
+    t.bigint("selling_plan_group_id")
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["selling_plan_group_id"], name: "index_selling_plans_on_selling_plan_group_id")
+    t.index(["shopify_id"], name: "index_selling_plans_on_shopify_id", unique: true)
   end
 
   create_table "shipping_addresses", force: :cascade do |t|
-    t.bigint "order_id"
-    t.string "first_name"
-    t.string "last_name"
-    t.string "address1"
-    t.string "address2"
-    t.string "city"
-    t.string "zip"
-    t.string "province"
-    t.string "country"
-    t.string "country_code"
-    t.string "province_code"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["order_id"], name: "index_shipping_addresses_on_order_id"
+    t.bigint("order_id")
+    t.string("first_name")
+    t.string("last_name")
+    t.string("address1")
+    t.string("address2")
+    t.string("city")
+    t.string("zip")
+    t.string("province")
+    t.string("country")
+    t.string("country_code")
+    t.string("province_code")
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["order_id"], name: "index_shipping_addresses_on_order_id")
   end
 
   create_table "shops", force: :cascade do |t|
-    t.string "shopify_domain", null: false
-    t.string "shopify_token", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "access_scopes"
-    t.string "klaviyo_public_key"
-    t.string "klaviyo_private_key"
-    t.bigint "plan_id"
-    t.datetime "orders_updated_at"
-    t.string "order_number_format_prefix", default: "#"
-    t.string "order_number_format_suffix"
-    t.string "email"
-    t.boolean "onboarded", default: false
-    t.integer "return_period", default: 14, null: false
-    t.text "return_explainer"
-    t.boolean "allow_automatic_payments", default: true
-    t.integer "max_trial_items", default: 3
-    t.string "slack_token"
-    t.string "currency_code", default: "USD", null: false
-    t.index ["plan_id"], name: "index_shops_on_plan_id"
-    t.index ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
+    t.string("shopify_domain", null: false)
+    t.string("shopify_token", null: false)
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.string("access_scopes")
+    t.string("klaviyo_public_key")
+    t.string("klaviyo_private_key")
+    t.bigint("plan_id")
+    t.datetime("orders_updated_at")
+    t.string("order_number_format_prefix", default: "#")
+    t.string("order_number_format_suffix")
+    t.string("email")
+    t.boolean("onboarded", default: false)
+    t.integer("return_period", default: 14, null: false)
+    t.text("return_explainer")
+    t.boolean("allow_automatic_payments", default: true)
+    t.integer("max_trial_items", default: 3)
+    t.string("slack_token")
+    t.string("currency_code", default: "USD", null: false)
+    t.index(["plan_id"], name: "index_shops_on_plan_id")
+    t.index(["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true)
   end
 
   add_foreign_key "line_items", "orders"
