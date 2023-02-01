@@ -2,6 +2,6 @@
 
 class ChangePrepayToDecimal < ActiveRecord::Migration[7.0]
   def change
-    change_column(:selling_plans, :prepay, :decimal, precision: 5, scale: 3)
+    change_column(:selling_plans, :prepay, :decimal, precision: 8, scale: 2)
   end
 end
