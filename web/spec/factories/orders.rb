@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :order do
-    shopify_id { Faker::Number.number(digits: 10) }
+    shopify_id { "gid://shopify/Order/#{Faker::Number.number(digits: 10)}" }
     due_date { Time.now }
     name { Faker::Number.number(digits: 4) }
     financial_status { "PARTIALLY_PAID" }

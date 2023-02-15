@@ -5,8 +5,6 @@ module Api
     class ShopsController < AuthenticatedController
       def show
         @shop = current_user
-        puts "HERE"
-        puts @shop.max_trial_items.inspect
       end
 
       def update

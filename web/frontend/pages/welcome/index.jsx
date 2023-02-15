@@ -34,6 +34,7 @@ const TrialPlan = () => (
 )
 
 const ThemeCustomizations = ({ shopDomain }) => {
+  const themeId = process.env.SHOPIFY_TRYONIFY_THEME_ID;
   return (
     <>
       <Card title='Customize your theme' sectioned>
@@ -46,7 +47,7 @@ const ThemeCustomizations = ({ shopDomain }) => {
             Legacy themes can enable the app embed block to automatically
             add the trial options to the product page.
           </p>
-          <Button url={`https://${shopDomain}/admin/themes/current/editor?context=apps&template=product&activateAppId=${import.meta.env.VITE_THEME_EXTENSION_ID}/selling-plans-embed`}>
+          <Button external url={`https://${shopDomain}/admin/themes/current/editor?context=apps&template=product&activateAppId=${themeId}/selling-plans-embed`}>
             Enable App Embed (Legacy Themes)
           </Button>
         </TextContainer>

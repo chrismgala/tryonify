@@ -48,6 +48,7 @@ export default defineConfig({
   define: {
     "process.env.SHOPIFY_API_KEY": JSON.stringify(process.env.SHOPIFY_API_KEY),
     "process.env.HOST": JSON.stringify(process.env.HOST.replace(/https?:\/\//, "")),
+    "process.env.SHOPIFY_TRYONIFY_THEME_ID": JSON.stringify(process.env.SHOPIFY_TRYONIFY_THEME_ID),
   },
   resolve: {
     preserveSymlinks: true,

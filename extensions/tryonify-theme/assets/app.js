@@ -201,7 +201,7 @@
     }
 
     if (payload.selling_plan) {
-      sellingPlanQuantity = payload.quantity;
+      sellingPlanQuantity = payload.quantity ?? 1;
     } else {
       return true;
     }

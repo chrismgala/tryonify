@@ -5,5 +5,7 @@ class LineItem < ApplicationRecord
   validates :shopify_id, uniqueness: true
 
   belongs_to :order
-  belongs_to :selling_plan
+  belongs_to :selling_plan, optional: true
+
+  enum status: [:pending, :paid, :returning, :returned]
 end
