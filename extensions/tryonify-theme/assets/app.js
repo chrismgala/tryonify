@@ -78,7 +78,18 @@
     }
   }
 
-  function getPayload(body) {
+  function getPayload(options) {
+    const { body, headers } = options
+    const headersWithLowerCaseKeys = Object.keys(headers).reduce((acc, key) => {
+      acc[key.toLowerCase()] = headers[key];
+      return acc;
+    }, {});
+
+    if (headersWithLowerCaseKeys['content-type'] === 'application/x-www-form-urlencoded') {
+      const params = new URLSearchParams(options.body);
+      return Object.fromEntries(params.entries());
+    }
+
     if (body instanceof FormData) {
       return Object.fromEntries(body.entries());
     } else {
@@ -96,7 +107,7 @@
       return handleCheckout(options.body);
     }
 
-    const payload = getPayload(options.body);
+    const payload = getPayload(options);
 
     if (resource.includes('/cart/change')) {
       return handleChangeEndpoint(payload);
@@ -201,7 +212,7 @@
     }
 
     if (payload.selling_plan) {
-      sellingPlanQuantity = payload.quantity;
+      sellingPlanQuantity = payload.quantity ?? 1;
     } else {
       return true;
     }
@@ -235,6 +246,8 @@
   }
 
   function showAlert() {
+    if (window.tryonify.disableErrorMessages) return;
+
     const alertEl = document.querySelector('.tryonify-alert');
     alertEl.classList.add('open');
 
@@ -274,8 +287,11 @@
         if (newPayload) {
           options.body = JSON.stringify(newPayload);
         } else {
-          return new Response(JSON.stringify({}), {
+          return new Response(JSON.stringify({ description: `Only ${window.tryonify.maxTrialItems} trial products allowed`, }), {
             status: 422,
+            body: JSON.stringify({
+              description: `Only ${window.tryonify.maxTrialItems} trial products allowed`,
+            }),
             statusText: `Only ${window.tryonify.maxTrialItems} trial products allowed`
           });
         }

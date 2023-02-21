@@ -1,6 +1,6 @@
 (function () {
   const embed = document.querySelector('.tryonify-embed');
-  const forms = document.querySelectorAll('form[action="/cart/add"]:not(.installment)');
+  const forms = document.querySelectorAll('form[action*="/cart/add"]:not(.installment)');
   let triggers;
   let addToCartButtons
 
