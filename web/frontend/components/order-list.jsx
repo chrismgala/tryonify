@@ -79,7 +79,7 @@ export default function OrderList({ status, query }) {
           <IndexTable.Cell>
             <Link
               dataPrimaryLink
-              url={`/orders/${shopifyId}`}
+              url={`/orders/${id}`}
             >
               <TextStyle variation="strong">{name}</TextStyle>
             </Link>
