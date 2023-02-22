@@ -78,7 +78,18 @@
     }
   }
 
-  function getPayload(body) {
+  function getPayload(options) {
+    const { body, headers } = options
+    const headersWithLowerCaseKeys = Object.keys(headers).reduce((acc, key) => {
+      acc[key.toLowerCase()] = headers[key];
+      return acc;
+    }, {});
+
+    if (headersWithLowerCaseKeys['content-type'] === 'application/x-www-form-urlencoded') {
+      const params = new URLSearchParams(options.body);
+      return Object.fromEntries(params.entries());
+    }
+
     if (body instanceof FormData) {
       return Object.fromEntries(body.entries());
     } else {
@@ -96,7 +107,7 @@
       return handleCheckout(options.body);
     }
 
-    const payload = getPayload(options.body);
+    const payload = getPayload(options);
 
     if (resource.includes('/cart/change')) {
       return handleChangeEndpoint(payload);
