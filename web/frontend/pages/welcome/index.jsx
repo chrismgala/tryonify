@@ -33,8 +33,7 @@ const TrialPlan = () => (
   </Card>
 )
 
-const ThemeCustomizations = ({ shopDomain }) => {
-  const themeId = process.env.SHOPIFY_TRYONIFY_THEME_ID;
+const ThemeCustomizations = ({ shopDomain, themeExtensionId }) => {
   return (
     <>
       <Card title='Customize your theme' sectioned>
@@ -47,7 +46,7 @@ const ThemeCustomizations = ({ shopDomain }) => {
             Legacy themes can enable the app embed block to automatically
             add the trial options to the product page.
           </p>
-          <Button external url={`https://${shopDomain}/admin/themes/current/editor?context=apps&template=product&activateAppId=${themeId}/selling-plans-embed`}>
+          <Button external url={`https://${shopDomain}/admin/themes/current/editor?context=apps&template=product&activateAppId=${themeExtensionId}/selling-plans-embed`}>
             Enable App Embed (Legacy Themes)
           </Button>
         </TextContainer>
@@ -154,6 +153,8 @@ export default function Welcome() {
     ChargingOrders,
     Returns
   }
+  console.log(import.meta.env)
+  const themeExtensionId = import.meta.env.VITE_THEME_EXTENSION_ID;
 
   return (
     <Page
@@ -165,7 +166,7 @@ export default function Welcome() {
     >
       <Layout>
         <Layout.Section>
-          {React.createElement(panels[selected], { shopDomain: data?.shop?.shopifyDomain })}
+          {React.createElement(panels[selected], { shopDomain: data?.shop?.shopifyDomain, themeExtensionId })}
         </Layout.Section>
         <Layout.Section secondary>
           <Listbox accessibilityLabel='Welcome navigation' onSelect={handleSelect}>
