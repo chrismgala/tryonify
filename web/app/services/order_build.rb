@@ -38,19 +38,22 @@ class OrderBuild < ApplicationService
     }
 
     shipping_address = @data.dig("shippingAddress")
-    shipping_address_attributes = {
-      address1: shipping_address.dig("address1"),
-      address2: shipping_address.dig("address2"),
-      city: shipping_address.dig("city"),
-      zip: shipping_address.dig("zip"),
-      province: shipping_address.dig("province"),
-      province_code: shipping_address.dig("provinceCode"),
-      country: shipping_address.dig("country"),
-      country_code: shipping_address.dig("countryCodeV2"),
-    }
+
+    if shipping_address
+      shipping_address_attributes = {
+        address1: shipping_address.dig("address1"),
+        address2: shipping_address.dig("address2"),
+        city: shipping_address.dig("city"),
+        zip: shipping_address.dig("zip"),
+        province: shipping_address.dig("province"),
+        province_code: shipping_address.dig("provinceCode"),
+        country: shipping_address.dig("country"),
+        country_code: shipping_address.dig("countryCodeV2"),
+      }
+      order[:shipping_address_attributes] = shipping_address_attributes
+    end
 
     order[:line_items_attributes] = line_items(@data)
-    order[:shipping_address_attributes] = shipping_address_attributes
     order
   end
 
