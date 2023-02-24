@@ -7,6 +7,7 @@ class Order < ApplicationRecord
   validates :shopify_id, uniqueness: true
 
   belongs_to :shop
+  has_many :line_items
   has_many :returns
   has_one :payment
   has_one :shipping_address
@@ -26,6 +27,8 @@ class Order < ApplicationRecord
                               .where(cancelled_at: nil)
                               .joins(:payment).where(payment: { status: "ERROR" })
                           }
+
+  accepts_nested_attributes_for :line_items, :shipping_address
 
   attribute :calculated_due_date, :datetime
 
@@ -53,6 +56,11 @@ class Order < ApplicationRecord
     end
 
     due_date
+  end
+
+  def line_items_attributes=(*attrs)
+    self.line_items = []
+    super(*attrs)
   end
 
   def self.search(query)

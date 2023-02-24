@@ -33,15 +33,10 @@ module Api
       end
 
       def show
-        order = Order.find_by!(shopify_id: params[:id])
-
+        order = Order.find(params[:id])
+        # Check whether the user can view this order
         render_errors(:unauthorized) unless current_user.id == order.shop_id
-
-        service = FetchOrder.new(id: "gid://shopify/Order/#{params[:id]}")
-        service.call
-
-        render_errors(service.error) if service.error
-        render(json: { order:, graphql_order: service.order, returns: order.returns })
+        render(json: { order:, returns: order.returns }, include: [:line_items])
       end
 
       private

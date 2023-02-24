@@ -1,24 +1,35 @@
 # frozen_string_literal: true
 
 # Update an order from Shopify ID
-class CreateOrUpdateOrder
-  class InvalidRequest < StandardError; end
+class CreateOrUpdateOrder < ApplicationService
+  attr_accessor :error
 
-  attr_accessor :order, :error
-
-  def initialize(order_attributes, shipping_address, tags = [])
-    @order_attributes = order_attributes
-    @shipping_address = shipping_address
-    @tags = tags
-    @order = nil
+  def initialize(order_instance)
+    super()
+    @order_instance = order_instance
   end
 
   def call
-    @order = Order.find_by(shopify_id: @order_attributes[:shopify_id])
+    return unless has_selling_plan?
 
-    update_order and return if @order
+    @order = Order.find_by(shopify_id: @order_instance[:shopify_id])
 
-    create_order
+    if @order
+      @order.line_items.destroy_all
+      @order.shipping_address.destroy
+      @order.update(@order_instance)
+    else
+      @order = Order.create!(@order_instance)
+
+      # Add TryOnify tag to order
+      tag_order
+
+      # Check for fraud or invalid orders
+      validate
+
+      # Update integrations
+      send_notifications
+    end
   rescue StandardError => e
     Rails.logger.error("[CreateOrUpdateOrder Failed]: #{e}")
     @error = e
@@ -27,34 +38,26 @@ class CreateOrUpdateOrder
 
   private
 
-  def create_order
-    @order = Order.create!(@order_attributes)
-
-    shipping_address = ShippingAddress.new(@shipping_address)
-    shipping_address.order = @order
-    shipping_address.save!
-
-    tag_order
-
-    ValidateOrderJob.perform_later(@order.id)
-
-    if @order
-      KlaviyoEvent.new(@order.shop).call(
-        event: "TryOnify Order Created",
-        email: @order.email,
-        properties: {
-          "order_id": @order.name,
-        }
-      )
-    end
-  end
-
-  def update_order
-    @order.update(@order_attributes)
+  def has_selling_plan?
+    @order_instance[:line_items_attributes].find { |line_item| !line_item[:selling_plan_id].nil? }
   end
 
   def tag_order
-    service = UpdateOrderTag.new("gid://shopify/Order/#{@order.shopify_id}", @tags)
+    service = UpdateOrderTag.new(@order.shopify_id, @order.tags)
     service.call
+  end
+
+  def validate
+    ValidateOrderJob.perform_later(@order.id)
+  end
+
+  def send_notifications
+    KlaviyoEvent.new(@order.shop).call(
+      event: "TryOnify Order Created",
+      email: @order.email,
+      properties: {
+        "order_id": @order.name,
+      }
+    )
   end
 end
