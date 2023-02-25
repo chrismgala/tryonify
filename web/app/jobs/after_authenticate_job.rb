@@ -6,10 +6,11 @@ class AfterAuthenticateJob < ActiveJob::Base
 
     shop.with_shopify_session do
       shopify_shop = ShopifyAPI::Shop.all.first
+
       shop.email = shopify_shop.email
       shop.order_number_format_prefix = shopify_shop.order_number_format_prefix
       shop.order_number_format_suffix = shopify_shop.order_number_format_suffix
-      shop.currency_code = shopify_shop.currency_code
+      shop.currency_code = shopify_shop.currency
       shop.save!
 
       # Set max trial metafield
