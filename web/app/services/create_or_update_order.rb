@@ -16,7 +16,7 @@ class CreateOrUpdateOrder < ApplicationService
 
     if @order
       @order.line_items.destroy_all
-      @order.shipping_address.destroy
+      @order&.shipping_address&.destroy
       @order.update(@order_instance)
     else
       @order = Order.create!(@order_instance)
