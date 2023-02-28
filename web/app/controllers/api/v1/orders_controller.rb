@@ -34,6 +34,14 @@ module Api
 
       def show
         order = Order.find(params[:id])
+
+        if order.line_items.length.zero?
+          graphql_order = FetchOrder.call(id: order.shopify_id)
+          built_order = OrderBuild.call(shop_id: order.shop_id, data: graphql_order.body.dig("data", "order"))
+          CreateOrUpdateOrder.call(built_order)
+          order.reload
+        end
+
         # Check whether the user can view this order
         render_errors(:unauthorized) unless current_user.id == order.shop_id
         render(json: { order:, returns: order.returns }, include: [:line_items])

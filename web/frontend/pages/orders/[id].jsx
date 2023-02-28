@@ -84,7 +84,7 @@ export default function EditSellingPlan() {
         content: 'View Order',
         onAction: () => navigate({
           name: 'Order',
-          resource: { id: data?.graphqlOrder?.legacyResourceId }
+          resource: { id: data?.order?.shopifyId.split('/').pop() }
         })
       }}
     >
