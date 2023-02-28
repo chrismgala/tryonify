@@ -75,7 +75,7 @@ export default function EditSellingPlan() {
       </IndexTable.Row>
     )
   })
-
+  console.log(data)
   return (
     <Page
       breadcrumbs={[{ content: 'Back to overview', onAction: () => navigate('/') }]}
