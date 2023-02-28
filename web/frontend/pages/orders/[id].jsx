@@ -75,7 +75,7 @@ export default function EditSellingPlan() {
       </IndexTable.Row>
     )
   })
-  console.log(data)
+
   return (
     <Page
       breadcrumbs={[{ content: 'Back to overview', onAction: () => navigate('/') }]}
@@ -84,7 +84,7 @@ export default function EditSellingPlan() {
         content: 'View Order',
         onAction: () => navigate({
           name: 'Order',
-          resource: { id: data?.graphqlOrder?.legacyResourceId }
+          resource: { id: data?.order?.shopifyId.split('/').pop() }
         })
       }}
     >
