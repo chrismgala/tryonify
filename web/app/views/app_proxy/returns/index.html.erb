@@ -44,7 +44,7 @@
               <% end %>
             <% else %>
               <form class="tryonify-return-form" action="/a/trial/returns" method="POST">
-                <input type="hidden" name="order_id" value="<%= @order.dig('legacyResourceId') %>" />
+                <input type="hidden" name="order_id" value="<%= @order.dig('id') %>" />
                 <input type="hidden" name="line_item_id" value="<%= line_item.dig('node', 'id') %>" />
                 <input type="hidden" name="title" value="<%= line_item.dig('node', 'title') %> <%= line_item.dig('node', 'variantTitle') %>">
                 <button class="tryonify-button" type="submit">Return</button>

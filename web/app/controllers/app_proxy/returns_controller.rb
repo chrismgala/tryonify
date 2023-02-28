@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AppProxy::ReturnsController < ApplicationController
   include ShopifyApp::AppProxyVerification
 
@@ -10,12 +12,12 @@ class AppProxy::ReturnsController < ApplicationController
 
       if service.order
         @order = service.order
-        existing_order = Order.find_by!(shopify_id: @order.dig('legacyResourceId'))
+        existing_order = Order.find_by!(shopify_id: @order.dig("id"))
         @returns = existing_order.returns
 
-        render(layout: false, content_type: 'application/liquid')
+        render(layout: false, content_type: "application/liquid")
       else
-        redirect_to '/a/trial/returns/search?err=not_found', allow_other_hosts: true
+        redirect_to("/a/trial/returns/search?err=not_found", allow_other_hosts: true)
       end
     end
   end
@@ -34,12 +36,12 @@ class AppProxy::ReturnsController < ApplicationController
       UpdateReturnOrderNoteJob.perform_later(@shop.id, return_order.id) if return_order.save
     end
 
-    redirect_to "/a/trial/returns?name=#{CGI.escape(order.name)}&email=#{CGI.escape(order.email)}"
+    redirect_to("/a/trial/returns?name=#{CGI.escape(order.name)}&email=#{CGI.escape(order.email)}")
   end
 
   def search
     @error = params[:err]
-    render(layout: false, content_type: 'application/liquid')
+    render(layout: false, content_type: "application/liquid")
   end
 
   private

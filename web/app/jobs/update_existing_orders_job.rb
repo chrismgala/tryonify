@@ -21,7 +21,7 @@ class UpdateExistingOrdersJob < ActiveJob::Base
       order_array = []
 
       service.orders.each do |order|
-        persisted_order = Order.find_by(shopify_id: order.dig("legacyResourceId"))
+        persisted_order = Order.find_by(shopify_id: order.dig("id"))
 
         next unless persisted_order
 
