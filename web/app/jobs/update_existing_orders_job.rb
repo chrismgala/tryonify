@@ -26,7 +26,6 @@ class UpdateExistingOrdersJob < ActiveJob::Base
         next unless persisted_order
 
         persisted_order.name = order.dig("name")
-        persisted_order.shopify_id = order.dig("legacyResourceId")
         persisted_order.due_date = order.dig("paymentTerms", "paymentSchedules", "nodes", 0, "dueAt")
         persisted_order.shopify_created_at = order.dig("createdAt")
         persisted_order.shopify_updated_at = order.dig("updatedAt")
