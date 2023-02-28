@@ -17,82 +17,34 @@ class FetchExistingOrdersJob < ActiveJob::Base
       end
 
       # Fetch pending orders since last check was done
-      service = FetchOrders.new({
+      orders = FetchOrders.call({
         first: 20,
         after: cursor,
         query:,
       })
-      service.call
-
-      order_edges = service.orders.dig("edges")
 
       # Step execution if there are no orders
-      return unless order_edges.length > 0
+      return unless orders&.body&.dig("data", "orders", "edges")
 
       # Create an array of orders with selling plans
-      order_edges.each do |order|
-        next unless has_selling_plan?(order["node"])
+      orders.body.dig("data", "orders", "edges").each do |order|
+        built_order = OrderBuild.call(shop_id: shop.id, data: order.dig("node"))
+        existing_order = Order.find_by(shopify_id: built_order[:shopify_id])
 
-        order_attributes = {
-          shopify_id: order.dig("node", "legacyResourceId"),
-          name: order.dig("node", "name"),
-          due_date: order.dig("node", "paymentTerms", "paymentSchedules", "nodes", 0, "dueAt"),
-          shopify_created_at: order.dig("node", "createdAt"),
-          shopify_updated_at: order.dig("node", "updatedAt"),
-          shop_id: shop.id,
-          financial_status: order.dig("node", "displayFinancialStatus"),
-          email: order.dig("node", "customer", "email"),
-          ip_address: order.dig("node", "clientIp"),
-          closed_at: order.dig("node", "closedAt"),
-          fully_paid: order.dig("node", "fullyPaid"),
-          total_outstanding: order.dig("node", "totalOutstandingSet", "shopMoney", "amount"),
-        }
-
-        shipping_address = {
-          address1: order.dig("node", "shippingAddress", "address1"),
-          address2: order.dig("node", "shippingAddress", "address2"),
-          city: order.dig("node", "shippingAddress", "city"),
-          country: order.dig("node", "shippingAddress", "country"),
-          country_code: order.dig("node", "shippingAddress", "countryCodeV2"),
-          province: order.dig("node", "shippingAddress", "province"),
-          province_code: order.dig("node", "shippingAddress", "provinceCode"),
-          zip: order.dig("node", "shippingAddress", "zip"),
-        }
-
-        update_service = CreateOrUpdateOrder.new(order_attributes, shipping_address, order.dig("node", "tags"))
-        update_service.call
+        if existing_order
+          OrderUpdate.call(order_attributes: built_order, order: existing_order)
+        else
+          OrderCreate.call(built_order)
+        end
       end
 
       # Create a job for the next page of orders
-      if service.orders.dig("pageInfo", "hasNextPage")
-        FetchExistingOrdersJob.perform_later(shop.id, service.orders.dig("pageInfo", "endCursor"))
+      if orders.body.dig("data", "pageInfo", "hasNextPage")
+        FetchExistingOrdersJob.perform_later(shop.id, orders.body.dig("data", "pageInfo", "endCursor"))
       else
         latest_order = shop.orders.order(shopify_created_at: :desc).first
         shop.update(orders_updated_at: latest_order.shopify_created_at) if latest_order
       end
-    end
-  end
-
-  # Page through line items looking for selling plan
-  def has_selling_plan?(order)
-    line_items = order.dig("lineItems", "edges")
-    selling_plan_ids = line_items.select { |x| x.dig("node", "sellingPlan", "sellingPlanId") }
-      .map { |x| x.dig("node", "sellingPlan", "sellingPlanId") }
-
-    if selling_plan_ids.length.positive? && SellingPlan.where(shopify_id: selling_plan_ids).any?
-      true
-    elsif order.dig("lineItems", "pageInfo", "hasNextPage")
-      service = FetchOrder.new(id: order.dig("id"), after: order.dig("lineItems", "pageInfo", "endCursor"))
-      service.call
-
-      if service.order
-        updated_order = service.order
-        has_selling_plan?(updated_order)
-      else
-        raise "Could not fetch order #{order.dig("id")}"
-      end
-    else
-      false
     end
   end
 end

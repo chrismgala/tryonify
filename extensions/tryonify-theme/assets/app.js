@@ -246,6 +246,8 @@
   }
 
   function showAlert() {
+    if (window.tryonify.disableErrorMessages) return;
+
     const alertEl = document.querySelector('.tryonify-alert');
     alertEl.classList.add('open');
 
@@ -285,8 +287,11 @@
         if (newPayload) {
           options.body = JSON.stringify(newPayload);
         } else {
-          return new Response(JSON.stringify({}), {
+          return new Response(JSON.stringify({ description: `Only ${window.tryonify.maxTrialItems} trial products allowed`, }), {
             status: 422,
+            body: JSON.stringify({
+              description: `Only ${window.tryonify.maxTrialItems} trial products allowed`,
+            }),
             statusText: `Only ${window.tryonify.maxTrialItems} trial products allowed`
           });
         }

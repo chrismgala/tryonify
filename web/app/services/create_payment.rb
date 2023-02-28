@@ -46,15 +46,18 @@ class CreatePayment
   end
 
   def can_charge?
+    # Check that there is a due date
+    return false unless @order.due_date
+
     # Check that the due date has passed
     return false if @order.due_date.after?(DateTime.current)
 
     # Make sure there are no returns that haven't been processed
-    returnItem = @order.returns.where(active: true).order(created_at: :desc).first
-    if returnItem
+    return_item = @order.returns.where(active: true).order(created_at: :desc).first
+    if return_item
       # Check if the return grace period has passed
       grace_period = @order.shop.return_period
-      deadline = returnItem.created_at + grace_period.days
+      deadline = return_item.created_at + grace_period.days
 
       return false unless deadline.before?(DateTime.current)
     end
@@ -77,13 +80,13 @@ class CreatePayment
   def charge
     @payment = Payment.new(
       idempotency_key: "order-#{@order.id}-#{SecureRandom.hex(10)}",
-      order_id: @order.id
+      order_id: @order.id,
     )
 
     query = CREATE_MANDATE_PAYMENT_QUERY
 
     variables = {
-      id: "gid://shopify/Order/#{@order.shopify_id}",
+      id: @order.shopify_id,
       idempotencyKey: @payment.idempotency_key,
       mandateId: @order.mandate_id,
     }
@@ -106,41 +109,9 @@ class CreatePayment
   end
 
   def update_order
-    fetch_order = FetchOrder.new(id: "gid://shopify/Order/#{@order.shopify_id}")
-    fetch_order.call
-
-    order = fetch_order.order
-
-    order_attributes = {
-      shopify_id: order.dig("legacyResourceId"),
-      shopify_created_at: order.dig("createdAt"),
-      shopify_updated_at: order.dig("updatedAt"),
-      name: order.dig("name"),
-      due_date: order.dig("paymentTerms", "paymentSchedules", "edges", 0, "node", "dueAt"),
-      closed_at: order.dig("closedAt"),
-      cancelled_at: order.dig("cancelledAt"),
-      ip_address: order.dig("clientIp"),
-      financial_status: order["displayFinancialStatus"],
-      fulfillment_status: order["displayFulfillmentStatus"],
-      email: order.dig("customer", "email"),
-      mandate_id: order.dig("paymentCollectionDetails", "vaultedPaymentMethods", 0, "id"),
-      fully_paid: order.dig("fullyPaid"),
-      total_outstanding: order.dig("totalOutstandingSet", "shopMoney", "amount"),
-    }
-
-    shipping_address = {
-      address1: order.dig("shippingAddress", "address1"),
-      address2: order.dig("shippingAddress", "address2"),
-      city: order.dig("shippingAddress", "city"),
-      country: order.dig("shippingAddress", "country"),
-      country_code: order.dig("shippingAddress", "countryCodeV2"),
-      province: order.dig("shippingAddress", "province"),
-      province_code: order.dig("shippingAddress", "provinceCode"),
-      zip: order.dig("shippingAddress", "zip"),
-    }
-
-    service = CreateOrUpdateOrder.new(order_attributes, shipping_address, order.dig("tags"))
-    service.call
+    graphql_order = FetchOrder.call(id: @order.shopify_id)
+    built_order = OrderBuild.call(shop_id: @order.shop_id, data: graphql_order.body.dig("data", "order"))
+    OrderUpdate.call(order_attributes: built_order, order: @order)
 
     @order.reload
   end

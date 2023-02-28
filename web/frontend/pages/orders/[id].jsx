@@ -36,8 +36,8 @@ export default function EditSellingPlan() {
     plural: 'products'
   }
 
-  const rowMarkup = data?.graphqlOrder?.lineItems.edges.map(({ node }) => {
-    const { id, title, variantTitle, image, quantity } = node;
+  const rowMarkup = data?.order?.lineItems.map(lineItem => {
+    const { id, title, variantTitle, imageUrl, quantity } = lineItem;
     let status = { level: 'warning', label: 'Pending' };
 
     if (data?.order?.financialStatus === 'PAID') {
@@ -61,7 +61,7 @@ export default function EditSellingPlan() {
       >
         <IndexTable.Cell>
           <Stack>
-            <Thumbnail source={image?.url || ImageMajor} alt={title} />
+            <Thumbnail source={imageUrl || ImageMajor} alt={title} />
             <Text variant="bodyMd" fontWeight="bold" as="span">{title}</Text>
             <span>{variantTitle}</span>
           </Stack>
@@ -92,7 +92,7 @@ export default function EditSellingPlan() {
         <Layout.Section>
           <Card title='Line Items'>
             <IndexTable
-              itemCount={data?.graphqlOrder?.lineItems.edges.length || 0}
+              itemCount={data?.order?.lineItems.length || 0}
               resourceName={resourceName}
               headings={[
                 { title: 'Product' },
