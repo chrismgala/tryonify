@@ -60,14 +60,15 @@
 
     forms.forEach((form) => {
       const sellingPlanInput = form.querySelector('input[name="selling_plan"]');
-      const idInput = form.querySelector('input[name="id"]');
+      const idInput = form.querySelector('[name="id"]');
+      const value = idInput.nodeName === 'SELECT' ? idInput.options[idInput.selectedIndex].value : idInput.value;
 
       if (sellingPlanInput) {
-        sellingPlanInput.dataset.variantId = idInput.value;
+        sellingPlanInput.dataset.variantId = value;
         inputs.push(sellingPlanInput);
       } else {
         const input = createInput();
-        input.dataset.variantId = idInput.value;
+        input.dataset.variantId = value;
         inputs.push(form.appendChild(input));
       }
     });
@@ -84,7 +85,7 @@
       const json = await response.json();
       const variant = json?.product?.variants.find(variant => variant.id === parseInt(e.target.value));
 
-      if (variant) {
+      if (variant && price) {
         price.innerHTML = new Intl.NumberFormat('default', { style: 'currency', currency: window.Shopify.currency.active }).format(variant.price);
       }
     }
@@ -151,7 +152,7 @@
     addToCartButtons = document.querySelectorAll('.tryonify-add-to-cart');
 
     forms.forEach((form) => {
-      const idInput = form.querySelector('input[name="id"]');
+      const idInput = form.querySelector('[name="id"]');
       idInput.addEventListener('change', handleVariantChange)
     })
 
