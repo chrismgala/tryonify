@@ -42,6 +42,7 @@
 
   function disableTrialOptions(isDisabled) {
     const trialOptions = document.querySelectorAll('.tryonify-selling-plan:not(.tryonify-selling-plan--default)');
+    const trialButton = document.querySelector('.tryonify-button');
 
     if (trialOptions.length > 0) {
       trialOptions.forEach(option => {
@@ -60,6 +61,16 @@
         input.disabled = isDisabled;
         input.dispatchEvent(changeEvent);
       });
+    }
+
+    if (trialButton) {
+      trialButton.disabled = isDisabled;
+
+      if (isDisabled) {
+        trialButton.classList.add('tryonify-selling-plan--disabled');
+      } else {
+        trialButton.classList.remove('tryonify-selling-plan--disabled');
+      }
     }
   }
 
@@ -257,7 +268,7 @@
   }
 
   function showProgress() {
-    const sellingGroup = document.querySelectorAll('.tryonify-selling-plan-group');
+    const sellingGroup = document.querySelectorAll('.tryonify-selling-plan-group, .tryonify-button');
     const wrapper = document.querySelector('.tryonify-selling-plan-wrapper');
 
     if (sellingGroup.length === 0) return;

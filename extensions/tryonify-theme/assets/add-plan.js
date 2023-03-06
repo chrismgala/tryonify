@@ -131,7 +131,7 @@
       const sellingPlan = form.querySelector('input[name="selling_plan"]');
 
       if (!sellingPlan) return;
-      sellingPlan.value = e.target.dataset.sellingPlanId;
+      sellingPlan.value = e.currentTarget.dataset.sellingPlanId;
 
       const submitButton = form.querySelector('[type="submit"]');
 
@@ -139,6 +139,11 @@
         submitButton.click();
       } else {
         form.submit();
+      }
+
+      // Clear selling plan input if button is clicked
+      if (e.currentTarget.nodeName === 'BUTTON') {
+        sellingPlan.value = '';
       }
     }
   }
