@@ -27,7 +27,7 @@
 <div class="tryonify-embed" data-embed-target="{{ block.settings.embed_target }}">
   <div class="tryonify-selling-plan-wrapper">
     {% if block.settings.style == 'expanded' %}
-      {% render 'expanded', cart_trial_items: cart_trial_items, show_buy_now_price: block.settings.show_buy_now_price %}
+      {% render 'expanded', cart_trial_items: cart_trial_items, show_buy_now_price: block.settings.show_buy_now_price, default_trial: block.settings.default_trial %}
     {% endif %}
   
     {% if block.settings.style == 'compact' %}
@@ -74,6 +74,12 @@
       "type": "checkbox",
       "id": "show_buy_now_price",
       "label": "Show Buy Now price",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "default_trial",
+      "label": "Select trial by default",
       "default": false
     },
     {

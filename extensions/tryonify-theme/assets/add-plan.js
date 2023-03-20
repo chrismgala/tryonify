@@ -163,6 +163,10 @@
 
     triggers.forEach((trigger) => {
       trigger.addEventListener('change', handleChange);
+
+      if (trigger.checked) {
+        handleChange({ target: trigger });
+      }
     });
 
     if (addToCartButtons.length > 0) {
