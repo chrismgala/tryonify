@@ -39,7 +39,7 @@ class FetchPaymentStatus
     end
 
     @status = response.body.dig("data", "orderPaymentStatus", "status")&.upcase
-    @error = response.body.dig("data", "orderPaymentStatus", "error")
+    @error = response.body.dig("data", "orderPaymentStatus", "errorMessage")
 
     @payment.update!(status: @status, error: @error)
 
