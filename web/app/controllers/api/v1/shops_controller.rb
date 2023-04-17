@@ -46,7 +46,8 @@ module Api
           :onboarded,
           :return_explainer,
           :allow_automatic_payments,
-          :return_period
+          :return_period,
+          :void_authorizations,
         )
       end
     end

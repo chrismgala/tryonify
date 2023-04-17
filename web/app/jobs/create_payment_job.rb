@@ -10,8 +10,7 @@ class CreatePaymentJob < ApplicationJob
     end
 
     order.shop.with_shopify_session do
-      service = CreatePayment.new(order_id)
-      service.call
+      CreatePayment.call(order_id)
     end
   end
 end

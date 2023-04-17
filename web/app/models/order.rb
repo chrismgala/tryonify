@@ -9,7 +9,8 @@ class Order < ApplicationRecord
   belongs_to :shop
   has_many :line_items
   has_many :returns
-  has_one :payment
+  has_many :transactions
+  has_many :payments
   has_one :shipping_address
 
   scope :payment_due, lambda {
@@ -46,6 +47,14 @@ class Order < ApplicationRecord
     true
   end
 
+  def authorized?
+    transactions.where(kind: :authorization).any?
+  end
+
+  def voided?
+    transactions.where(kind: :void).any?
+  end
+
   def calculated_due_date
     latest_return = returns.where(active: true).order(created_at: :desc).first
 
@@ -56,6 +65,10 @@ class Order < ApplicationRecord
     end
 
     due_date
+  end
+
+  def cancel
+    OrderCancelJob.perform_later(id)
   end
 
   def line_items_attributes=(*attrs)

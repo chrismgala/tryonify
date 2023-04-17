@@ -12,13 +12,14 @@ class OrderCreate < ApplicationService
   def call
     return unless has_selling_plan?
 
-    puts @order_attributes.inspect
     @order = Order.create!(@order_attributes)
 
     # Add TryOnify tag to order
     tag_order
     # Check for fraud or invalid orders
     validate
+    # Authorize order
+    authorize
     # Update integrations
     send_notifications
 
@@ -38,6 +39,10 @@ class OrderCreate < ApplicationService
 
   def validate
     ValidateOrderJob.perform_later(@order.id)
+  end
+
+  def authorize
+    OrderAuthorizeJob.perform_later(@order.id)
   end
 
   def send_notifications
