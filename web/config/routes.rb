@@ -32,6 +32,12 @@ Rails.application.routes.draw do
       end
       resources :products, only: [:index]
       resources :orders, only: [:index, :show]
+      resources :draft_orders, only: [:index]
+      resources :checkouts, only: [:index, :create] do
+        collection do
+          post :bulk_destroy
+        end
+      end
       resources :returns, only: [:index, :update, :destroy]
 
       get "/chart", to: "chart#index"
