@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_11_020807) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_18_175717) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
+
+  create_table "checkouts", force: :cascade do |t|
+    t.string "draft_order_id", null: false
+    t.string "link"
+    t.string "name"
+    t.bigint "shop_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shop_id"], name: "index_checkouts_on_shop_id"
+  end
 
   create_table "line_items", force: :cascade do |t|
     t.bigint "order_id"
@@ -181,15 +191,35 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_11_020807) do
     t.integer "max_trial_items", default: 3
     t.string "slack_token"
     t.string "currency_code", default: "USD", null: false
+    t.boolean "void_authorizations", default: false
     t.index ["plan_id"], name: "index_shops_on_plan_id"
     t.index ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
   end
 
-  add_foreign_key "line_items", "orders"
+  create_table "transactions", force: :cascade do |t|
+    t.string "shopify_id", null: false
+    t.bigint "order_id", null: false
+    t.bigint "parent_transaction_id"
+    t.integer "kind", null: false
+    t.decimal "amount", null: false
+    t.string "error"
+    t.json "receipt"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "authorization_expires_at"
+    t.string "payment_id"
+    t.index ["order_id"], name: "index_transactions_on_order_id"
+    t.index ["parent_transaction_id"], name: "index_transactions_on_parent_transaction_id"
+  end
+
+  add_foreign_key "checkouts", "shops"
+  add_foreign_key "line_items", "orders", on_delete: :cascade
   add_foreign_key "orders", "shops", on_delete: :cascade
   add_foreign_key "payments", "orders"
   add_foreign_key "products", "shops", on_delete: :cascade
   add_foreign_key "returns", "orders", on_delete: :cascade
   add_foreign_key "selling_plan_groups", "shops", on_delete: :cascade
   add_foreign_key "selling_plans", "selling_plan_groups", on_delete: :cascade
+  add_foreign_key "transactions", "orders"
+  add_foreign_key "transactions", "transactions", column: "parent_transaction_id"
 end
