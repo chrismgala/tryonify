@@ -6,6 +6,7 @@ class Shop < ActiveRecord::Base
   has_many :orders, dependent: :destroy
   has_many :returns, dependent: :destroy
   has_many :selling_plan_groups, dependent: :destroy
+  has_many :checkouts, dependent: :destroy
   has_many :metafields, dependent: :destroy
 
   def api_version
