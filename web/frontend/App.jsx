@@ -27,6 +27,10 @@ export default function App() {
                     destination: "/",
                   },
                   {
+                    label: "Checkouts",
+                    destination: "/checkouts",
+                  },
+                  {
                     label: "Trial Plans",
                     destination: "/plans",
                   },
