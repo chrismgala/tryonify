@@ -72,6 +72,6 @@ class CreatePayment < ApplicationService
   end
 
   def schedule_update
-    FetchPaymentStatusJob.set(wait: 2.minutes).perform_later(@order.payment.id)
+    FetchPaymentStatusJob.set(wait: 2.minutes).perform_later(@payment.id)
   end
 end
