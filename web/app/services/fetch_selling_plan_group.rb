@@ -22,17 +22,17 @@ class FetchSellingPlanGroup
       first: @pagination[:first].to_i,
       last: @pagination[:last].to_i,
       before: @pagination[:before],
-      after: @pagination[:after]
+      after: @pagination[:after],
     }
 
     response = @client.query(query:, variables:)
 
-    unless response.body['errors'].nil?
+    unless response.body["errors"].nil?
       raise FetchSellingPlanGroup::InvalidRequest,
-            response.body.dig('errors', 0, 'message') and return
+        response.body.dig("errors", 0, "message") and return
     end
 
-    @selling_plan_group = response.body.dig('data', 'sellingPlanGroup')
+    @selling_plan_group = response.body.dig("data", "sellingPlanGroup")
   rescue ActiveRecord::RecordInvalid, StandardError => e
     Rails.logger.error("[FetchSellingPlanGroup Failed]: #{e}")
     @error = e.message

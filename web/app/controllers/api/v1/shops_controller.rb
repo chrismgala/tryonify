@@ -40,13 +40,14 @@ module Api
       private
 
       def shop_params
-        params.permit(
+        params.require(:shop).permit(
           :klaviyo_public_key,
           :klaviyo_private_key,
           :onboarded,
           :return_explainer,
           :allow_automatic_payments,
           :return_period,
+          :authorize_transactions,
           :void_authorizations,
         )
       end

@@ -15,7 +15,7 @@ class OrderAuthorize < ApplicationService
   private
 
   def authorize_allowed?
-    @order.total_outstanding.positive? && !@order.fully_paid && !@order.authorized?
+    @order.total_outstanding.positive? && !@order.fully_paid && @order.should_reauthorize?
   end
 
   def authorize

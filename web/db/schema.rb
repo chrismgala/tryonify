@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_14_180411) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_21_001614) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
+
+  create_table "checkouts", force: :cascade do |t|
+    t.string "draft_order_id", null: false
+    t.string "link"
+    t.string "name"
+    t.bigint "shop_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shop_id"], name: "index_checkouts_on_shop_id"
+  end
 
   create_table "line_items", force: :cascade do |t|
     t.bigint "order_id"
@@ -182,6 +192,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_14_180411) do
     t.string "slack_token"
     t.string "currency_code", default: "USD", null: false
     t.boolean "void_authorizations", default: false
+    t.boolean "authorize_transactions", default: true
     t.index ["plan_id"], name: "index_shops_on_plan_id"
     t.index ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
   end
@@ -198,10 +209,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_14_180411) do
     t.datetime "updated_at", null: false
     t.datetime "authorization_expires_at"
     t.string "payment_id"
+    t.boolean "voided", default: false
     t.index ["order_id"], name: "index_transactions_on_order_id"
     t.index ["parent_transaction_id"], name: "index_transactions_on_parent_transaction_id"
   end
 
+  add_foreign_key "checkouts", "shops"
   add_foreign_key "line_items", "orders", on_delete: :cascade
   add_foreign_key "orders", "shops", on_delete: :cascade
   add_foreign_key "payments", "orders"

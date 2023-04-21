@@ -8,8 +8,12 @@ class Transaction < ApplicationRecord
 
   after_create_commit :void, if: :void_authorizations
   # after_create_commit :retry_transaction, if: :retryable?
-  after_create_commit :cancel_order # , if: :invalid?
+  after_create_commit :cancel_order, if: :invalid?
 
+  scope :successful_authorizations, -> { where(kind: :authorization, error: nil, voided: false) }
+  scope :reauthorization_required, -> {
+                                     successful_authorizations.where("DATE(authorization_expires_at) < DATE(?)", DateTime.current + 12.hours)
+                                   }
   INVALID_TRANSACTION_ERRORS = ["CARD_DECLINED", "EXPIRED_CARD", "INVALID_AMOUNT", "PICK_UP_CARD"].freeze
   RETRY_TRANSACTION_ERRORS = ["PROCESSING_ERROR", "PAYMENT_METHOD_UNAVAILABLE", "GENERIC_ERROR", "CONFIG_ERROR"].freeze
 

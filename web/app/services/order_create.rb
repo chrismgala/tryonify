@@ -19,7 +19,7 @@ class OrderCreate < ApplicationService
     # Check for fraud or invalid orders
     validate
     # Authorize order
-    authorize
+    authorize if @order.shop.authorize_transactions
     # Update integrations
     send_notifications
 

@@ -21,7 +21,7 @@ class TransactionCreate < ApplicationService
     shopify_transaction.currency = @order.shop.currency_code
     shopify_transaction.kind = @kind
 
-    if @parent_id
+    if @parent_transaction_id
       parent_transaction = Transaction.find_by(shopify_id: @parent_transaction_id)
       shopify_transaction.parent_id = @parent_transaction_id
       shopify_transaction.amount = parent_transaction.amount
@@ -31,14 +31,18 @@ class TransactionCreate < ApplicationService
     shopify_transaction.amount = @order.total_outstanding unless shopify_transaction.amount
 
     if shopify_transaction.save!
-      Transaction.create!(
-        shopify_id: shopify_transaction.id,
-        order_id: @order.id,
-        amount: shopify_transaction.amount.to_f,
-        kind: @kind,
-        parent_transaction: parent_transaction&.id,
-        error: shopify_transaction.error_code,
-      )
+      Transaction.transaction do
+        parent_transaction&.update!(voided: true) if @kind == "void"
+        Transaction.create!(
+          shopify_id: "gid://shopify/OrderTransaction/#{shopify_transaction.id}",
+          order_id: @order.id,
+          amount: shopify_transaction.amount.to_f,
+          kind: @kind,
+          parent_transaction: parent_transaction&.id,
+          receipt: shopify_transaction.receipt,
+          error: shopify_transaction.error_code,
+        )
+      end
     end
   end
 end

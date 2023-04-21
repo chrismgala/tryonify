@@ -48,7 +48,11 @@ class Order < ApplicationRecord
   end
 
   def authorized?
-    transactions.where(kind: :authorization).any?
+    transactions.successful_authorizations.any?
+  end
+
+  def should_reauthorize?
+    transactions.reauthorization_required.any? && !shop.void_authorizations
   end
 
   def voided?
@@ -76,11 +80,13 @@ class Order < ApplicationRecord
     super(*attrs)
   end
 
-  def self.search(query)
-    if query.present?
-      search_by_name(query)
-    else
-      order(shopify_created_at: :desc)
+  class << self
+    def search(query)
+      if query.present?
+        search_by_name(query)
+      else
+        order(shopify_created_at: :desc)
+      end
     end
   end
 end
