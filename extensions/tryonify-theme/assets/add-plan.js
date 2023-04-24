@@ -31,7 +31,7 @@
       }
     } else {
       forms.forEach((form) => {
-        let productButton = form.querySelector('button[type="submit"]');
+        let productButton = form.querySelector('input[type="submit"],button[type="submit"]');
         let retry = 3;
         let isParent = false;
 
