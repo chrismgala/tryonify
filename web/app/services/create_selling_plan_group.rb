@@ -59,18 +59,18 @@ class CreateSellingPlanGroup
     variables = {
       name: @selling_plan_group.name,
       description: @selling_plan_group.description,
-      plan: create_plan(@selling_plan_group.selling_plan)
+      plan: create_plan(@selling_plan_group.selling_plan),
     }
 
     response = @client.query(query:, variables:)
 
     # Raise an error if the query is unsuccessful
-    unless response.body['errors'].nil?
+    unless response.body["errors"].nil?
       raise CreateSellingPlanGroup::InvalidRequest,
-            response.body.dig('errors', 0, 'message') and return
+        response.body.dig("errors", 0, "message") and return
     end
 
-    @selling_plan_group = response.body.dig('data', 'sellingPlanGroupCreate', 'sellingPlanGroup')
+    @selling_plan_group = response.body.dig("data", "sellingPlanGroupCreate", "sellingPlanGroup")
   rescue ActiveRecord::RecordInvalid, StandardError => e
     Rails.logger.error("[CreateSellingPlanGroup Failed]: #{e.message}")
     @error = e
@@ -84,36 +84,36 @@ class CreateSellingPlanGroup
     [{
       name: plan.name,
       description: plan.description,
-      options: ['default'],
+      options: ["default"],
       billingPolicy: {
         fixed: {
           checkoutCharge: {
-            type: 'PRICE',
+            type: "PRICE",
             value: {
-              fixedValue: plan.prepay
-            }
+              fixedValue: plan.prepay,
+            },
           },
           remainingBalanceChargeTimeAfterCheckout: trial_days_iso,
-          remainingBalanceChargeTrigger: 'TIME_AFTER_CHECKOUT'
-        }
+          remainingBalanceChargeTrigger: "TIME_AFTER_CHECKOUT",
+        },
       },
-      category: 'TRY_BEFORE_YOU_BUY',
+      category: "TRY_BEFORE_YOU_BUY",
       inventoryPolicy: {
-        reserve: 'ON_SALE'
+        reserve: "ON_SALE",
       },
       deliveryPolicy: {
         fixed: {
-          fulfillmentTrigger: 'ASAP'
-        }
+          fulfillmentTrigger: "ASAP",
+        },
       },
       pricingPolicies: {
         fixed: {
-          adjustmentType: 'FIXED_AMOUNT',
+          adjustmentType: "FIXED_AMOUNT",
           adjustmentValue: {
-            fixedValue: 0
-          }
-        }
-      }
+            fixedValue: 0,
+          },
+        },
+      },
     }]
   end
 end

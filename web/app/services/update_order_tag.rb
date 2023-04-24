@@ -8,7 +8,7 @@ class UpdateOrderTag
 
   def initialize(order_id, existing_tags = [])
     @order_id = order_id
-    @existing_tags = existing_tags
+    @existing_tags = existing_tags || []
     @session = ShopifyAPI::Context.active_session
     @client = ShopifyAPI::Clients::Graphql::Admin.new(session: @session)
   end

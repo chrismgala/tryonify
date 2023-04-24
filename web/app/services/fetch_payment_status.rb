@@ -12,8 +12,9 @@ class FetchPaymentStatus
     }
   QUERY
 
-  RETRY_STATUS = [:RETRYABLE, :PROCESSING]
-  FAILED_STATUS = [:ERROR]
+  AUTHORIZED_STATUS = ["AUTHORIZED"]
+  RETRY_STATUS = ["RETRYABLE", "PROCESSING", "PENDING"]
+  FAILED_STATUS = ["ERROR"]
 
   attr_accessor :status, :error
 
@@ -58,6 +59,15 @@ class FetchPaymentStatus
           "error": @error,
         }
       )
+    end
+
+    if AUTHORIZED_STATUS.include?(@status)
+      # Check for changes in previous payment status
+      @payment.order.payments.where(status: "AUTHORIZED").each do |payment|
+        FetchPaymentStatusJob.perform_later(payment.id) if payment.id != @payment.id
+      end
+
+      OrderTransactionFetch.call(@payment.order)
     end
   end
 end

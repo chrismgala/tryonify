@@ -1,6 +1,6 @@
 {% for selling_plan_group in product.selling_plan_groups %}
-  <div class="tryonify-selling-plan-group">
-    {% if selling_plan_group.app_id == "tryonify" %}
+  {% if selling_plan_group.app_id == "tryonify" %}
+    <div class="tryonify-selling-plan-group">
       {% for selling_plan in selling_plan_group.selling_plans %}
         <label class="tryonify-selling-plan {% if cart_trial_items >= app.metafields.settings.maxTrialItems %}tryonify-selling-plan--disabled{% endif %}" for="tryonify-{{ selling_plan.id }}">
           <div class="tryonify-selling-plan-row">
@@ -30,6 +30,6 @@
           {% endif %}
         </div>
       </label>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 {% endfor %}

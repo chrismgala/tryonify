@@ -96,6 +96,16 @@ export default function Settings() {
                       component={CheckboxField}
                     />
                     <Field
+                      label="Authorize new orders"
+                      name="authorizeTransactions"
+                      component={CheckboxField}
+                    />
+                    <Field
+                      label="Void authorizations immediately"
+                      name="voidAuthorizations"
+                      component={CheckboxField}
+                    />
+                    <Field
                       label="Max trial items per order"
                       name="maxTrialItems"
                       autoComplete="off"

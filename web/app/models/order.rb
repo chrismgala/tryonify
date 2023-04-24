@@ -9,7 +9,8 @@ class Order < ApplicationRecord
   belongs_to :shop
   has_many :line_items
   has_many :returns
-  has_one :payment
+  has_many :transactions
+  has_many :payments
   has_one :shipping_address
 
   scope :payment_due, lambda {
@@ -46,6 +47,18 @@ class Order < ApplicationRecord
     true
   end
 
+  def authorized?
+    transactions.successful_authorizations.any?
+  end
+
+  def should_reauthorize?
+    transactions.reauthorization_required.any? && !shop.void_authorizations
+  end
+
+  def voided?
+    transactions.where(kind: :void).any?
+  end
+
   def calculated_due_date
     latest_return = returns.where(active: true).order(created_at: :desc).first
 
@@ -58,16 +71,22 @@ class Order < ApplicationRecord
     due_date
   end
 
+  def cancel
+    OrderCancelJob.perform_later(id)
+  end
+
   def line_items_attributes=(*attrs)
     self.line_items = []
     super(*attrs)
   end
 
-  def self.search(query)
-    if query.present?
-      search_by_name(query)
-    else
-      order(shopify_created_at: :desc)
+  class << self
+    def search(query)
+      if query.present?
+        search_by_name(query)
+      else
+        order(shopify_created_at: :desc)
+      end
     end
   end
 end

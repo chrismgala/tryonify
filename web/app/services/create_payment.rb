@@ -1,24 +1,10 @@
 # frozen_string_literal: true
 
-class CreatePayment
-  class UserError < StandardError; end
-  class InvalidRequest < StandardError; end
-
-  attr_accessor :payment, :error
-
-  CREATE_MANDATE_PAYMENT_QUERY = <<~QUERY
-    mutation orderCreateMandatePayment($id: ID!, $idempotencyKey: String!, $mandateId: ID!) {
-      orderCreateMandatePayment(id: $id, idempotencyKey: $idempotencyKey, mandateId: $mandateId) {
-        paymentReferenceId
-        userErrors {
-          field
-          message
-        }
-      }
-    }
-  QUERY
+class CreatePayment < ApplicationService
+  attr_accessor :error
 
   def initialize(order_id)
+    super()
     @order = Order.find(order_id)
     @payment = nil
     @error = nil
@@ -37,12 +23,8 @@ class CreatePayment
       charge
 
       # Get status of payment
-      schedule_update if @payment.save!
+      schedule_update if @payment
     end
-  rescue CreatePayment::InvalidRequest => e
-    Rails.logger.error("[CreatePayment Failed]: Order #{@order.id} - #{e}")
-    @error = e
-    raise e
   end
 
   def can_charge?
@@ -78,34 +60,7 @@ class CreatePayment
   end
 
   def charge
-    @payment = Payment.new(
-      idempotency_key: "order-#{@order.id}-#{SecureRandom.hex(10)}",
-      order_id: @order.id,
-    )
-
-    query = CREATE_MANDATE_PAYMENT_QUERY
-
-    variables = {
-      id: @order.shopify_id,
-      idempotencyKey: @payment.idempotency_key,
-      mandateId: @order.mandate_id,
-    }
-
-    response = @client.query(query:, variables:)
-
-    unless response.body.dig("data", "orderCreateMandatePayment", "userErrors", 0, "message").nil?
-      raise CreatePayment::UserError,
-        response.body.dig("data", "orderCreateMandatePayment", "userErrors", 0, "message") and return
-    end
-
-    unless response.body["errors"].nil?
-      raise CreatePayment::InvalidRequest,
-        response.body.dig("errors", 0, "message") and return
-    end
-
-    payment_reference_id = response.body.dig("data", "orderCreateMandatePayment", "paymentReferenceId")
-    @payment.payment_reference_id = payment_reference_id
-    @payment.save!
+    @payment = OrderCreateMandatePayment.call(order: @order)
   end
 
   def update_order
@@ -117,6 +72,6 @@ class CreatePayment
   end
 
   def schedule_update
-    FetchPaymentStatusJob.set(wait: 2.minutes).perform_later(@order.payment.id)
+    FetchPaymentStatusJob.set(wait: 2.minutes).perform_later(@payment.id)
   end
 end

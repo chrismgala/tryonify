@@ -14,8 +14,7 @@ RSpec.describe(CreatePayment) do
 
     it "creates a payment" do
       order.shop.with_shopify_session do
-        service = CreatePayment.new(order.id)
-        service.call
+        CreatePayment.call(order.id)
       end
 
       expect(Payment.where(order_id: order.id)).to(exist)
@@ -32,8 +31,7 @@ RSpec.describe(CreatePayment) do
 
     it "does not create a payment" do
       order.shop.with_shopify_session do
-        service = CreatePayment.new(order.id)
-        service.call
+        CreatePayment.call(order.id)
       end
 
       expect(Payment.where(order_id: order.id)).to_not(exist)
@@ -48,8 +46,7 @@ RSpec.describe(CreatePayment) do
       return_item.save!
 
       order.shop.with_shopify_session do
-        service = CreatePayment.new(order.id)
-        service.call
+        CreatePayment.call(order.id)
       end
 
       expect(Payment.where(order_id: order.id)).to(exist)
@@ -67,8 +64,7 @@ RSpec.describe(CreatePayment) do
 
     it "creates a payment" do
       order.shop.with_shopify_session do
-        service = CreatePayment.new(order.id)
-        service.call
+        CreatePayment.call(order.id)
       end
 
       expect(Payment.where(order_id: order.id)).to(exist)
@@ -85,8 +81,7 @@ RSpec.describe(CreatePayment) do
 
     it "creates a payment" do
       order.shop.with_shopify_session do
-        service = CreatePayment.new(order.id)
-        service.call
+        CreatePayment.call(order.id)
       end
 
       expect(Payment.where(order_id: order.id)).to_not(exist)
@@ -103,8 +98,7 @@ RSpec.describe(CreatePayment) do
 
     it "does not create a payment" do
       order.shop.with_shopify_session do
-        service = CreatePayment.new(order.id)
-        service.call
+        CreatePayment.new(order.id)
       end
 
       expect(Payment.where(order_id: order.id)).to_not(exist)

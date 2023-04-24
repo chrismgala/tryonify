@@ -12,17 +12,21 @@ class OrderCreate < ApplicationService
   def call
     return unless has_selling_plan?
 
-    puts @order_attributes.inspect
     @order = Order.create!(@order_attributes)
 
     # Add TryOnify tag to order
     tag_order
     # Check for fraud or invalid orders
     validate
+    # Authorize order
+    authorize if @order.shop.authorize_transactions
     # Update integrations
     send_notifications
 
     @order
+  rescue => err
+    Rails.logger.error("[OrderCreate Failed]: #{err.message}")
+    raise err
   end
 
   private
@@ -38,6 +42,10 @@ class OrderCreate < ApplicationService
 
   def validate
     ValidateOrderJob.perform_later(@order.id)
+  end
+
+  def authorize
+    OrderAuthorizeJob.perform_later(@order.id)
   end
 
   def send_notifications
