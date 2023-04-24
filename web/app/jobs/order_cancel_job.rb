@@ -12,7 +12,7 @@ class OrderCancelJob < ApplicationJob
     end
 
     order.shop.with_shopify_session do
-      OrderCancel.call(order)
+      OrderCancel.call(order: order)
     end
   end
 end

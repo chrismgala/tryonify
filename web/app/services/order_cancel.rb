@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class OrderCancel < ApplicationService
-  def initialize(order:, refund: true, reason:)
+  def initialize(order:, refund: true)
     super()
     @order = order
     @refund = refund
-    @reason = reason
     @session = ShopifyAPI::Context.active_session
   end
 
@@ -13,16 +12,16 @@ class OrderCancel < ApplicationService
     return unless @order
 
     # Cancel order
-    puts cancel_order
-    # Update integrations
-    send_notifications
+    send_notifications if cancel_order
   end
 
   private
 
   def cancel_order
+    suggested_refund = OrderSuggestedRefund.call(@order) if @refund
+
     shopify_order = ShopifyAPI::Order.find(id: @order.shopify_id.split("/").pop, session: @session)
-    shopify_order.cancel(session: @session)
+    shopify_order.cancel(amount: suggested_refund || nil, session: @session)
   end
 
   def send_notifications

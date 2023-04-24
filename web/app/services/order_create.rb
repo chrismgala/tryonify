@@ -24,6 +24,9 @@ class OrderCreate < ApplicationService
     send_notifications
 
     @order
+  rescue => err
+    Rails.logger.error("[OrderCreate Failed]: #{err.message}")
+    raise err
   end
 
   private
