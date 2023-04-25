@@ -13,6 +13,9 @@ class OrderCancel < ApplicationService
 
     # Cancel order
     send_notifications if cancel_order
+  rescue StandardError => e
+    Rails.logger.error("[OrderCancel Failed]: #{e.message}")
+    raise e
   end
 
   private

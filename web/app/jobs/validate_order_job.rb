@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ValidateOrderJob < ActiveJob::Base
+  discard_on ActiveRecord::RecordNotFound
+
   def perform(order_id)
     order = Order.find(order_id)
 

@@ -7,8 +7,8 @@ class Transaction < ApplicationRecord
   enum :kind, [:authorization, :void, :capture, :change, :refund, :sale, :suggested_refund]
 
   after_create_commit :void, if: :should_void_authorizations
-  # after_create_commit :retry_transaction, if: :retryable?
-  after_create_commit :cancel_order # , if: :invalid?
+  # after_create :retry_transaction, if: :retryable?
+  after_create_commit :cancel_order, if: :invalid?
 
   scope :successful_authorizations, -> { where(kind: :authorization, error: nil, voided: false) }
   scope :reauthorization_required, -> {
@@ -45,6 +45,6 @@ class Transaction < ApplicationRecord
   end
 
   def invalid?
-    INVALID_TRANSACTION_ERRORS.include?(error)
+    kind == "authorization" && INVALID_TRANSACTION_ERRORS.include?(error)
   end
 end
