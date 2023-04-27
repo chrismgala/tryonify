@@ -7,9 +7,7 @@ task reauthorize_expiring_payments: :environment do |_task, _args|
   Shop.find_each do |shop|
     shop.with_shopify_session do
       shop.orders.pending.find_each do |order|
-        if order.should_reauthorize?
-          OrderAuthorizeJob.perform_later(order.id)
-        end
+        OrderAuthorizeJob.perform_later(order.id) if order.should_reauthorize?
       end
     end
   end

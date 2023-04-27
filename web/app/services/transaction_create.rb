@@ -23,12 +23,12 @@ class TransactionCreate < ApplicationService
 
     if @parent_transaction_id
       parent_transaction = Transaction.find_by(shopify_id: @parent_transaction_id)
-      shopify_transaction.parent_id = @parent_transaction_id
-      shopify_transaction.amount = parent_transaction.amount
+      shopify_transaction.parent_id = @parent_transaction_id.split("/").last.to_i
+      shopify_transaction.amount = parent_transaction.amount.to_s
     end
 
     # Use the outstanding amount if no parent transaction is provided
-    shopify_transaction.amount = @order.total_outstanding unless shopify_transaction.amount
+    shopify_transaction.amount = @order.total_outstanding.to_s unless shopify_transaction.amount
 
     if shopify_transaction.save!
       Transaction.transaction do
@@ -38,7 +38,7 @@ class TransactionCreate < ApplicationService
           order_id: @order.id,
           amount: shopify_transaction.amount.to_f,
           kind: @kind,
-          parent_transaction: parent_transaction&.id,
+          parent_transaction_id: parent_transaction&.id,
           receipt: shopify_transaction.receipt,
           error: shopify_transaction.error_code,
         )

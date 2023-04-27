@@ -59,6 +59,34 @@ class Stubs
       .to_return(status: 200, body: response_body.to_json, headers: {})
   end
 
+  def payment_status_paid
+    response_body = {
+      data: {
+        orderPaymentStatus: {
+          status: "PAID",
+          errorMessage: nil,
+        },
+      },
+    }.to_json
+
+    WebMock.stub_request(:post, "https://test.myshopify.com/admin/api/2023-04/graphql.json")
+      .with(
+        body: /fetchPaymentStatus/,
+        headers: {
+          "Accept" => "application/json",
+          "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+          "Content-Type" => "application/json",
+          "User-Agent" => /.*/,
+          "X-Shopify-Access-Token" => /.*/,
+        }
+      )
+      .to_return(
+        status: 200,
+        body: response_body,
+        headers: {}
+      )
+  end
+
   def update_tags
     WebMock.stub_request(:post, "https://test.myshopify.com/admin/api/2023-04/graphql.json")
       .with(
@@ -72,5 +100,24 @@ class Stubs
         }
       )
       .to_return(status: 200, body: "", headers: {})
+  end
+
+  def create_transaction
+    WebMock.stub_request(:post, /transactions\.json/)
+      .with(
+        body: /.*/,
+        headers: {
+          "Accept" => "application/json",
+          "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+          "Content-Type" => "application/json",
+          "User-Agent" => /.*/,
+          "X-Shopify-Access-Token" => /.*/,
+        }
+      )
+      .to_return(
+        status: 200,
+        body: lambda { |request| request.body },
+        headers: {}
+      )
   end
 end
