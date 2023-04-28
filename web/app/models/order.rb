@@ -52,7 +52,7 @@ class Order < ApplicationRecord
   end
 
   def should_reauthorize?
-    order.pending? && transactions.reauthorization_required.any? && !shop.void_authorizations
+    pending? && transactions.reauthorization_required.any? && !shop.void_authorizations
   end
 
   def voided?
@@ -72,7 +72,7 @@ class Order < ApplicationRecord
   end
 
   def cancel
-    OrderCancelJob.perform_later(id)
+    OrderCancelJob.perform_later(id) if pending?
   end
 
   def line_items_attributes=(*attrs)

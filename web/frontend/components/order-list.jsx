@@ -60,11 +60,11 @@ export default function OrderList({ status, query }) {
     (order, index) => {
       const {
         id,
-        shopifyId,
         name,
         shopifyCreatedAt,
         financialStatus,
         calculatedDueDate,
+        cancelledAt,
         returns,
       } = order;
       const paymentDueStatus = getPaymentDueStatus(order);
@@ -88,10 +88,15 @@ export default function OrderList({ status, query }) {
             {new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(shopifyCreatedAt))}
           </IndexTable.Cell>
           <IndexTable.Cell>
-            {calculatedDueDate && new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(calculatedDueDate))}
+            {(calculatedDueDate && !cancelledAt) ? (
+              new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(calculatedDueDate))
+            ) : (
+              <span>--</span>
+            )}
           </IndexTable.Cell>
           <IndexTable.Cell>
             <Stack spacing="extraTight">
+              {cancelledAt && <Badge>Cancelled</Badge>}
               <PaymentStatus status={financialStatus} />
               {paymentDueStatus && <PaymentStatus status={paymentDueStatus} />}
               {activeReturns > 0 && <Badge status='critical'>Returns</Badge>}
