@@ -6,7 +6,7 @@ class Transaction < ApplicationRecord
 
   enum :kind, [:authorization, :void, :capture, :change, :refund, :sale, :suggested_refund]
 
-  after_create_commit :void, if: :should_void_authorizations
+  # after_create_commit :void, if: :should_void_authorizations
   # after_create :retry_transaction, if: :retryable?
   after_create_commit :cancel_order, if: :invalid?
 

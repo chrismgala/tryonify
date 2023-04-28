@@ -100,11 +100,11 @@ export default function Settings() {
                       name="authorizeTransactions"
                       component={CheckboxField}
                     />
-                    <Field
+                    {/* <Field
                       label="Void authorizations immediately"
                       name="voidAuthorizations"
                       component={CheckboxField}
-                    />
+                    /> */}
                     <Field
                       label="Max trial items per order"
                       name="maxTrialItems"
