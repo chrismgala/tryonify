@@ -18,26 +18,13 @@ class UpdateExistingOrdersJob < ActiveJob::Base
       return unless service.orders.length > 0
 
       # Create an array of orders with selling plans
-      order_array = []
-
       service.orders.each do |order|
         persisted_order = Order.find_by(shopify_id: order.dig("id"))
 
         next unless persisted_order
 
-        persisted_order.name = order.dig("name")
-        persisted_order.due_date = order.dig("paymentTerms", "paymentSchedules", "nodes", 0, "dueAt")
-        persisted_order.shopify_created_at = order.dig("createdAt")
-        persisted_order.shopify_updated_at = order.dig("updatedAt")
-        persisted_order.shop_id = shop.id
-        persisted_order.financial_status = order.dig("displayFinancialStatus")
-        persisted_order.email = order.dig("customer", "email")
-        persisted_order.closed_at = order.dig("closedAt")
-        persisted_order.cancelled_at = order.dig("cancelledAt")
-        persisted_order.fully_paid = order.dig("fullyPaid")
-        persisted_order.total_outstanding = order.dig("totalOutstandingSet", "shopMoney", "amount")
-
-        persisted_order.save!
+        built_order = OrderBuild.call(shop_id: shop.id, data: order)
+        OrderUpdate.call(order_attributes: built_order, order: persisted_order)
       end
     end
   end
