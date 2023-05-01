@@ -5,7 +5,7 @@ class Order < ApplicationRecord
 
   validates :shopify_id, :email, :financial_status, presence: true
   validates :shopify_id, uniqueness: true
-  validate :has_selling_plan?
+  validate :has_selling_plan?, on: :create
 
   belongs_to :shop
   has_many :line_items
