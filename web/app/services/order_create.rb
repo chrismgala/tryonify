@@ -17,7 +17,7 @@ class OrderCreate < ApplicationService
     # Add TryOnify tag to order
     tag_order
     # Check for fraud or invalid orders
-    validate
+    # validate
     # Authorize order
     authorize if @order.shop.authorize_transactions
     # Update integrations

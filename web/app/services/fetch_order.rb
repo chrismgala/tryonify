@@ -68,16 +68,6 @@ class FetchOrder < ApplicationService
               amount
             }
           }
-          shippingAddress {
-            address1
-            address2
-            city
-            country
-            countryCodeV2
-            province
-            provinceCode
-            zip
-          }
         }
       }
     }
