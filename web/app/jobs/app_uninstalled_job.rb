@@ -18,6 +18,6 @@ class AppUninstalledJob < ActiveJob::Base
     end
 
     logger.info("#{self.class} started for shop '#{shop_domain}'")
-    shop.destroy
+    shop.destroy!
   end
 end
