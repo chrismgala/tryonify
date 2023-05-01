@@ -65,7 +65,7 @@ class Order < ApplicationRecord
   end
 
   def should_reauthorize?
-    pending? && transactions.reauthorization_required.any? && !shop.void_authorizations
+    pending? && transactions.reauthorization_required.any? && !shop.void_authorizations && shop.authorize_transactions
   end
 
   def voided?
