@@ -15,7 +15,7 @@ class OrderUpdate < ApplicationService
     Order.transaction do
       @order.line_items.destroy_all
       @order.shipping_address&.destroy
-      @order.update(@order_attributes)
+      @order.update!(@order_attributes)
     end
   end
 end

@@ -27,7 +27,7 @@ class OrderCreateMandatePayment < ApplicationService
   end
 
   def call
-    create_mandate_payment
+    create_mandate_payment if @order.mandate_id
   end
 
   private
