@@ -20,7 +20,7 @@ export default function Onboarding() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ onboarded: true })
-    }).then((response) => response.data),
+    }).then(async (response) => await response.json()),
     {
       onSettled: () => {
         queryClient.invalidateQueries('/api/v1/shop');

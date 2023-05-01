@@ -57,7 +57,7 @@ export default function EditSellingPlan() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(updatedSellingPlan),
-    }).then((response) => response.data),
+    }).then(async (response) => await response.json()),
     {
       onSuccess: (response) => {
         queryClient.setQueryData(['sellingPlanGroup', params.id], response);
