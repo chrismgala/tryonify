@@ -15,6 +15,7 @@ RSpec.describe(FetchPaymentStatus) do
     it "should update the status to PAID" do
       @shop.with_shopify_session do
         @stub.payment_status_paid
+        @stub.fetch_transactions
         service = FetchPaymentStatus.new(@payment.id)
         service.call
         @payment.reload

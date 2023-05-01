@@ -52,7 +52,7 @@ class FetchPaymentStatus
     if FAILED_STATUS.include?(@status)
       KlaviyoEvent.new(@payment.order.shop).call(
         event: "TryOnify Order Payment Failed",
-        email: @order.dig("customer", "email"),
+        email: @payment.order.email,
         properties: {
           "order_id": @payment.order.shopify_id,
           "order_name": @payment.order.name,
@@ -66,7 +66,9 @@ class FetchPaymentStatus
       @payment.order.payments.where(status: "AUTHORIZED").each do |payment|
         FetchPaymentStatusJob.perform_later(payment.id) if payment.id != @payment.id
       end
+    end
 
+    unless RETRY_STATUS.include?(@status)
       OrderTransactionFetch.call(@payment.order)
     end
   end

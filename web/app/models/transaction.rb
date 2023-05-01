@@ -8,16 +8,23 @@ class Transaction < ApplicationRecord
 
   # after_create_commit :void, if: :should_void_authorizations
   # after_create :retry_transaction, if: :retryable?
-  after_create_commit :cancel_order, if: :invalid?
+  after_create_commit :cancel_order, if: :invalid_authorization?
 
   scope :successful_authorizations, -> { where(kind: :authorization, error: nil, voided: false) }
+  scope :failed_authorizations, -> { where(kind: :authorization).where(error: INVALID_TRANSACTION_ERRORS) }
   scope :reauthorization_required, -> {
-                                     successful_authorizations.where("DATE(authorization_expires_at) < DATE(?)", DateTime.current + 12.hours)
+                                     successful_authorizations
+                                       .where("authorization_expires_at < ?", 12.hours.from_now)
+                                       .where(parent_transaction_id: nil)
                                    }
   INVALID_TRANSACTION_ERRORS = ["CARD_DECLINED", "EXPIRED_CARD", "INVALID_AMOUNT", "PICK_UP_CARD"].freeze
   RETRY_TRANSACTION_ERRORS = ["PROCESSING_ERROR", "PAYMENT_METHOD_UNAVAILABLE", "GENERIC_ERROR", "CONFIG_ERROR"].freeze
 
   private
+
+  def invalid_authorization?
+    kind == "authorization" && INVALID_TRANSACTION_ERRORS.include?(error)
+  end
 
   def void
     if kind == "authorization"
@@ -45,6 +52,6 @@ class Transaction < ApplicationRecord
   end
 
   def invalid?
-    kind == "authorization" && INVALID_TRANSACTION_ERRORS.include?(error)
+    INVALID_TRANSACTION_ERRORS.include?(error)
   end
 end
