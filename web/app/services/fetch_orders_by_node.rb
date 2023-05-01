@@ -38,6 +38,28 @@ class FetchOrdersByNode
               }
             }
           }
+          lineItems(first: 10) {
+            edges {
+              node {
+                id
+                title
+                unfulfilledQuantity
+                quantity
+                restockable
+                variantTitle
+                image {
+                  url
+                }
+                sellingPlan {
+                  sellingPlanId
+                }
+              }
+            }
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+          }
         }
       }
     }
