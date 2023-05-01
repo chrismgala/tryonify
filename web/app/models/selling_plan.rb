@@ -5,9 +5,10 @@ class SellingPlan < ApplicationRecord
   validates :shopify_id, uniqueness: true
   validates :trial_days, numericality: { only_integer: true, less_than_or_equal_to: 60 }
 
+  has_many :orders, through: :line_items
   belongs_to :selling_plan_group
 
   def description
-    self[:description] || ''
+    self[:description] || ""
   end
 end

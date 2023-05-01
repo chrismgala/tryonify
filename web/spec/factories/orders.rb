@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :order do
     shopify_id { "gid://shopify/Order/#{Faker::Number.number(digits: 10)}" }
-    due_date { Time.now }
+    due_date { Time.now + 1.day }
     name { Faker::Number.number(digits: 4) }
     financial_status { "PARTIALLY_PAID" }
     email { Faker::Internet.email }
@@ -13,6 +13,19 @@ FactoryBot.define do
     fully_paid { false }
     total_outstanding { 231.07 }
     shop
+    line_items { [association(:line_item, order: instance)] }
+
+    trait :without_selling_plan do
+      after(:build) do |order|
+        build(:line_item, order: order, selling_plan: nil)
+      end
+    end
+
+    trait :with_expiring_authorization do
+      after(:create) do |order|
+        create(:transaction, kind: "authorization", authorization_expires_at: 1.hour.from_now, order: order)
+      end
+    end
   end
 
   trait :with_return do

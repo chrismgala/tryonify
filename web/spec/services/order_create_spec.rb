@@ -25,15 +25,28 @@ RSpec.describe(OrderCreate) do
   end
 
   context "after order is placed" do
-    before do
-      @shop.with_shopify_session do
-        OrderCreate.call(@order_hash)
+    context "the shop has authorize_transactions set to true" do
+      before do
+        @shop.update(authorize_transactions: true)
+        @shop.with_shopify_session do
+          OrderCreate.call(@order_hash)
+        end
+      end
+
+      it "enqueues a payment authorization job " do
+        expect(OrderAuthorizeJob).to(have_been_enqueued.with(Order.last.id))
       end
     end
 
-    context "the shop has authorize_transactions set to true" do
-      it "enqueues a payment authorization job" do
-        expect(OrderAuthorizeJob).to(have_been_enqueued.with(Order.last.id))
+    context "the shop has authorize_transactions set to false" do
+      before do
+        @shop.update(authorize_transactions: false)
+      end
+
+      it "does not enqueue a payment authorization job " do
+        @shop.with_shopify_session do
+          expect { OrderCreate.call(@order_hash) }.not_to(have_enqueued_job(OrderAuthorizeJob))
+        end
       end
     end
   end

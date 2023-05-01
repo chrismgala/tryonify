@@ -42,9 +42,9 @@ class OrderTransactionFetch < ApplicationService
   def fetch_order_transaction
     response = @client.query(query: FETCH_ORDER_TRANSACTION_QUERY, variables: { id: @order.shopify_id })
     response.body.dig("data", "order", "transactions")&.each do |transaction|
+      parent_transaction = @order.transactions.find_by(shopify_id: transaction.dig("parentTransaction", "id"))
       @order.transactions.find_or_create_by!(shopify_id: transaction["id"]) do |t|
-        parent_transaction = transaction.dig("parentTransaction", "id")
-        t.parent_transaction = @order.transactions.find_by(shopify_id: parent_transaction) if parent_transaction
+        t.parent_transaction = parent_transaction if parent_transaction
         t.payment_id = transaction["paymentId"]
         t.receipt = transaction["receiptJson"]
         t.kind = transaction["kind"].downcase
@@ -52,6 +52,7 @@ class OrderTransactionFetch < ApplicationService
         t.authorization_expires_at = transaction["authorizationExpiresAt"]
         t.error = transaction["errorCode"]
       end
+      parent_transaction&.update!(voided: true)
     end
   rescue StandardError => e
     Rails.logger.error("[OrderTransactionFetch]: #{e.message}")
