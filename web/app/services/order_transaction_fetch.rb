@@ -42,6 +42,8 @@ class OrderTransactionFetch < ApplicationService
   def fetch_order_transaction
     response = @client.query(query: FETCH_ORDER_TRANSACTION_QUERY, variables: { id: @order.shopify_id })
     response.body.dig("data", "order", "transactions")&.each do |transaction|
+      next unless transaction["kind"].downcase == "void" || transaction["kind"].downcase == "authorization"
+
       parent_transaction = @order.transactions.find_by(shopify_id: transaction.dig("parentTransaction", "id"))
       @order.transactions.find_or_create_by!(shopify_id: transaction["id"]) do |t|
         t.parent_transaction = parent_transaction if parent_transaction
