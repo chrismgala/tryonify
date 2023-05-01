@@ -61,16 +61,6 @@ class FetchOrders < ApplicationService
                 endCursor
               }
             }
-            shippingAddress {
-              address1
-              address2
-              city
-              country
-              countryCodeV2
-              province
-              provinceCode
-              zip
-            }
           }
         }
         pageInfo {

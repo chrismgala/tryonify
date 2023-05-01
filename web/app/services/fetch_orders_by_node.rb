@@ -30,16 +30,6 @@ class FetchOrdersByNode
               amount
             }
           }
-          shippingAddress {
-            address1
-            address2
-            city
-            country
-            countryCodeV2
-            province
-            provinceCode
-            zip
-          }
           paymentTerms {
             overdue
             paymentSchedules(first: 1) {
