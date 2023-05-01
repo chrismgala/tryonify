@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class FetchExistingOrdersJob < ActiveJob::Base
+  sidekiq_options retry: 1
+
   def perform(shop_id, cursor = nil)
     shop = Shop.find(shop_id)
 
