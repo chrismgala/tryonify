@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class UpdateExistingOrdersJob < ActiveJob::Base
+  discard_on ActiveRecord::RecordInvalid
   sidekiq_options retry: 1
 
   def perform(shop_id, ids)
