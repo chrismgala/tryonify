@@ -22,7 +22,7 @@ class OrdersCreateJob < ApplicationJob
       return unless graphql_order
 
       order = OrderBuild.call(shop_id: shop.id, data: graphql_order.body.dig("data", "order"))
-      CreateOrUpdateOrder.call(order)
+      OrderCreate.call(order)
     end
   end
 end

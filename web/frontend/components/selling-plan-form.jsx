@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Layout,
@@ -18,7 +18,7 @@ const validationSchema = Yup.object().shape({
   sellingPlanAttributes: Yup.object().shape({
     name: Yup.string().required('Name is required'),
     description: Yup.string().nullable(),
-    prepay: Yup.number().required('Pre-paid amount is required'),
+    prepay: Yup.number(),
     trialDays: Yup.number().required('Trial days required'),
   }),
 });

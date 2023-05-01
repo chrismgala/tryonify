@@ -31,7 +31,7 @@ export default function ReturnList({ title }) {
     (orderId) => fetch(`/api/v1/returns/${orderId}`, {
       method: 'PUT'
     })
-      .then((response) => response.data),
+      .then(async (response) => response.json()),
     {
       onSettled: () => {
         queryClient.invalidateQueries(`/api/v1/returns?${createQueryString(pagination)}`);

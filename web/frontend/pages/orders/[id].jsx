@@ -113,7 +113,7 @@ export default function EditSellingPlan() {
               {isLoading ? (
                 <SkeletonBodyText />
               ) : (
-                <span>{DateTime.fromISO(data?.order?.calculatedDueDate).toLocaleString()}</span>
+                <span>{data?.order?.cancelledAt ? 'Cancelled' : DateTime.fromISO(data?.order?.calculatedDueDate).toLocaleString()}</span>
               )}
             </Card.Section>
           </Card>

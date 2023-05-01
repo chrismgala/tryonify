@@ -38,7 +38,7 @@ module Api
         if order.line_items.length.zero?
           graphql_order = FetchOrder.call(id: order.shopify_id)
           built_order = OrderBuild.call(shop_id: order.shop_id, data: graphql_order.body.dig("data", "order"))
-          CreateOrUpdateOrder.call(built_order)
+          OrderUpdate.call(order_attributes: built_order, order:)
           order.reload
         end
 

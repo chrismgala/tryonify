@@ -5,20 +5,22 @@ class Order < ApplicationRecord
 
   validates :shopify_id, :email, :financial_status, presence: true
   validates :shopify_id, uniqueness: true
+  validate :has_selling_plan?
 
   belongs_to :shop
   has_many :line_items
   has_many :returns
-  has_one :payment
+  has_many :transactions
+  has_many :payments
   has_one :shipping_address
 
   scope :payment_due, lambda {
-                        where("due_date < ?", DateTime.current)
+                        where("due_date < ?", Time.current)
                           .where("total_outstanding > 0")
                           .where(cancelled_at: nil)
                       }
   scope :pending, lambda {
-                    where("DATE(due_date) > DATE(?)", DateTime.current)
+                    where("due_date > ?", Time.current)
                       .where("total_outstanding > 0").where(cancelled_at: nil)
                   }
   scope :pending_returns, -> { includes(:returns).where(returns: { active: true }) }
@@ -34,9 +36,17 @@ class Order < ApplicationRecord
 
   pg_search_scope :search_by_name, against: :name, using: { tsearch: { prefix: true } }
 
-  pg_search_scope :address_search, associated_against: {
-    shipping_address: [:city, :address1, :address2, :zip],
-  }, using: :trigram
+  pg_search_scope :address_search,
+    associated_against: {
+      shipping_address: [:city, :address1, :address2, :zip],
+    },
+    using: :trigram
+
+  def has_selling_plan?
+    unless line_items.find { |x| !x.selling_plan_id.nil? }.present?
+      errors.add(:base, "Order must have a selling plan")
+    end
+  end
 
   def pending?
     return false if calculated_due_date.before?(DateTime.current)
@@ -44,6 +54,22 @@ class Order < ApplicationRecord
     return false if total_outstanding <= 0
 
     true
+  end
+
+  def authorized?
+    transactions.successful_authorizations.any?
+  end
+
+  def authorization_invalid?
+    transactions.failed_authorizations.any?
+  end
+
+  def should_reauthorize?
+    pending? && transactions.reauthorization_required.any? && !shop.void_authorizations && shop.authorize_transactions
+  end
+
+  def voided?
+    transactions.where(kind: :void).any?
   end
 
   def calculated_due_date
@@ -58,16 +84,22 @@ class Order < ApplicationRecord
     due_date
   end
 
+  def cancel
+    OrderCancelJob.perform_later(id) if pending?
+  end
+
   def line_items_attributes=(*attrs)
     self.line_items = []
     super(*attrs)
   end
 
-  def self.search(query)
-    if query.present?
-      search_by_name(query)
-    else
-      order(shopify_created_at: :desc)
+  class << self
+    def search(query)
+      if query.present?
+        search_by_name(query)
+      else
+        order(shopify_created_at: :desc)
+      end
     end
   end
 end

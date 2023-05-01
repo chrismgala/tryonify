@@ -1,25 +1,25 @@
 services:
   - type: web
-    name: Web
-    branch: staging
+    name: prod-web
+    branch: main
     env: docker
     healthCheckPath: /api/auth
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: Database
+          name: prod-db
           property: connectionString
       - key: RAILS_MASTER_KEY
         sync: false
       - key: REDIS_URL
         fromService:
           type: redis
-          name: Redis
+          name: prod-redis
           property: connectionString
       - fromGroup: TryOnify
   - type: worker
-    name: Sidekiq
-    branch: staging
+    name: prod-worker
+    branch: main
     env: docker
     dockerfilePath: ./sidekiq/Dockerfile
     scaling:
@@ -29,82 +29,97 @@ services:
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: Database
+          name: prod-db
           property: connectionString
       - key: RAILS_MASTER_KEY
         sync: false
       - key: REDIS_URL
         fromService:
           type: redis
-          name: Redis
+          name: prod-redis
           property: connectionString
       - fromGroup: TryOnify
   - type: cron
-    name: FetchOrders
-    branch: staging
+    name: prod-fetch-orders
+    branch: main
     env: docker
     schedule: 0 */12 * * *
     dockerCommand: rake fetch_orders
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: Database
+          name: prod-db
           property: connectionString
       - key: RAILS_MASTER_KEY
         sync: false
       - key: REDIS_URL
         fromService:
           type: redis
-          name: Redis
+          name: prod-redis
           property: connectionString
       - fromGroup: TryOnify
   - type: cron
-    name: CreatePayments
-    branch: staging
+    name: prod-create-payments
+    branch: main
     env: docker
     schedule: 30 */6 * * *
     dockerCommand: rake create_payments
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: Database
+          name: prod-db
           property: connectionString
       - key: RAILS_MASTER_KEY
         sync: false
       - key: REDIS_URL
         fromService:
           type: redis
-          name: Redis
+          name: prod-redis
           property: connectionString
       - fromGroup: TryOnify
   - type: cron
-    name: UpdateOrders
-    branch: staging
+    name: prod-update-orders
+    branch: main
     env: docker
     schedule: 0 * * * *
     dockerCommand: rake update_orders
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: Database
+          name: prod-db
           property: connectionString
       - key: RAILS_MASTER_KEY
         sync: false
       - key: REDIS_URL
         fromService:
           type: redis
-          name: Redis
+          name: prod-redis
+          property: connectionString
+      - fromGroup: TryOnify
+  - type: cron
+    name: prod-reauthorize-orders
+    branch: main
+    env: docker
+    schedule: 0 */6 * * *
+    dockerCommand: rake reauthorize_expiring_payments
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: prod-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: prod-redis
           property: connectionString
       - fromGroup: TryOnify
   - type: redis
-    name: Redis
+    name: prod-redis
     ipAllowList:
       - source: 0.0.0.0
         description: everywhere
     maxmemoryPolicy: noeviction
 
 databases:
-  - name: Database
+  - name: prod-db
     databaseName: tryonify_production
-  - name: (Staging) Database
-    databaseName: tryonify_staging

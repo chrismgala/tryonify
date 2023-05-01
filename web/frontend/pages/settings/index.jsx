@@ -26,6 +26,8 @@ const initialValues = {
   allowAutomaticPayments: true,
 };
 
+const APPROVED_FOR_AUTHORIZE = ['tryonify.myshopify.com', 'tryonify-dev.myshopify.com', 'spongerevolution.myshopify.com', 'my-perfect-cosmetics-aus.myshopify.com']
+
 export default function Settings() {
   const toast = useToast();
   const fetch = useAuthenticatedFetch();
@@ -34,17 +36,20 @@ export default function Settings() {
   const { isLoading, error, data } = useAppQuery({
     url: "/api/v1/shop"
   });
-  const saveMutation = useMutation((shop) => fetch('/api/v1/shop', {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(shop)
-  }).then((response) => response.data), {
-    onSuccess: (response) => {
-      queryClient.setQueryData("/api/v1/shop", response);
-    },
-  });
+  const saveMutation = useMutation(
+    (shop) => fetch('/api/v1/shop', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(shop)
+    }).then(async (response) => await response.json()),
+    {
+      onSuccess: (response) => {
+        queryClient.setQueryData("/api/v1/shop", response);
+      },
+    }
+  );
   const redirectHost = process.env.HOST;
 
   const onSubmit = useCallback(async (values, { resetForm }) => {
@@ -95,6 +100,18 @@ export default function Settings() {
                       name="allowAutomaticPayments"
                       component={CheckboxField}
                     />
+                    {APPROVED_FOR_AUTHORIZE.includes(data?.shop?.shopifyDomain) &&
+                      <Field
+                        label="Authorize new orders"
+                        name="authorizeTransactions"
+                        component={CheckboxField}
+                      />
+                    }
+                    {/* <Field
+                      label="Void authorizations immediately"
+                      name="voidAuthorizations"
+                      component={CheckboxField}
+                    /> */}
                     <Field
                       label="Max trial items per order"
                       name="maxTrialItems"

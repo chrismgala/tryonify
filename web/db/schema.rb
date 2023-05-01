@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_18_175717) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_21_001614) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -192,6 +192,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_18_175717) do
     t.string "slack_token"
     t.string "currency_code", default: "USD", null: false
     t.boolean "void_authorizations", default: false
+    t.boolean "authorize_transactions", default: false
     t.index ["plan_id"], name: "index_shops_on_plan_id"
     t.index ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
   end
@@ -208,6 +209,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_18_175717) do
     t.datetime "updated_at", null: false
     t.datetime "authorization_expires_at"
     t.string "payment_id"
+    t.boolean "voided", default: false
     t.index ["order_id"], name: "index_transactions_on_order_id"
     t.index ["parent_transaction_id"], name: "index_transactions_on_parent_transaction_id"
   end

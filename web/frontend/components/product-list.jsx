@@ -59,7 +59,7 @@ export default function ProductList({ id }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ addProducts, removeProducts })
-      }).then(response => response.data);
+      }).then(async (response) => response.json());
     },
     {
       onSuccess: () => {

@@ -12,8 +12,9 @@ class FetchPaymentStatus
     }
   QUERY
 
-  RETRY_STATUS = [:RETRYABLE, :PROCESSING]
-  FAILED_STATUS = [:ERROR]
+  AUTHORIZED_STATUS = ["AUTHORIZED"]
+  RETRY_STATUS = ["RETRYABLE", "PROCESSING", "PENDING"]
+  FAILED_STATUS = ["ERROR"]
 
   attr_accessor :status, :error
 
@@ -51,13 +52,24 @@ class FetchPaymentStatus
     if FAILED_STATUS.include?(@status)
       KlaviyoEvent.new(@payment.order.shop).call(
         event: "TryOnify Order Payment Failed",
-        email: @order.dig("customer", "email"),
+        email: @payment.order.email,
         properties: {
           "order_id": @payment.order.shopify_id,
           "order_name": @payment.order.name,
           "error": @error,
         }
       )
+    end
+
+    if AUTHORIZED_STATUS.include?(@status)
+      # Check for changes in previous payment status
+      @payment.order.payments.where(status: "AUTHORIZED").each do |payment|
+        FetchPaymentStatusJob.perform_later(payment.id) if payment.id != @payment.id
+      end
+    end
+
+    unless RETRY_STATUS.include?(@status)
+      OrderTransactionFetch.call(@payment.order)
     end
   end
 end
