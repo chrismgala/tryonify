@@ -50,7 +50,6 @@ class FetchPaymentStatus
     end
 
     if FAILED_STATUS.include?(@status)
-      @payment.order.update!(stale: true)
       KlaviyoEvent.new(@payment.order.shop).call(
         event: "TryOnify Order Payment Failed",
         email: @payment.order.email,

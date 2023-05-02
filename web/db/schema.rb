@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_02_193355) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_21_001614) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -75,7 +75,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_02_193355) do
     t.datetime "cancelled_at"
     t.string "ip_address"
     t.string "tags", array: true
-    t.boolean "stale", default: false
     t.index ["shop_id"], name: "index_orders_on_shop_id"
     t.index ["shopify_id"], name: "unique_shopify_ids", unique: true
   end
