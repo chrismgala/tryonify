@@ -7,11 +7,40 @@ class Stubs
     payment
   end
 
-  def order(order_id)
+  def order(order)
     response_body = {
       data: {
         order: {
-          id: order_id,
+          id: order.id,
+          paymentTerms: {
+            paymentSchedules: {
+              edges: [
+                {
+                  node: {
+                    dueAt: order.due_date,
+                  },
+                },
+              ],
+            },
+          },
+          paymentCollectionDetails: {
+            vaultedPaymentMethods: [
+              {
+                id: order.mandate_id,
+              },
+            ],
+          },
+          customer: {
+            email: order.email,
+          },
+          totalOutstandingSet: {
+            shopMoney: {
+              amount: order.total_outstanding,
+            },
+          },
+          displayFinancialStatus: order.financial_status,
+          fullyPaid: false,
+          name: order.name,
           shippingAddress: {
             address1: "",
           },
@@ -24,7 +53,7 @@ class Stubs
 
     WebMock.stub_request(:post, "https://test.myshopify.com/admin/api/2023-04/graphql.json")
       .with(
-        body: "{\"query\":\"query fetchOrder($id: ID!, $after: String) {\\n  order(id: $id) {\\n    ...on Order {\\n      id\\n      createdAt\\n      updatedAt\\n      closedAt\\n      cancelledAt\\n      clientIp\\n      name\\n      displayFinancialStatus\\n      displayFulfillmentStatus\\n      customer {\\n        email\\n      }\\n      note\\n      tags\\n      fullyPaid\\n      totalOutstandingSet {\\n        shopMoney {\\n          amount\\n        }\\n      }\\n      paymentTerms {\\n        paymentSchedules(first: 1) {\\n          edges {\\n            node {\\n              dueAt\\n            }\\n          }\\n        }\\n      }\\n      paymentCollectionDetails {\\n        vaultedPaymentMethods {\\n          id\\n        }\\n      }\\n      lineItems(first: 10, after: $after) {\\n        edges {\\n          node {\\n            id\\n            image {\\n              url\\n            }\\n            quantity\\n            restockable\\n            unfulfilledQuantity\\n            title\\n            variantTitle\\n            sellingPlan {\\n              sellingPlanId\\n            }\\n          }\\n        }\\n        pageInfo {\\n          hasNextPage\\n          endCursor\\n        }\\n      }\\n      totalPriceSet {\\n        shopMoney {\\n          amount\\n        }\\n      }\\n      shippingAddress {\\n        address1\\n        address2\\n        city\\n        country\\n        countryCodeV2\\n        province\\n        provinceCode\\n        zip\\n      }\\n    }\\n  }\\n}\\n\",\"variables\":{\"id\":\"#{order_id}\",\"after\":null}}",
+        body: /fetchOrder/,
         headers: {
           "Accept" => "application/json",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
