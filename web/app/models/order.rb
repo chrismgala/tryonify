@@ -17,18 +17,20 @@ class Order < ApplicationRecord
 
   scope :payment_due, lambda {
                         where("due_date < ?", Time.current)
-                          .where("total_outstanding > 0")
+                          .where(fully_paid: false)
                           .where(cancelled_at: nil)
                       }
   scope :pending, lambda {
                     where("due_date > ?", Time.current)
-                      .where("total_outstanding > 0").where(cancelled_at: nil)
+                      .where(fully_paid: false)
+                      .where(cancelled_at: nil)
                   }
   scope :pending_returns, -> { includes(:returns).where(returns: { active: true }) }
   scope :failed_payments, lambda {
-                            where("total_outstanding > 0")
+                            includes(:payments)
+                              .where(fully_paid: false)
                               .where(cancelled_at: nil)
-                              .joins(:payment).where(payment: { status: "ERROR" })
+                              .where(payments: { status: "ERROR" })
                           }
 
   accepts_nested_attributes_for :line_items, :shipping_address
