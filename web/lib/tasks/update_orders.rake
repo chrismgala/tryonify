@@ -8,8 +8,7 @@ task update_orders: :environment do |_task, _args|
 
   shops.each do |shop|
     puts "Updating orders for #{shop.shopify_domain}"
-    Order.where(shop:).where(cancelled_at: nil).where("created_at > ?",
-      14.days.ago).find_in_batches(batch_size: 20) do |orders|
+    Order.where(shop:).where(cancelled_at: nil).where(due_date: nil).find_in_batches(batch_size: 20) do |orders|
       ids = orders.map { |x| x.shopify_id }
       UpdateExistingOrdersJob.perform_later(shop.id, ids)
     end
