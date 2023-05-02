@@ -33,8 +33,10 @@ class FetchOrdersByNode
           paymentTerms {
             overdue
             paymentSchedules(first: 1) {
-              nodes {
-                dueAt
+              edges {
+                node {
+                  dueAt
+                }
               }
             }
           }
