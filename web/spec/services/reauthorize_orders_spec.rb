@@ -14,7 +14,8 @@ RSpec.describe(ReauthorizeOrders) do
     end
 
     context "has no authorization that is expiring" do
-      let(:order) { FactoryBot.create(:order) }
+      let(:shop) { FactoryBot.create(:shop, authorize_transactions: true) }
+      let(:order) { FactoryBot.create(:order, shop: shop) }
       it "should not reauthorize the order" do
         ReauthorizeOrders.call(order.shop)
         expect(OrderAuthorizeJob).not_to(have_been_enqueued.with(order.id))

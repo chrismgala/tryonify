@@ -11,7 +11,6 @@ class OrderUpdate < ApplicationService
 
   def call
     @order = Order.find_by!(shopify_id: order_attributes[:shopify_id]) unless @order
-
     Order.transaction do
       @order_attributes = @order_attributes.except(:email) if @order_attributes[:email].blank?
       @order.line_items.destroy_all

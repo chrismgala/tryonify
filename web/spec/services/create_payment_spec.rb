@@ -9,7 +9,7 @@ RSpec.describe(CreatePayment) do
 
     before do
       stub = Stubs.new
-      stub.order(order.shopify_id)
+      stub.order(order)
     end
 
     it "creates a payment" do
@@ -26,7 +26,7 @@ RSpec.describe(CreatePayment) do
 
     before do
       stub = Stubs.new
-      stub.order(order.shopify_id)
+      stub.order(order)
     end
 
     it "does not create a payment" do
@@ -59,7 +59,7 @@ RSpec.describe(CreatePayment) do
 
     before do
       stub = Stubs.new
-      stub.order(order.shopify_id)
+      stub.order(order)
     end
 
     it "creates a payment" do
@@ -76,7 +76,7 @@ RSpec.describe(CreatePayment) do
 
     before do
       stub = Stubs.new
-      stub.order(order.shopify_id)
+      stub.order(order)
     end
 
     it "creates a payment" do
@@ -93,7 +93,7 @@ RSpec.describe(CreatePayment) do
 
     before do
       stub = Stubs.new
-      stub.order(order.shopify_id)
+      stub.order(order)
     end
 
     it "does not create a payment" do
