@@ -11,7 +11,6 @@ task update_orders: :environment do |_task, _args|
     Order.where(shop:)
       .where(cancelled_at: nil)
       .where(fully_paid: false)
-      .where(stale: false)
       .find_in_batches(batch_size: 20) do |orders|
       ids = orders.map { |x| x.shopify_id }
       UpdateExistingOrdersJob.perform_later(shop.id, ids)
