@@ -40,6 +40,11 @@ class FetchOrdersByNode
               }
             }
           }
+          paymentCollectionDetails {
+            vaultedPaymentMethods {
+              id
+            }
+          }
           lineItems(first: 10) {
             edges {
               node {
