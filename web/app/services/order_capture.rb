@@ -35,7 +35,7 @@ class OrderCapture < ApplicationService
       Rails.logger.error("[OrderCapture]: No authorization found for order #{@order.id}")
       return
     end
-    puts authorization.inspect
+
     response = @client.query(query: ORDER_CAPTURE_QUERY, variables: {
       input: {
         id: @order.shopify_id,
