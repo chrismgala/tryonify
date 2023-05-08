@@ -7,7 +7,7 @@ module Api
         "tryonify.myshopify.com",
         "tryonify-dev.myshopify.com",
         "spongerevolution.myshopify.com",
-        # "my-perfect-cosmetics-aus.myshopify.com",
+        "my-perfect-cosmetics-aus.myshopify.com",
       ].freeze
 
       def show
