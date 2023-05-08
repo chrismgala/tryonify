@@ -63,6 +63,10 @@ class Order < ApplicationRecord
     cancelled_at.present?
   end
 
+  def authorization
+    transactions.successful_authorizations.last
+  end
+
   def authorized?
     transactions.successful_authorizations.any?
   end

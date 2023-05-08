@@ -124,7 +124,6 @@ class FetchOrders < ApplicationService
     response = @client.query(query:, variables:)
 
     unless response.body["errors"].nil?
-      puts "HERE HERE HERE"
       raise response.body.dig("errors", 0, "message") && return
     end
 

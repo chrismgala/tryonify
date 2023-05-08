@@ -6,7 +6,6 @@ class Transaction < ApplicationRecord
 
   enum :kind, [:authorization, :void, :capture, :change, :refund, :sale, :suggested_refund]
 
-  # after_create_commit :void, if: :should_void_authorizations
   # after_create :retry_transaction, if: :retryable?
   after_create_commit :cancel_order, if: :invalid_authorization?
 
@@ -24,20 +23,6 @@ class Transaction < ApplicationRecord
 
   def invalid_authorization?
     kind == "authorization" && INVALID_TRANSACTION_ERRORS.include?(error)
-  end
-
-  def void
-    if kind == "authorization"
-      TransactionCreate.call(
-        order: order,
-        kind: "void",
-        parent_transaction_id: shopify_id,
-      )
-    end
-  end
-
-  def should_void_authorizations
-    order&.shop&.void_authorizations
   end
 
   def retry_transaction
