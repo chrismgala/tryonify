@@ -76,7 +76,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_21_001614) do
     t.string "ip_address"
     t.string "tags", array: true
     t.index ["shop_id"], name: "index_orders_on_shop_id"
-    t.index ["shopify_id"], name: "unique_shopify_ids", unique: true
+    t.index ["shopify_id"], name: "index_orders_on_shopify_id", unique: true
   end
 
   create_table "payments", force: :cascade do |t|
@@ -107,7 +107,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_21_001614) do
     t.boolean "active", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "interval", default: 0, null: false
   end
 
   create_table "products", force: :cascade do |t|
@@ -147,7 +146,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_21_001614) do
     t.string "shopify_id"
     t.string "name", default: "Free trial", null: false
     t.text "description", default: "Try this product free for 14 days"
-    t.decimal "prepay", precision: 5, scale: 3, default: "0.0"
+    t.decimal "prepay", precision: 8, scale: 2, default: "0.0"
     t.integer "trial_days", default: 14
     t.bigint "selling_plan_group_id"
     t.datetime "created_at", null: false
@@ -215,7 +214,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_21_001614) do
   end
 
   add_foreign_key "checkouts", "shops"
-  add_foreign_key "line_items", "orders", on_delete: :cascade
+  add_foreign_key "line_items", "orders"
   add_foreign_key "orders", "shops", on_delete: :cascade
   add_foreign_key "payments", "orders"
   add_foreign_key "products", "shops", on_delete: :cascade

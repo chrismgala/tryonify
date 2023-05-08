@@ -6,7 +6,7 @@ class OrderTransactionFetch < ApplicationService
   FETCH_ORDER_TRANSACTION_QUERY = <<~QUERY
     query fetchTransaction($id: ID!) {
       order(id: $id) {
-        transactions(first: 20) {
+        transactions(first: 30) {
           id
           paymentId
           parentTransaction {
@@ -16,6 +16,7 @@ class OrderTransactionFetch < ApplicationService
           kind
           errorCode
           authorizationExpiresAt
+          status
           amountSet {
             shopMoney {
               amount
@@ -42,11 +43,9 @@ class OrderTransactionFetch < ApplicationService
   def fetch_order_transaction
     response = @client.query(query: FETCH_ORDER_TRANSACTION_QUERY, variables: { id: @order.shopify_id })
     response.body.dig("data", "order", "transactions")&.each do |transaction|
-      next unless transaction["kind"].downcase == "void" || transaction["kind"].downcase == "authorization"
-
+      puts transaction.inspect
       parent_transaction = @order.transactions.find_by(shopify_id: transaction.dig("parentTransaction", "id"))
-      @order.transactions.find_or_create_by!(shopify_id: transaction["id"]) do |t|
-        t.parent_transaction = parent_transaction if parent_transaction
+      found_transaction = @order.transactions.find_or_create_by!(shopify_id: transaction["id"]) do |t|
         t.payment_id = transaction["paymentId"]
         t.receipt = transaction["receiptJson"]
         t.kind = transaction["kind"].downcase
@@ -54,7 +53,12 @@ class OrderTransactionFetch < ApplicationService
         t.authorization_expires_at = transaction["authorizationExpiresAt"]
         t.error = transaction["errorCode"]
       end
-      parent_transaction&.update!(voided: true)
+
+      # Update parent transaction reference
+      if parent_transaction
+        found_transaction.update!(parent_transaction: parent_transaction)
+        parent_transaction.update!(voided: true)
+      end
     end
   rescue StandardError => e
     Rails.logger.error("[OrderTransactionFetch]: #{e.message}")
