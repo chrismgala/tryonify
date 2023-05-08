@@ -6,7 +6,7 @@ module Api
       APPROVED_FOR_AUTHORIZE = [
         "tryonify.myshopify.com",
         "tryonify-dev.myshopify.com",
-        # "spongerevolution.myshopify.com",
+        "spongerevolution.myshopify.com",
         # "my-perfect-cosmetics-aus.myshopify.com",
       ].freeze
 
