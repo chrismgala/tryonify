@@ -17,13 +17,20 @@ class CreatePayment < ApplicationService
 
     # Update order to make sure it has the latest details
     update_order
+    fetch_transactions
+
     # Check whether the charge should be made
     if can_charge?
       # Charge the remaining balance
-      charge
-
-      # Get status of payment
-      schedule_update if @payment
+      if @order.authorization.nil? && @order.total_outstanding > 0
+        @payment = create_mandate_payment
+        schedule_update if @payment
+      elsif @order.authorization
+        capture_authorization
+      else
+        Rails.logger.error("[CreatePayment]: Unable to perform payment for Order ID #{@order.id}")
+        nil
+      end
     end
   end
 
@@ -53,14 +60,19 @@ class CreatePayment < ApplicationService
     # Order is fully paid
     return false if @order.fully_paid
 
-    # Order has no total outstanding
-    return false if @order.total_outstanding && @order.total_outstanding <= 0
-
     true
   end
 
-  def charge
+  def create_mandate_payment
     @payment = OrderCreateMandatePayment.call(order: @order)
+  end
+
+  def capture_authorization
+    OrderCapture.call(@order)
+  end
+
+  def fetch_transactions
+    OrderTransactionFetch.call(@order)
   end
 
   def update_order

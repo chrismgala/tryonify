@@ -12,6 +12,7 @@ class FetchSellingPlanGroups
           node {
             id
             name
+            description
             options
             sellingPlans(first: 10) {
               edges {
@@ -54,6 +55,7 @@ class FetchSellingPlanGroups
           node {
             id
             name
+            description
             options
             sellingPlans(first: 10) {
               edges {
@@ -103,17 +105,17 @@ class FetchSellingPlanGroups
       first: @pagination[:first] ? @pagination[:first].to_i : 20,
       last: @pagination[:last].to_i,
       before: @pagination[:before],
-      after: @pagination[:after]
+      after: @pagination[:after],
     }
 
     response = @client.query(query:, variables:)
 
-    unless response.body['errors'].nil?
+    unless response.body["errors"].nil?
       raise FetchSellingPlanGroups::InvalidRequest,
-            response.body.dig('errors', 0, 'message') and return
+        response.body.dig("errors", 0, "message") and return
     end
 
-    @selling_plan_groups = response.body['data']['sellingPlanGroups']
+    @selling_plan_groups = response.body["data"]["sellingPlanGroups"]
   rescue ActiveRecord::RecordInvalid, StandardError => e
     Rails.logger.error("[FetchSellingPlanGroups Failed]: #{e.message}")
     @error = e.message

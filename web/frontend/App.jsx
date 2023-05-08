@@ -23,22 +23,23 @@ export default function App() {
               <NavigationMenu
                 navigationLinks={[
                   {
-                    label: "Orders",
-                    destination: "/",
+                    label: 'Orders',
+                    destination: '/',
                   },
                   {
-                    label: "Checkouts",
-                    destination: "/checkouts",
+                    label: 'Checkouts',
+                    destination: '/checkouts',
                   },
                   {
-                    label: "Trial Plans",
-                    destination: "/plans",
+                    label: 'Trial Plans',
+                    destination: '/plans',
                   },
                   {
-                    label: "Settings",
-                    destination: "/settings",
+                    label: 'Settings',
+                    destination: '/settings',
                   }
                 ]}
+                matcher={() => undefined}
               />
               <Routes pages={pages} />
             </I18nProvider>

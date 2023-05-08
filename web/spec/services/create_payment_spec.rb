@@ -4,12 +4,16 @@ require "rails_helper"
 require "support/stubs"
 
 RSpec.describe(CreatePayment) do
+  before do
+    @stub = Stubs.new
+    @stub.fetch_transactions
+  end
+
   context "order is due" do
     let(:order) { FactoryBot.create(:order, due_date: 1.day.ago) }
 
     before do
-      stub = Stubs.new
-      stub.order(order)
+      @stub.order(order)
     end
 
     it "creates a payment" do
@@ -25,8 +29,7 @@ RSpec.describe(CreatePayment) do
     let!(:order) { FactoryBot.create(:order, :with_return, due_date: 1.day.ago) }
 
     before do
-      stub = Stubs.new
-      stub.order(order)
+      @stub.order(order)
     end
 
     it "does not create a payment" do
@@ -58,8 +61,7 @@ RSpec.describe(CreatePayment) do
     let(:return) { FactoryBot.create(:return, shop: order.shop, order:, active: false) }
 
     before do
-      stub = Stubs.new
-      stub.order(order)
+      @stub.order(order)
     end
 
     it "creates a payment" do
@@ -75,8 +77,7 @@ RSpec.describe(CreatePayment) do
     let(:order) { FactoryBot.create(:order, due_date: 1.day.ago, total_outstanding: 0.0) }
 
     before do
-      stub = Stubs.new
-      stub.order(order)
+      @stub.order(order)
     end
 
     it "creates a payment" do
@@ -92,8 +93,7 @@ RSpec.describe(CreatePayment) do
     let(:order) { FactoryBot.create(:order, due_date: 1.day.from_now) }
 
     before do
-      stub = Stubs.new
-      stub.order(order)
+      @stub.order(order)
     end
 
     it "does not create a payment" do
