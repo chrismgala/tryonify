@@ -24,7 +24,7 @@ class OrderCancel < ApplicationService
     suggested_refund = OrderSuggestedRefund.call(@order) if @refund
 
     shopify_order = ShopifyAPI::Order.find(id: @order.shopify_id.split("/").pop, session: @session)
-    shopify_order.cancel(amount: suggested_refund || nil, session: @session)
+    shopify_order.cancel(amount: suggested_refund || nil, email: true, session: @session)
   end
 
   def send_notifications
