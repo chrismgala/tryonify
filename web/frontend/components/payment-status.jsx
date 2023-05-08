@@ -17,6 +17,9 @@ export default function PaymentStatus({ status }) {
     case 'PARTIALLY_PAID':
       badgeStatus = 'warning';
       break;
+    case 'PAID':
+      badgeStatus = 'success';
+      break;
     default:
       break;
   }

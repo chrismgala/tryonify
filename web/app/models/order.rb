@@ -4,7 +4,7 @@ class Order < ApplicationRecord
   include PgSearch::Model
 
   validates :shopify_id, :email, :financial_status, presence: true
-  # validates :due_date, presence: true, if: -> { cancelled_at.nil? }
+  validates :due_date, :mandate_id, presence: true, unless: -> { canceled? }
   validates :shopify_id, uniqueness: true
   validate :has_selling_plan?, on: :create
 
@@ -57,6 +57,10 @@ class Order < ApplicationRecord
     return false if total_outstanding <= 0
 
     true
+  end
+
+  def canceled?
+    cancelled_at.present?
   end
 
   def authorized?
