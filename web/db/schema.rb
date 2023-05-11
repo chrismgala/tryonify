@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_21_001614) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_11_181232) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -209,6 +209,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_21_001614) do
     t.datetime "authorization_expires_at"
     t.string "payment_id"
     t.boolean "voided", default: false
+    t.integer "status", default: 0
+    t.string "gateway"
     t.index ["order_id"], name: "index_transactions_on_order_id"
     t.index ["parent_transaction_id"], name: "index_transactions_on_parent_transaction_id"
   end

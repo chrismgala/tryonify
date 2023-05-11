@@ -16,6 +16,7 @@ class OrderTransactionFetch < ApplicationService
           kind
           errorCode
           authorizationExpiresAt
+          gateway
           status
           amountSet {
             shopMoney {
@@ -43,14 +44,15 @@ class OrderTransactionFetch < ApplicationService
   def fetch_order_transaction
     response = @client.query(query: FETCH_ORDER_TRANSACTION_QUERY, variables: { id: @order.shopify_id })
     response.body.dig("data", "order", "transactions")&.each do |transaction|
-      puts transaction.inspect
       parent_transaction = @order.transactions.find_by(shopify_id: transaction.dig("parentTransaction", "id"))
       found_transaction = @order.transactions.find_or_create_by!(shopify_id: transaction["id"]) do |t|
         t.payment_id = transaction["paymentId"]
         t.receipt = transaction["receiptJson"]
         t.kind = transaction["kind"].downcase
         t.amount = transaction.dig("amountSet", "shopMoney", "amount")
-        t.authorization_expires_at = transaction["authorizationExpiresAt"]
+        t.status = transaction["status"].downcase
+        t.gateway = transaction["gateway"]
+        t.authorization_expires_at = transaction["authorizationExpiresAt"].blank? ? 3.days.from_now : transaction["authorizationExpiresAt"]
         t.error = transaction["errorCode"]
       end
 

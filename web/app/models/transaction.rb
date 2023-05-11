@@ -5,6 +5,7 @@ class Transaction < ApplicationRecord
   belongs_to :parent_transaction, class_name: "Transaction", optional: true
 
   enum :kind, [:authorization, :void, :capture, :change, :refund, :sale, :suggested_refund]
+  enum :status, [:awaiting_response, :error, :failure, :pending, :success, :unknown]
 
   # after_create :retry_transaction, if: :retryable?
   after_create_commit :cancel_order, if: :invalid_authorization?
