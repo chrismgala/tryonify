@@ -57,7 +57,7 @@ class OrderTransactionFetch < ApplicationService
         t.error = transaction["errorCode"]
       end
 
-      found_transaction.update!(authorization_expires_at: get_authorization_expiration_date(transaction)) # if found_transaction.authorization_expires_at.blank?
+      found_transaction.update!(authorization_expires_at: get_authorization_expiration_date(transaction)) if found_transaction.authorization_expires_at.blank?
 
       # Update parent transaction reference
       if parent_transaction
