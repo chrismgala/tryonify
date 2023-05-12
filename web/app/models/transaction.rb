@@ -5,6 +5,7 @@ class Transaction < ApplicationRecord
   belongs_to :parent_transaction, class_name: "Transaction", optional: true
 
   enum :kind, [:authorization, :void, :capture, :change, :refund, :sale, :suggested_refund]
+  enum :status, [:awaiting_response, :error, :failure, :pending, :success, :unknown]
 
   # after_create :retry_transaction, if: :retryable?
   after_create_commit :cancel_order, if: :invalid_authorization?
@@ -13,8 +14,9 @@ class Transaction < ApplicationRecord
   scope :failed_authorizations, -> { where(kind: :authorization).where(error: INVALID_TRANSACTION_ERRORS) }
   scope :reauthorization_required, -> {
                                      successful_authorizations
-                                       .where("authorization_expires_at < ?", 12.hours.from_now)
                                        .where(parent_transaction_id: nil)
+                                       .where("authorization_expires_at < ?", 12.hours.from_now)
+                                       .or(successful_authorizations.where(parent_transaction_id: nil).where(authorization_expires_at: nil))
                                    }
   INVALID_TRANSACTION_ERRORS = ["CARD_DECLINED", "EXPIRED_CARD", "INVALID_AMOUNT", "PICK_UP_CARD"].freeze
   RETRY_TRANSACTION_ERRORS = ["PROCESSING_ERROR", "PAYMENT_METHOD_UNAVAILABLE", "GENERIC_ERROR", "CONFIG_ERROR"].freeze
