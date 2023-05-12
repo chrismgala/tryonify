@@ -16,6 +16,7 @@ class OrderTransactionFetch < ApplicationService
           kind
           errorCode
           authorizationExpiresAt
+          gateway
           status
           amountSet {
             shopMoney {
@@ -50,7 +51,9 @@ class OrderTransactionFetch < ApplicationService
         t.receipt = transaction["receiptJson"]
         t.kind = transaction["kind"].downcase
         t.amount = transaction.dig("amountSet", "shopMoney", "amount")
-        t.authorization_expires_at = transaction["authorizationExpiresAt"]
+        t.status = transaction["status"].downcase
+        t.gateway = transaction["gateway"]
+        t.authorization_expires_at = transaction["kind"].downcase == "authorization" && transaction["authorizationExpiresAt"].blank? ? 3.days.from_now : transaction["authorizationExpiresAt"]
         t.error = transaction["errorCode"]
       end
 
