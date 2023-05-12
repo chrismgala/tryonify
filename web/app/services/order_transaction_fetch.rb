@@ -44,6 +44,7 @@ class OrderTransactionFetch < ApplicationService
   def fetch_order_transaction
     response = @client.query(query: FETCH_ORDER_TRANSACTION_QUERY, variables: { id: @order.shopify_id })
     response.body.dig("data", "order", "transactions")&.each do |transaction|
+      puts transaction.inspect
       parent_transaction = @order.transactions.find_by(shopify_id: transaction.dig("parentTransaction", "id"))
       found_transaction = @order.transactions.find_or_create_by!(shopify_id: transaction["id"]) do |t|
         t.payment_id = transaction["paymentId"]
@@ -52,7 +53,7 @@ class OrderTransactionFetch < ApplicationService
         t.amount = transaction.dig("amountSet", "shopMoney", "amount")
         t.status = transaction["status"].downcase
         t.gateway = transaction["gateway"]
-        t.authorization_expires_at = transaction["authorizationExpiresAt"].blank? ? 3.days.from_now : transaction["authorizationExpiresAt"]
+        t.authorization_expires_at = transaction["kind"].downcase == "authorization" && transaction["authorizationExpiresAt"].blank? ? 3.days.from_now : transaction["authorizationExpiresAt"]
         t.error = transaction["errorCode"]
       end
 
