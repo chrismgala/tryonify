@@ -71,6 +71,10 @@ class Order < ApplicationRecord
     transactions.failed_authorizations.any?
   end
 
+  def unfulfilled?
+    fulfillment_status == "UNFULFILLED"
+  end
+
   def should_reauthorize?
     pending? && transactions.reauthorization_required.any? && shop.authorize_transactions
   end
@@ -92,7 +96,7 @@ class Order < ApplicationRecord
   end
 
   def cancel
-    OrderCancelJob.perform_later(id) if pending?
+    OrderCancelJob.perform_later(id) if pending? && unfulfilled?
   end
 
   def line_items_attributes=(*attrs)
