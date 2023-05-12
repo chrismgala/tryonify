@@ -23,10 +23,7 @@ class Transaction < ApplicationRecord
   private
 
   def invalid_authorization?
-    return true if kind == "authorization" && INVALID_TRANSACTION_ERRORS.include?(error)
-    return true if kind == "authorization" && gateway == "paypal" && status == "failure"
-
-    false
+    kind == "authorization" && status == "failure"
   end
 
   def retry_transaction
