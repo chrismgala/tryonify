@@ -26,7 +26,8 @@ FactoryBot.define do
       shop { association(:shop, authorize_transactions: true) }
 
       after(:create) do |order|
-        create(:transaction, kind: "authorization", authorization_expires_at: 1.hour.from_now, order: order)
+        create(:transaction, kind: "authorization", authorization_expires_at: 1.hour.from_now, status: :success,
+          order: order)
       end
     end
   end
