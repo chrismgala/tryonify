@@ -12,6 +12,7 @@ class OrderTransactionFetch < ApplicationService
           parentTransaction {
             id
           }
+          createdAt
           receiptJson
           kind
           errorCode
@@ -52,9 +53,11 @@ class OrderTransactionFetch < ApplicationService
         t.amount = transaction.dig("amountSet", "shopMoney", "amount")
         t.status = transaction["status"].downcase
         t.gateway = transaction["gateway"]
-        t.authorization_expires_at = transaction["kind"].downcase == "authorization" && transaction["authorizationExpiresAt"].blank? ? 3.days.from_now : transaction["authorizationExpiresAt"]
+        t.authorization_expires_at = get_authorization_expiration_date(transaction)
         t.error = transaction["errorCode"]
       end
+
+      found_transaction.update!(authorization_expires_at: get_authorization_expiration_date(transaction)) if found_transaction.authorization_expires_at.blank?
 
       # Update parent transaction reference
       if parent_transaction
@@ -65,5 +68,17 @@ class OrderTransactionFetch < ApplicationService
   rescue StandardError => e
     Rails.logger.error("[OrderTransactionFetch]: #{e.message}")
     @error = e.message
+  end
+
+  def get_authorization_expiration_date(transaction)
+    if transaction["kind"].downcase == "authorization" && transaction["authorizationExpiresAt"].blank?
+      if (transaction["createdAt"] + 3.days) < 3.days.from_now
+        return transaction["createdAt"] + 3.days
+      else
+        return 3.days.from_now
+      end
+    end
+
+    transaction["authorizationExpiresAt"]
   end
 end
