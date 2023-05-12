@@ -57,7 +57,7 @@ class OrderTransactionFetch < ApplicationService
         t.error = transaction["errorCode"]
       end
 
-      found_transaction.update!(authorization_expires_at: get_authorization_expiration_date(transaction)) if found_transaction.authorization_expires_at.blank?
+      found_transaction.update!(authorization_expires_at: get_authorization_expiration_date(transaction)) # if found_transaction.authorization_expires_at.blank?
 
       # Update parent transaction reference
       if parent_transaction
@@ -72,8 +72,8 @@ class OrderTransactionFetch < ApplicationService
 
   def get_authorization_expiration_date(transaction)
     if transaction["kind"].downcase == "authorization" && transaction["authorizationExpiresAt"].blank?
-      if (transaction["createdAt"] + 3.days) < 3.days.from_now
-        return transaction["createdAt"] + 3.days
+      if (transaction["createdAt"].to_date + 3.days) < 3.days.from_now
+        return transaction["createdAt"].to_date + 3.days
       else
         return 3.days.from_now
       end
