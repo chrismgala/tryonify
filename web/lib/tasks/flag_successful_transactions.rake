@@ -20,7 +20,7 @@ task :flag_successful_transactions, [:shop_domain] => :environment do |_task, ar
           existing_transaction.update!(
             status: transaction["status"].downcase,
             gateway: transaction["gateway"],
-            authorization_expires_at: get_authorization_expiration_date(transaction),
+            authorization_expires_at: (transaction["kind"].downcase == "authorization") && (transaction["status"].downcase == "success") ? get_authorization_expiration_date(transaction) : nil,
           )
         end
       end
