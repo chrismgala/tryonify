@@ -41,7 +41,7 @@ class OrderTransactionsUpdate < ApplicationService
   end
 
   def get_authorization_expiration_date(transaction)
-    if transaction["kind"].downcase == "authorization" && transaction["authorizationExpiresAt"].blank?
+    if transaction["kind"].downcase == "authorization" && transaction["authorizationExpiresAt"].blank? && transaction["status"].downcase == "success"
       if (transaction["createdAt"].to_date + 3.days) < 3.days.from_now
         return transaction["createdAt"].to_date + 3.days
       else
