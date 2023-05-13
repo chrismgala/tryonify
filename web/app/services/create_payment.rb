@@ -72,7 +72,7 @@ class CreatePayment < ApplicationService
   end
 
   def fetch_transactions
-    OrderTransactionFetch.call(@order)
+    OrderTransactionsUpdate.call(@order)
   end
 
   def update_order

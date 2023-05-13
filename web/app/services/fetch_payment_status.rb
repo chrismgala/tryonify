@@ -69,7 +69,7 @@ class FetchPaymentStatus
     end
 
     unless RETRY_STATUS.include?(@status)
-      OrderTransactionFetch.call(@payment.order)
+      OrderTransactionsUpdate.call(@payment.order)
     end
   end
 end
