@@ -11,8 +11,6 @@ class DraftOrdersFetch < ApplicationService
             createdAt
             customer {
               id
-              firstName
-              lastName
               email
             }
           }
@@ -37,8 +35,6 @@ class DraftOrdersFetch < ApplicationService
             createdAt
             customer {
               id
-              firstName
-              lastName
               email
             }
           }
