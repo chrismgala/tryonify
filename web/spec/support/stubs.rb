@@ -39,7 +39,7 @@ class Stubs
             },
           },
           displayFinancialStatus: order.financial_status,
-          fullyPaid: false,
+          fullyPaid: order.fully_paid,
           name: order.name,
           shippingAddress: {
             address1: "",

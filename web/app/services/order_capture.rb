@@ -6,6 +6,7 @@ class OrderCapture < ApplicationService
       orderCapture(input: $input) {
         transaction {
           id
+          paymentId
         }
         userErrors {
           field
@@ -29,12 +30,22 @@ class OrderCapture < ApplicationService
   private
 
   def capture_payment
-    authorization = @order.authorization
+    authorization = @order.latest_authorization
 
     if authorization.nil?
       Rails.logger.error("[OrderCapture]: No authorization found for order #{@order.id}")
       return
     end
+
+    if authorization.authorization_expires_at < Time.now
+      Rails.logger.error("[OrderCapture]: Authorization expired for order #{order.id}")
+    end
+
+    payment = Payment.new(
+      idempotency_key: "order-#{@order.id}-#{SecureRandom.hex(10)}",
+      order_id: @order.id,
+      parent_transaction: authorization,
+    )
 
     response = @client.query(query: ORDER_CAPTURE_QUERY, variables: {
       input: {
@@ -47,6 +58,14 @@ class OrderCapture < ApplicationService
     response.body.dig("data", "orderCapture", "userErrors")&.each do |error|
       Rails.logger.error("[OrderCapture]: #{error["message"]}")
     end
+
+    unless response.body["errors"].nil?
+      raise response.body.dig("errors", 0, "message") and return
+    end
+
+    payment_reference_id = response.body.dig("data", "orderCapture", "transaction", "paymentId")
+    payment.payment_reference_id = payment_reference_id
+    payment if payment.save!
   rescue StandardError => e
     Rails.logger.error("[OrderCapture]: #{e.message}")
   end

@@ -22,14 +22,10 @@ class CreatePayment < ApplicationService
     # Check whether the charge should be made
     if can_charge?
       # Charge the remaining balance
-      if @order.authorization.nil? && @order.total_outstanding > 0
-        @payment = create_mandate_payment
-        schedule_update if @payment
-      elsif @order.authorization
+      if @order.authorized?
         capture_authorization
       else
-        Rails.logger.error("[CreatePayment]: Unable to perform payment for Order ID #{@order.id}")
-        nil
+        create_mandate_payment
       end
     end
   end
@@ -39,7 +35,7 @@ class CreatePayment < ApplicationService
     return false unless @order.due_date
 
     # Check that the due date has passed
-    return false if @order.due_date.after?(DateTime.current)
+    return false if @order.due_date.after?(Time.current)
 
     # Make sure there are no returns that haven't been processed
     return_item = @order.returns.where(active: true).order(created_at: :desc).first
@@ -48,7 +44,7 @@ class CreatePayment < ApplicationService
       grace_period = @order.shop.return_period
       deadline = return_item.created_at + grace_period.days
 
-      return false unless deadline.before?(DateTime.current)
+      return false unless deadline.before?(Time.current)
     end
 
     # Make sure order has actually been fulfilled
@@ -60,11 +56,15 @@ class CreatePayment < ApplicationService
     # Order is fully paid
     return false if @order.fully_paid
 
+    # Check for previous payment attempt
+    return false if @order.payments.where.not(status: "AUTHORIZED").any?
+
     true
   end
 
   def create_mandate_payment
     @payment = OrderCreateMandatePayment.call(order: @order)
+    schedule_update if @payment
   end
 
   def capture_authorization

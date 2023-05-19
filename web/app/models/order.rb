@@ -54,13 +54,15 @@ class Order < ApplicationRecord
   def pending?
     return false if calculated_due_date.before?(DateTime.current)
     return false if cancelled_at
-    return false if total_outstanding <= 0
+    return false if fully_paid
 
     true
   end
 
-  def authorization
-    transactions.successful_authorizations.last
+  def latest_authorization
+    transactions.successful_authorizations
+      .order(authorization_expires_at: :desc)
+      .first
   end
 
   def authorized?
