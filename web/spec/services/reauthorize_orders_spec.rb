@@ -21,5 +21,14 @@ RSpec.describe(ReauthorizeOrders) do
         expect(OrderAuthorizeJob).not_to(have_been_enqueued.with(order.id))
       end
     end
+
+    context "failed to reauthorize" do
+      it "should not cancel" do
+        order = FactoryBot.create(:order, :with_expiring_authorization)
+        FactoryBot.create(:transaction, :failure, order: order)
+        ReauthorizeOrders.call(order.shop)
+        expect(OrderCancelJob).not_to(have_been_enqueued.with(order.id))
+      end
+    end
   end
 end

@@ -27,11 +27,15 @@ class Transaction < ApplicationRecord
     kind == "authorization" && status == "failure"
   end
 
+  def reauthorization?
+    order.transactions.where(kind: :authorization).count > 1
+  end
+
   def retry_transaction
   end
 
   def cancel_order
-    order.cancel
+    order.cancel unless reauthorization?
   end
 
   def retryable?

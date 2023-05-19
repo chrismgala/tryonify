@@ -39,6 +39,15 @@ FactoryBot.define do
           order: order)
       end
     end
+
+    trait :with_failed_authorization do
+      shop { association(:shop, authorize_transactions: true) }
+
+      after(:create) do |order|
+        create(:transaction, kind: "authorization", authorization_expires_at: nil, status: :failure,
+          order: order)
+      end
+    end
   end
 
   trait :with_return do
