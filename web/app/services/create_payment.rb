@@ -27,6 +27,9 @@ class CreatePayment < ApplicationService
       else
         create_mandate_payment
       end
+
+      # Don't touch the order again after payment
+      @order.ignore! if @order.ignored_at.nil?
     end
   end
 
@@ -50,13 +53,14 @@ class CreatePayment < ApplicationService
     # Make sure order has actually been fulfilled
     # return false if @order.fulfillment_status != 'FULFILLED'
 
-    # Order is not closed
+    # Order is not cancelled
     return false if @order.cancelled_at
 
     # Order is fully paid
     return false if @order.fully_paid
 
-    # Check for previous payment attempt
+    # Check for previous payment attempt, anything other than AUTHORIZED
+    # could be a failed payment or a payment that has been captured
     return false if @order.payments.where.not(status: "AUTHORIZED").any?
 
     true
