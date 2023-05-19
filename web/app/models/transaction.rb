@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Transaction < ApplicationRecord
+  has_one :payment
   belongs_to :order
   belongs_to :parent_transaction, class_name: "Transaction", optional: true
 

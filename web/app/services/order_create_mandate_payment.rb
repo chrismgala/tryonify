@@ -59,8 +59,6 @@ class OrderCreateMandatePayment < ApplicationService
 
     payment_reference_id = response.body.dig("data", "orderCreateMandatePayment", "paymentReferenceId")
     payment.payment_reference_id = payment_reference_id
-    if payment.save!
-      payment
-    end
+    payment if payment.save!
   end
 end

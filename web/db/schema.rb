@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_11_181232) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_19_160756) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -75,6 +75,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_11_181232) do
     t.datetime "cancelled_at"
     t.string "ip_address"
     t.string "tags", array: true
+    t.datetime "ignored_at"
     t.index ["shop_id"], name: "index_orders_on_shop_id"
     t.index ["shopify_id"], name: "index_orders_on_shopify_id", unique: true
   end
@@ -87,8 +88,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_11_181232) do
     t.bigint "order_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "parent_transaction_id"
     t.index ["idempotency_key"], name: "index_payments_on_idempotency_key", unique: true
     t.index ["order_id"], name: "index_payments_on_order_id"
+    t.index ["parent_transaction_id"], name: "index_payments_on_parent_transaction_id"
   end
 
   create_table "pg_search_documents", force: :cascade do |t|
@@ -219,6 +222,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_11_181232) do
   add_foreign_key "line_items", "orders"
   add_foreign_key "orders", "shops", on_delete: :cascade
   add_foreign_key "payments", "orders"
+  add_foreign_key "payments", "transactions", column: "parent_transaction_id"
   add_foreign_key "products", "shops", on_delete: :cascade
   add_foreign_key "returns", "orders", on_delete: :cascade
   add_foreign_key "selling_plan_groups", "shops", on_delete: :cascade

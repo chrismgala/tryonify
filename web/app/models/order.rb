@@ -19,11 +19,13 @@ class Order < ApplicationRecord
                         where("due_date < ?", Time.current)
                           .where(fully_paid: false)
                           .where(cancelled_at: nil)
+                          .where(ignored_at: nil)
                       }
   scope :pending, lambda {
                     where("due_date > ?", Time.current)
                       .where(fully_paid: false)
                       .where(cancelled_at: nil)
+                      .where(ignored_at: nil)
                   }
   scope :pending_returns, -> { includes(:returns).where(returns: { active: true }) }
   scope :failed_payments, lambda {
@@ -54,13 +56,15 @@ class Order < ApplicationRecord
   def pending?
     return false if calculated_due_date.before?(DateTime.current)
     return false if cancelled_at
-    return false if total_outstanding <= 0
+    return false if fully_paid
 
     true
   end
 
-  def authorization
-    transactions.successful_authorizations.last
+  def latest_authorization
+    transactions.successful_authorizations
+      .order(authorization_expires_at: :desc)
+      .first
   end
 
   def authorized?
@@ -97,6 +101,10 @@ class Order < ApplicationRecord
 
   def cancel
     OrderCancelJob.perform_later(id) if pending? && unfulfilled?
+  end
+
+  def ignore!
+    update!(ignored_at: Time.current)
   end
 
   def line_items_attributes=(*attrs)
