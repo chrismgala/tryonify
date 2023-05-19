@@ -73,14 +73,14 @@ RSpec.describe(CreatePayment) do
     end
   end
 
-  context "order is due with no total outstanding" do
-    let(:order) { FactoryBot.create(:order, due_date: 1.day.ago, total_outstanding: 0.0) }
+  context "order is fully paid" do
+    let(:order) { FactoryBot.create(:order, due_date: 1.day.ago, fully_paid: true) }
 
     before do
       @stub.order(order)
     end
 
-    it "creates a payment" do
+    it "does not create a payment" do
       order.shop.with_shopify_session do
         CreatePayment.call(order.id)
       end
@@ -98,10 +98,34 @@ RSpec.describe(CreatePayment) do
 
     it "does not create a payment" do
       order.shop.with_shopify_session do
-        CreatePayment.new(order.id)
+        CreatePayment.call(order.id)
       end
 
       expect(Payment.where(order_id: order.id)).to_not(exist)
+    end
+  end
+
+  context "authorization has expired" do
+    let(:order) { FactoryBot.create(:order, :with_expired_authorization, due_date: 1.day.ago) }
+
+    before do
+      @stub.order(order)
+    end
+
+    it "does not create a payment" do
+      order.shop.with_shopify_session do
+        CreatePayment.call(order.id)
+      end
+
+      expect(Payment.where(order_id: order.id)).to_not(exist)
+    end
+
+    it "sets the order to ignored" do
+      order.shop.with_shopify_session do
+        CreatePayment.call(order.id)
+      end
+      order.reload
+      expect(order.ignored_at).to_not(be_nil)
     end
   end
 end

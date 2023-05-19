@@ -9,7 +9,6 @@ class UpdateSellingPlanGroup
     @selling_plan_group = selling_plan_group
     @session = ShopifyAPI::Context.active_session
     @client = ShopifyAPI::Clients::Graphql::Admin.new(session: @session)
-    puts @selling_plan_group.inspect
   end
 
   def call

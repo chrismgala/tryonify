@@ -18,4 +18,17 @@ RSpec.describe(Order, type: :model) do
       expect(order.valid?).to(eq(false))
     end
   end
+
+  context "latest_authorization" do
+    let(:order) { FactoryBot.create(:order) }
+
+    it "returns the most recent authorization" do
+      FactoryBot.create_list(:transaction, 4, status: :success, kind: :authorization,
+        order: order) do |transaction, index|
+        transaction.update(authorization_expires_at: index.days.from_now)
+      end
+      transactions = order.transactions.successful_authorizations.order(authorization_expires_at: :desc)
+      expect(order.latest_authorization.authorization_expires_at).to(be > transactions[1].authorization_expires_at)
+    end
+  end
 end
