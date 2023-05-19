@@ -25,6 +25,18 @@ RSpec.describe(Transaction, type: :model) do
       end
     end
 
+    it "should not cancel if the transaction is a reauthorization" do
+      FactoryBot.create(:transaction, status: :success, order: @order)
+      FactoryBot.create(
+        :transaction,
+        kind: "authorization",
+        error: "CARD_DECLINED",
+        status: :failure,
+        order: @order,
+      )
+      expect(OrderCancelJob).to_not(have_been_enqueued.with(@order.id))
+    end
+
     it "should not cancel if the transaction is invalid and the order is fulfilled" do
       @order.shop.with_shopify_session do
         @order.update(fulfillment_status: "FULFILLED")
