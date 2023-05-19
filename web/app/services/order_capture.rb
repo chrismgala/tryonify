@@ -58,7 +58,7 @@ class OrderCapture < ApplicationService
     })
 
     response.body.dig("data", "orderCapture", "userErrors")&.each do |error|
-      Rails.logger.error("[OrderCapture]: #{error["message"]}")
+      Rails.logger.error("[OrderCapture ID: #{@order.id}]: #{error["message"]}")
       payment.error = "#{payment.error} #{error["message"]}"
       payment.status = "ERROR"
       @order.ignore!
