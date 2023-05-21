@@ -12,11 +12,11 @@ class Transaction < ApplicationRecord
   after_create_commit :cancel_order, if: :invalid_authorization?
 
   scope :successful_authorizations, -> { where(kind: :authorization, error: nil, voided: false, status: :success) }
-  scope :failed_authorizations, -> { where(kind: :authorization).where(error: INVALID_TRANSACTION_ERRORS) }
+  scope :failed_authorizations, -> { where(kind: :authorization).where(status: :failure) }
   scope :reauthorization_required, -> {
                                      successful_authorizations
                                        .where(parent_transaction_id: nil)
-                                       .where("authorization_expires_at < ?", 12.hours.from_now)
+                                       .where("authorization_expires_at < ?", 6.hours.from_now)
                                    }
   INVALID_TRANSACTION_ERRORS = ["CARD_DECLINED", "EXPIRED_CARD", "INVALID_AMOUNT", "PICK_UP_CARD"].freeze
   RETRY_TRANSACTION_ERRORS = ["PROCESSING_ERROR", "PAYMENT_METHOD_UNAVAILABLE", "GENERIC_ERROR", "CONFIG_ERROR"].freeze
