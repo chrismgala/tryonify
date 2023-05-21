@@ -64,7 +64,7 @@ class CreatePayment < ApplicationService
 
     # Check for previous payment attempt, anything other than AUTHORIZED
     # could be a failed payment or a payment that has been captured
-    return false if @order.payments.where.not(status: "AUTHORIZED").any?
+    # return false if @order.payments.where.not(status: "AUTHORIZED").any?
 
     true
   end

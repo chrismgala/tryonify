@@ -6,4 +6,6 @@ class Payment < ApplicationRecord
 
   belongs_to :order
   belongs_to :parent_transaction, class_name: :Transaction, optional: true
+
+  enum kind: [:payment, :authorization]
 end

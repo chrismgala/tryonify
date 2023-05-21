@@ -47,6 +47,7 @@ class OrderCapture < ApplicationService
       idempotency_key: "order-#{@order.id}-#{SecureRandom.hex(10)}",
       order_id: @order.id,
       parent_transaction: authorization,
+      kind: :payment,
     )
 
     response = @client.query(query: ORDER_CAPTURE_QUERY, variables: {
