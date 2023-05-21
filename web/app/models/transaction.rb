@@ -12,7 +12,7 @@ class Transaction < ApplicationRecord
   after_create_commit :cancel_order, if: :invalid_authorization?
 
   scope :successful_authorizations, -> { where(kind: :authorization, error: nil, voided: false, status: :success) }
-  scope :failed_authorizations, -> { where(kind: :authorization).where(error: INVALID_TRANSACTION_ERRORS) }
+  scope :failed_authorizations, -> { where(kind: :authorization).where(status: :failure) }
   scope :reauthorization_required, -> {
                                      successful_authorizations
                                        .where(parent_transaction_id: nil)
