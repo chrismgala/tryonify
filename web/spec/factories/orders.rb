@@ -22,12 +22,46 @@ FactoryBot.define do
       end
     end
 
+    trait :with_valid_authorizations do
+      shop { association(:shop, authorize_transactions: true) }
+
+      after(:create) do |order|
+        create(
+          :transaction,
+          kind: "authorization",
+          authorization_expires_at: 2.days.from_now,
+          status: :success,
+          order: order,
+        )
+      end
+    end
+
     trait :with_expiring_authorization do
       shop { association(:shop, authorize_transactions: true) }
 
       after(:create) do |order|
-        create(:transaction, kind: "authorization", authorization_expires_at: 1.hour.from_now, status: :success,
-          order: order)
+        create(
+          :transaction,
+          kind: "authorization",
+          authorization_expires_at: 1.hour.from_now,
+          status: :success,
+          order: order,
+        )
+      end
+    end
+
+    trait :with_expiring_paypal_authorization do
+      shop { association(:shop, authorize_transactions: true) }
+
+      after(:create) do |order|
+        create(
+          :transaction,
+          kind: "authorization",
+          gateway: "paypal",
+          authorization_expires_at: 1.day.ago,
+          status: :success,
+          order: order,
+        )
       end
     end
 
@@ -35,8 +69,13 @@ FactoryBot.define do
       shop { association(:shop, authorize_transactions: true) }
 
       after(:create) do |order|
-        create(:transaction, kind: "authorization", authorization_expires_at: 1.hour.ago, status: :success,
-          order: order)
+        create(
+          :transaction,
+          kind: "authorization",
+          authorization_expires_at: 1.hour.ago,
+          status: :success,
+          order: order,
+        )
       end
     end
 
@@ -44,8 +83,13 @@ FactoryBot.define do
       shop { association(:shop, authorize_transactions: true) }
 
       after(:create) do |order|
-        create(:transaction, kind: "authorization", authorization_expires_at: nil, status: :failure,
-          order: order)
+        create(
+          :transaction,
+          kind: "authorization",
+          authorization_expires_at: nil,
+          status: :failure,
+          order: order,
+        )
       end
     end
   end

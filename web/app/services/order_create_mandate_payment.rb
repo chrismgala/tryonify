@@ -36,6 +36,7 @@ class OrderCreateMandatePayment < ApplicationService
     payment = Payment.new(
       idempotency_key: "order-#{@order.id}-#{SecureRandom.hex(10)}",
       order_id: @order.id,
+      kind: @auto_capture ? :payment : :authorization,
     )
 
     query = CREATE_MANDATE_PAYMENT_QUERY
