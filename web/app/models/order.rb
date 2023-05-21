@@ -80,7 +80,20 @@ class Order < ApplicationRecord
   end
 
   def should_reauthorize?
-    pending? && transactions.reauthorization_required.any? && transactions.failed_authorizations.empty? && shop.authorize_transactions
+    return false unless shop.authorize_transactions
+
+    # If the order is pending
+    if pending?
+      # And it has transactions that require reauthorization
+      if transactions.reauthorization_required.any?
+        # If the authorization is from PayPal, wait until the next day to reauthorize
+        if latest_authorization.gateway == "paypal" && latest_authorization.authorization_expires_at + 1.day < Time.current
+          true
+        elsif latest_authorization.gateway != "paypal"
+          true
+        end
+      end
+    end
   end
 
   def voided?
