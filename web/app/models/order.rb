@@ -29,10 +29,11 @@ class Order < ApplicationRecord
                   }
   scope :pending_returns, -> { includes(:returns).where(returns: { active: true }) }
   scope :failed_payments, lambda {
-                            includes(:payments)
+                            includes(:transactions)
                               .where(fully_paid: false)
                               .where(cancelled_at: nil)
-                              .where(payments: { status: "ERROR" })
+                              .where("due_date < ?", Time.current)
+                              .where(transactions: { kind: :sale, status: :failure })
                           }
 
   accepts_nested_attributes_for :line_items, :shipping_address
