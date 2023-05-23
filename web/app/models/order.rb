@@ -82,6 +82,7 @@ class Order < ApplicationRecord
 
   def should_reauthorize?
     return false unless shop.authorize_transactions
+    return false if transactions.failed_authorizations.any?
 
     # If the order is pending
     if pending?
