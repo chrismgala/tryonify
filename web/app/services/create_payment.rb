@@ -35,7 +35,7 @@ class CreatePayment < ApplicationService
 
   def can_charge?
     # Check that the order has not been ignored
-    return false unless @order.ignored_at.nil?
+    return false if @order.ignored?
 
     # Check that there is a due date
     return false unless @order.due_date
