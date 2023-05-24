@@ -122,6 +122,10 @@ class Order < ApplicationRecord
     update!(ignored_at: Time.current)
   end
 
+  def ignored?
+    ignored_at.present?
+  end
+
   def line_items_attributes=(*attrs)
     self.line_items = []
     super(*attrs)
