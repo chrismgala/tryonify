@@ -39,8 +39,6 @@ class OrderCapture < ApplicationService
 
     if authorization.authorization_expires_at < Time.current
       Rails.logger.error("[OrderCapture ID: #{@order.id}]: Authorization expired for order")
-      @order.ignore!
-      return
     end
 
     payment = Payment.new(
