@@ -5,7 +5,7 @@ task create_payments: :environment do |_task, _args|
   puts "Creating payments..."
 
   Order.payment_due.joins(:shop).where(shop: { allow_automatic_payments: true }).find_each do |order|
-    CreatePaymentJob.perform_later(order.id) unless order.payments.where(status: "ERROR").any?
+    CreatePaymentJob.perform_later(order.id) unless order.ignored?
   end
 
   puts "done."
