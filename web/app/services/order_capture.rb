@@ -7,6 +7,16 @@ class OrderCapture < ApplicationService
         transaction {
           id
           paymentId
+          receiptJson
+          kind
+          amountSet {
+            shopMoney {
+              amount
+            }
+          }
+          gateway
+          errorCode
+          status
         }
         userErrors {
           field
@@ -61,14 +71,29 @@ class OrderCapture < ApplicationService
       payment.error = "#{payment.error} #{error["message"]}"
       payment.status = "ERROR"
       @order.ignore!
+      return
     end
 
     unless response.body["errors"].nil?
       raise response.body.dig("errors", 0, "message") and return
     end
 
-    payment_reference_id = response.body.dig("data", "orderCapture", "transaction", "paymentId")
-    payment.payment_reference_id = payment_reference_id
+    shopify_transaction = response.body.dig("data", "orderCapture", "transaction")
+    payment.payment_reference_id = shopify_transaction["paymentId"]
+    payment.status = shopify_transaction["status"]
+
+    # Save or update transaction data
+    @order.transactions.find_or_create_by!(shopify_id: shopify_transaction["id"]) do |t|
+      t.order_id = @order.id
+      t.payment_id = shopify_transaction["paymentId"]
+      t.receipt = shopify_transaction["receiptJson"]
+      t.kind = shopify_transaction["kind"].downcase
+      t.amount = shopify_transaction.dig("amountSet", "shopMoney", "amount")
+      t.status = shopify_transaction["status"].downcase
+      t.gateway = shopify_transaction["gateway"]
+      t.error = shopify_transaction["errorCode"]
+    end
+
     payment if payment.save!
   rescue StandardError => e
     Rails.logger.error("[OrderCapture ID: #{@order.id}]: #{e.message}")
