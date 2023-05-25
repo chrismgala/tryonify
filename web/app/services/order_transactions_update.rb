@@ -3,6 +3,8 @@
 class OrderTransactionsUpdate < ApplicationService
   attr_accessor :error
 
+  PAYPAL_HONOR_PERIOD_DAYS = 3
+
   def initialize(order)
     super()
     @order = order
@@ -42,10 +44,10 @@ class OrderTransactionsUpdate < ApplicationService
 
   def get_authorization_expiration_date(transaction)
     if transaction["kind"].downcase == "authorization" && transaction["authorizationExpiresAt"].blank? && transaction["status"].downcase == "success"
-      if (transaction["createdAt"].to_date + 4.days) < 4.days.from_now
-        return transaction["createdAt"].to_date + 4.days
+      if (transaction["createdAt"].to_datetime + 3.days) < 3.days.from_now
+        return transaction["createdAt"].to_datetime + 3.days
       else
-        return 4.days.from_now
+        return 3.days.from_now
       end
     end
 
