@@ -95,7 +95,7 @@ class OrderCapture < ApplicationService
       t.error = shopify_transaction["errorCode"]
     end
 
-    Rails.logger.info("[OrderCapture id=#{payment.id}]: Payment captured")
+    Rails.logger.info("[OrderCapture id=#{@order.id}]: Payment captured")
 
     payment if payment.save!
   rescue StandardError => e
