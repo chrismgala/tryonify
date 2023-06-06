@@ -40,15 +40,16 @@ class OrderCapture < ApplicationService
   private
 
   def capture_payment
+    Rails.logger.info("[OrderCapture id=#{@order.id}]: Capturing payment")
     authorization = @order.latest_authorization
 
     if authorization.nil?
-      Rails.logger.error("[OrderCapture ID: #{@order.id}]: No authorization found for order")
+      Rails.logger.error("[OrderCapture id=#{@order.id}]: No authorization found for order")
       return
     end
 
     if authorization.authorization_expires_at < Time.current
-      Rails.logger.error("[OrderCapture ID: #{@order.id}]: Authorization expired for order")
+      Rails.logger.warn("[OrderCapture id=#{@order.id}]: Authorization expired for order")
     end
 
     payment = Payment.new(
@@ -93,6 +94,8 @@ class OrderCapture < ApplicationService
       t.gateway = shopify_transaction["gateway"]
       t.error = shopify_transaction["errorCode"]
     end
+
+    Rails.logger.info("[OrderCapture id=#{@order.id}]: Payment captured")
 
     payment if payment.save!
   rescue StandardError => e

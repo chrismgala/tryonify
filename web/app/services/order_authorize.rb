@@ -19,9 +19,13 @@ class OrderAuthorize < ApplicationService
   end
 
   def authorize
+    Rails.logger.info("[OrderAuthorize id=#{@order.id}]: Order authorizing")
     @authorization = OrderCreateMandatePayment.call(order: @order, auto_capture: false)
 
-    schedule_update if @authorization
+    if @authorization
+      Rails.logger.info("[OrderAuthorize id=#{@order.id}]: Order successfully authorized")
+      schedule_update
+    end
   end
 
   def schedule_update
