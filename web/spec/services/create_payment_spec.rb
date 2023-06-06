@@ -110,6 +110,7 @@ RSpec.describe(CreatePayment) do
 
     before do
       @stub.order(order)
+      @stub.capture
     end
 
     it "does not create a payment" do

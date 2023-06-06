@@ -21,6 +21,7 @@ class CreatePayment < ApplicationService
 
     # Check whether the charge should be made
     if can_charge?
+      Rails.logger.info("[CreatePayment id=#{@order.id}]: Creating payment")
       # Charge the remaining balance
       if @order.authorized?
         capture_authorization

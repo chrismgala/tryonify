@@ -12,7 +12,10 @@ task :flag_successful_transactions, [:shop_domain] => :environment do |_task, ar
   end
 
   shop.with_shopify_session do
-    shop.orders.pending.each do |order|
+    shop.orders
+      .active
+      .pending
+      .each do |order|
       response = OrderTransactionFetch.call(order)
       response.body.dig("data", "order", "transactions")&.each do |transaction|
         existing_transaction = order.transactions.find_by(shopify_id: transaction["id"])
