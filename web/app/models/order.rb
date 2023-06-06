@@ -15,17 +15,16 @@ class Order < ApplicationRecord
   has_many :payments
   has_one :shipping_address
 
+  scope :active, -> { where(ignored_at: nil) }
   scope :payment_due, lambda {
                         where("due_date < ?", Time.current)
                           .where(fully_paid: false)
                           .where(cancelled_at: nil)
-                          .where(ignored_at: nil)
                       }
   scope :pending, lambda {
                     where("due_date > ?", Time.current)
                       .where(fully_paid: false)
                       .where(cancelled_at: nil)
-                      .where(ignored_at: nil)
                   }
   scope :pending_returns, -> { includes(:returns).where(returns: { active: true }) }
   scope :failed_payments, lambda {

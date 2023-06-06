@@ -33,6 +33,8 @@ class OrderCreateMandatePayment < ApplicationService
   private
 
   def create_mandate_payment
+    Rails.logger.info("[OrderCreateMandatePayment id=#{@order.id} auto_capture=#{@auto_capture}]: Creating mandate payment")
+
     payment = Payment.new(
       idempotency_key: "order-#{@order.id}-#{SecureRandom.hex(10)}",
       order_id: @order.id,
@@ -57,6 +59,8 @@ class OrderCreateMandatePayment < ApplicationService
     unless response.body["errors"].nil?
       raise response.body.dig("errors", 0, "message") and return
     end
+
+    Rails.logger.info("[OrderCreateMandatePayment id=#{@order.id} auto_capture=#{@auto_capture}]: Mandate payment created")
 
     payment_reference_id = response.body.dig("data", "orderCreateMandatePayment", "paymentReferenceId")
     payment.payment_reference_id = payment_reference_id

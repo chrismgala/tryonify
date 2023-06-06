@@ -14,7 +14,10 @@ class ReauthorizeOrders < ApplicationService
 
   def reauthorize_orders
     @shop.with_shopify_session do
-      @shop.orders.pending.find_each do |order|
+      @shop.orders
+        .active
+        .pending
+        .find_each do |order|
         OrderAuthorizeJob.perform_later(order.id) if order.should_reauthorize?
       end
     end
