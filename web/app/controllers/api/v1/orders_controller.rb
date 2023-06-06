@@ -6,15 +6,15 @@ module Api
       def index
         orders = case pagination_params[:status]
         when "overdue"
-          current_user.orders.payment_due.order(shopify_created_at: :desc)
+          current_user.orders.includes(:returns).payment_due.order(shopify_created_at: :desc)
         when "pending"
-          current_user.orders.pending.order(shopify_created_at: :desc)
+          current_user.orders.includes(:returns).pending.order(shopify_created_at: :desc)
         when "failed_payments"
-          current_user.orders.failed_payments.order(shopify_created_at: :desc)
+          current_user.orders.includes(:returns).failed_payments.order(shopify_created_at: :desc)
         when "returns"
-          current_user.orders.pending_returns.order(shopify_created_at: :desc)
+          current_user.orders.includes(:returns).pending_returns.order(shopify_created_at: :desc)
         else
-          current_user.orders.order(shopify_created_at: :desc)
+          current_user.orders.includes(:returns).order(shopify_created_at: :desc)
         end
 
         paginated_orders = orders.search(params[:query]).page(pagination_params[:page])
@@ -29,7 +29,7 @@ module Api
           },
         }
 
-        render(json: payload, include: ["returns"])
+        render(json: payload, include: :returns)
       end
 
       def show
