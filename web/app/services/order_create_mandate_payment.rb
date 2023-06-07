@@ -28,6 +28,8 @@ class OrderCreateMandatePayment < ApplicationService
 
   def call
     create_mandate_payment if @order.mandate_id
+  rescue StandardError => e
+    Rails.logger.error("[OrderCreateMandatePayment Failed id=#{@order.id}]: #{e.message}")
   end
 
   private

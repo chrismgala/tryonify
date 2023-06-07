@@ -35,6 +35,8 @@ class OrderCapture < ApplicationService
 
   def call
     capture_payment
+  rescue StandardError => e
+    Rails.logger.error("[OrderCapture id=#{@order.id}]: #{e.message}")
   end
 
   private
@@ -98,7 +100,5 @@ class OrderCapture < ApplicationService
     Rails.logger.info("[OrderCapture id=#{@order.id}]: Payment captured")
 
     payment if payment.save!
-  rescue StandardError => e
-    Rails.logger.error("[OrderCapture ID: #{@order.id}]: #{e.message}")
   end
 end

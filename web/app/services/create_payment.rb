@@ -85,6 +85,9 @@ class CreatePayment < ApplicationService
 
   def update_order
     graphql_order = FetchOrder.call(id: @order.shopify_id)
+
+    raise "Failed to fetch order #{@order.id}" and return unless graphql_order
+
     built_order = OrderBuild.call(shop_id: @order.shop_id, data: graphql_order.body.dig("data", "order"))
     OrderUpdate.call(order_attributes: built_order, order: @order)
 
