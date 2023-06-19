@@ -6,7 +6,7 @@ module EnsureBilling
   extend ActiveSupport::Concern
 
   # List of shops that get app for free
-  EXCLUDED_FROM_BILLING = ['paskho.myshopify.com'].freeze
+  EXCLUDED_FROM_BILLING = ["paskho.myshopify.com", "26910b-2.myshopify.com"].freeze
 
   included do
     before_action :check_billing
@@ -14,7 +14,7 @@ module EnsureBilling
   end
 
   def check_billing
-    return if EXCLUDED_FROM_BILLING.include? current_shopify_domain
+    return if EXCLUDED_FROM_BILLING.include?(current_shopify_domain)
 
     @shop = Shop.find_by!(shopify_domain: current_shopify_domain)
     return unless @shop
@@ -24,7 +24,7 @@ module EnsureBilling
       app = service.call
 
       # Redirect to billing if no active subscription
-      request_payment unless app.dig('activeSubscriptions').length > 0
+      request_payment unless app.dig("activeSubscriptions").length > 0
     end
   end
 
@@ -38,8 +38,8 @@ module EnsureBilling
     confirmation_url = service.create_charge(plan)
 
     if confirmation_url
-      render('shopify_app/shared/redirect', layout: false,
-                                            locals: { url: confirmation_url, current_shopify_domain: })
+      render("shopify_app/shared/redirect", layout: false,
+        locals: { url: confirmation_url, current_shopify_domain: })
     end
   end
 end
