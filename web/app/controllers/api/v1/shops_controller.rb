@@ -8,6 +8,7 @@ module Api
         "tryonify-dev.myshopify.com",
         "spongerevolution.myshopify.com",
         "my-perfect-cosmetics-aus.myshopify.com",
+        "my-perfect-cosmetics.myshopify.com",
         "ms-hair.myshopify.com",
         "smooth-encore.myshopify.com",
       ].freeze
