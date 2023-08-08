@@ -35,6 +35,7 @@ const APPROVED_FOR_AUTHORIZE = [
   'ms-hair.myshopify.com',
   'smooth-encore.myshopify.com',
   'camplane.myshopify.com',
+  'jordanjack.myshopify.com',
 ]
 
 export default function Settings() {
