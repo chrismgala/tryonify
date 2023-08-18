@@ -61,6 +61,9 @@
     forms.forEach((form) => {
       const sellingPlanInput = form.querySelector('input[name="selling_plan"]');
       const idInput = form.querySelector('[name="id"]');
+
+      if (!idInput) return;
+
       const value = idInput.nodeName === 'SELECT' ? idInput.options[idInput.selectedIndex].value : idInput.value;
 
       if (sellingPlanInput) {
@@ -99,6 +102,7 @@
     input.type = 'hidden';
     input.name = 'selling_plan';
     input.value = selectedSellingPlan || '';
+    input.classList.add('tryonify-selling-plan-input');
 
     return input;
   }
@@ -119,18 +123,17 @@
   function handleAddToCart(e) {
     e.preventDefault();
 
-    let form;
+    let form = e.target.closest('form');
 
-    if (addToCartButtons.length > 1) {
-      form = e.target.closest('form');
-    } else {
+    if (!form) {
       form = document.querySelector('form[action~="/cart/add"]:not(.installment)');
     }
 
     if (form) {
       const sellingPlan = form.querySelector('input[name="selling_plan"]');
+      const idInput = form.querySelector('[name="id"]');
 
-      if (!sellingPlan) return;
+      if (!sellingPlan || !idInput) return;
       sellingPlan.value = e.currentTarget.dataset.sellingPlanId;
 
       const submitButton = form.querySelector('[type="submit"]');
@@ -158,6 +161,7 @@
 
     forms.forEach((form) => {
       const idInput = form.querySelector('[name="id"]');
+      if (!idInput) return;
       idInput.addEventListener('change', handleVariantChange)
     })
 
