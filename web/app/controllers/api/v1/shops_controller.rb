@@ -13,7 +13,8 @@ module Api
         "smooth-encore.myshopify.com",
         "camplane.myshopify.com",
         "jordanjack.myshopify.com",
-        "hello-lashesnz.myshopify.com"
+        "hello-lashesnz.myshopify.com",
+        "getlumina.myshopify.com",
       ].freeze
 
       def show

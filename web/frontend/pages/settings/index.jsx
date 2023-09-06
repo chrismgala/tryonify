@@ -37,6 +37,7 @@ const APPROVED_FOR_AUTHORIZE = [
   'camplane.myshopify.com',
   'jordanjack.myshopify.com',
   'hello-lashesnz.myshopify.com',
+  'getlumina.myshopify.com',
 ]
 
 export default function Settings() {
