@@ -40,6 +40,11 @@ const APPROVED_FOR_AUTHORIZE = [
   'hello-lashesnz.myshopify.com',
 ]
 
+const APPROVED_FOR_PREPAID = [
+  'fd4267.myshopify.com',
+  'tryonify-dev.myshopify.com',
+]
+
 export default function Settings() {
   const toast = useToast();
   const fetch = useAuthenticatedFetch();
@@ -112,12 +117,14 @@ export default function Settings() {
                       name="allowAutomaticPayments"
                       component={CheckboxField}
                     />
-                    <Field
-                      label="Cancel orders using pre-paid cards"
-                      name="cancelPrepaidCards"
-                      component={CheckboxField}
-                      helpText="Requires a checkout charge on trial plan"
-                    />
+                    {APPROVED_FOR_PREPAID.includes(data?.shop?.shopifyDomain) &&
+                      <Field
+                        label="Cancel orders using pre-paid cards"
+                        name="cancelPrepaidCards"
+                        component={CheckboxField}
+                        helpText="Requires a checkout charge on trial plan"
+                      />
+                    }
                     {APPROVED_FOR_AUTHORIZE.includes(data?.shop?.shopifyDomain) &&
                       <Field
                         label="Authorize new orders"
