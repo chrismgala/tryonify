@@ -24,6 +24,7 @@ const initialValues = {
   returnPeriod: 14,
   returnExplainer: '',
   allowAutomaticPayments: true,
+  cancelPrepaidCards: true,
 };
 
 const APPROVED_FOR_AUTHORIZE = [
@@ -110,6 +111,12 @@ export default function Settings() {
                       label="Allow automatic payments"
                       name="allowAutomaticPayments"
                       component={CheckboxField}
+                    />
+                    <Field
+                      label="Cancel orders using pre-paid cards"
+                      name="cancelPrepaidCards"
+                      component={CheckboxField}
+                      helpText="Requires a checkout charge on trial plan"
                     />
                     {APPROVED_FOR_AUTHORIZE.includes(data?.shop?.shopifyDomain) &&
                       <Field

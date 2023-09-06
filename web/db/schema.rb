@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_21_204830) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_30_164826) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -196,6 +196,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_21_204830) do
     t.string "currency_code", default: "USD", null: false
     t.boolean "void_authorizations", default: false
     t.boolean "authorize_transactions", default: false
+    t.boolean "cancel_prepaid_cards", default: true
     t.index ["plan_id"], name: "index_shops_on_plan_id"
     t.index ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
   end

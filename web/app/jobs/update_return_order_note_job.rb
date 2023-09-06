@@ -5,7 +5,7 @@ class UpdateReturnOrderNoteJob < ActiveJob::Base
     shop = Shop.find(shop_id)
 
     if shop.nil?
-      logger.error("#{self.class} failed: cannot find shop with domain '#{shop_domain}'")
+      logger.error("#{self.class} failed: cannot find shop with ID '#{shop_id}'")
       return
     end
 
