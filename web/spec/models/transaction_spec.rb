@@ -13,6 +13,8 @@ RSpec.describe(Transaction, type: :model) do
 
   context "when an authorization transaction is created" do
     it "should cancel the order if the transaction is invalid" do
+      @order.shop.authorize_transactions = true
+      @order.shop.save!
       @order.shop.with_shopify_session do
         invalid_transaction = FactoryBot.create(
           :transaction,
@@ -21,6 +23,7 @@ RSpec.describe(Transaction, type: :model) do
           status: :failure,
           order: @order,
         )
+
         expect(OrderCancelJob).to(have_been_enqueued.with(invalid_transaction.order.id))
       end
     end
@@ -53,14 +56,21 @@ RSpec.describe(Transaction, type: :model) do
         end.not_to(have_enqueued_job(OrderCancelJob))
       end
     end
+  end
 
-    # it "should void the transaction if the shop has void_authorizations set to true" do
-    #   @shop.update(void_authorizations: true)
-    #   @shop.with_shopify_session do
-    #     FactoryBot.create(:transaction, kind: "authorization", order: @order)
-    #   end
+  context "when a prepaid card is used" do
+    it "should cancel if pre-paid cards are not allowed" do
+      @order.shop.cancel_prepaid_cards = true
+      @order.shop.save!
+      transaction = FactoryBot.create(:transaction, :with_prepaid_card, order: @order)
+      expect(OrderCancelJob).to(have_been_enqueued.with(transaction.order.id))
+    end
 
-    #   expect(Transaction.last.kind).to(eq("void"))
-    # end
+    it "should do nothing if pre-paid cards are allowed" do
+      @order.shop.cancel_prepaid_cards = false
+      @order.shop.save!
+      transaction = FactoryBot.create(:transaction, :with_prepaid_card, order: @order)
+      expect(OrderCancelJob).to_not(have_been_enqueued.with(transaction.order.id))
+    end
   end
 end

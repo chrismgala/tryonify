@@ -9,8 +9,17 @@ class Shop < ActiveRecord::Base
   has_many :checkouts, dependent: :destroy
   has_many :metafields, dependent: :destroy
 
+  APPROVED_FOR_PREPAID = [
+    "fd4267.myshopify.com"
+  ].freeze
+
   def api_version
     ShopifyApp.configuration.api_version
+  end
+
+  def cancel_prepaid_cards
+    return self[:cancel_prepaid_cards] if !Rails.env.production? || APPROVED_FOR_PREPAID.include?(shopify_domain)
+    false
   end
 
   def get_metafield(key)

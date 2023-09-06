@@ -146,7 +146,7 @@
 
       // Clear selling plan input if button is clicked
       if (e.currentTarget.nodeName === 'BUTTON') {
-        sellingPlan.value = '';
+        window.setTimeout(() => sellingPlan.value = '', 1000);
       }
     }
   }
