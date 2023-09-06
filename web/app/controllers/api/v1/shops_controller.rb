@@ -14,7 +14,8 @@ module Api
         "camplane.myshopify.com",
         "jordanjack.myshopify.com",
         "hello-lashesnz.myshopify.com",
-        "fd4267.myshopify.com"
+        "fd4267.myshopify.com",
+        "getlumina.myshopify.com"
       ].freeze
 
       def show
