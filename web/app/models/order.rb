@@ -48,6 +48,8 @@ class Order < ApplicationRecord
     },
     using: :trigram
 
+  MAX_AUTHORIZATION_RETRY = 3
+
   def has_selling_plan?
     unless line_items.find { |x| !x.selling_plan_id.nil? }.present?
       errors.add(:base, "Order must have a selling plan")
@@ -82,8 +84,8 @@ class Order < ApplicationRecord
 
   def should_reauthorize?
     return false unless shop.authorize_transactions
-    return false if transactions.failed_authorizations.any?
     return false if ignored?
+    return false if transactions.failed_authorizations.count >= MAX_AUTHORIZATION_RETRY
 
     # If the order is pending
     if pending? && transactions.reauthorization_required.any?
