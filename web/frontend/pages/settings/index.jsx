@@ -44,6 +44,8 @@ const APPROVED_FOR_AUTHORIZE = [
 const APPROVED_FOR_PREPAID = [
   'fd4267.myshopify.com',
   'tryonify-dev.myshopify.com',
+  'camplane.myshopify.com',
+  'hello-lashesnz.myshopify.com',
 ]
 
 export default function Settings() {
