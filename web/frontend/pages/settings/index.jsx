@@ -39,6 +39,7 @@ const APPROVED_FOR_AUTHORIZE = [
   'jordanjack.myshopify.com',
   'hello-lashesnz.myshopify.com',
   'getlumina.myshopify.com',
+  'organic-erotic-oe.myshopify.com',
 ]
 
 const APPROVED_FOR_PREPAID = [

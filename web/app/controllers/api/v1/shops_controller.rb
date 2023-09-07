@@ -15,7 +15,8 @@ module Api
         "jordanjack.myshopify.com",
         "hello-lashesnz.myshopify.com",
         "fd4267.myshopify.com",
-        "getlumina.myshopify.com"
+        "getlumina.myshopify.com",
+        "organic-erotic-oe.myshopify.com"
       ].freeze
 
       def show
