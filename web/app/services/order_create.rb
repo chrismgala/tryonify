@@ -14,16 +14,20 @@ class OrderCreate < ApplicationService
 
     @order = Order.create!(@order_attributes)
 
+    # Fetch order transactions
+    fetch_transactions
     # Add TryOnify tag to order
     tag_order
     # Check for fraud or invalid orders
-    # validate
+    valid?
     # Authorize order
     authorize if @order.shop.authorize_transactions
     # Update integrations
     send_notifications
 
     @order
+  rescue ActiveRecord::RecordInvalid => err
+    Rails.logger.error("[OrderCreate Failed name=#{@order_attributes[:name]}]: #{err.message}")
   rescue => err
     Rails.logger.error("[OrderCreate Failed]: #{err.message}")
     raise err
@@ -35,13 +39,18 @@ class OrderCreate < ApplicationService
     @order_attributes[:line_items_attributes].find { |line_item| !line_item[:selling_plan_id].nil? }
   end
 
+  def fetch_transactions
+    OrderTransactionsUpdate.call(@order)
+  end
+
   def tag_order
     service = UpdateOrderTag.new(@order.shopify_id, @order.tags)
     service.call
   end
 
-  def validate
-    ValidateOrderJob.perform_later(@order.id)
+  def valid?
+    errors = ValidateOrder.call(@order)
+    errors.length.zero?
   end
 
   def authorize

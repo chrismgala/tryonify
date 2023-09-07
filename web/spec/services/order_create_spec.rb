@@ -7,6 +7,7 @@ RSpec.describe(OrderCreate) do
   before do
     stub = Stubs.new
     stub.update_tags
+    stub.fetch_transactions
 
     @shop = FactoryBot.create(:shop)
     selling_plan = FactoryBot.create(:selling_plan_group, shop: @shop).selling_plan

@@ -24,6 +24,7 @@ const initialValues = {
   returnPeriod: 14,
   returnExplainer: '',
   allowAutomaticPayments: true,
+  cancelPrepaidCards: true,
 };
 
 const APPROVED_FOR_AUTHORIZE = [
@@ -36,6 +37,14 @@ const APPROVED_FOR_AUTHORIZE = [
   'smooth-encore.myshopify.com',
   'camplane.myshopify.com',
   'jordanjack.myshopify.com',
+  'hello-lashesnz.myshopify.com',
+  'getlumina.myshopify.com',
+]
+
+const APPROVED_FOR_PREPAID = [
+  'fd4267.myshopify.com',
+  'tryonify-dev.myshopify.com',
+  'camplane.myshopify.com',
   'hello-lashesnz.myshopify.com',
 ]
 
@@ -111,6 +120,14 @@ export default function Settings() {
                       name="allowAutomaticPayments"
                       component={CheckboxField}
                     />
+                    {APPROVED_FOR_PREPAID.includes(data?.shop?.shopifyDomain) &&
+                      <Field
+                        label="Cancel orders using pre-paid cards"
+                        name="cancelPrepaidCards"
+                        component={CheckboxField}
+                        helpText="Requires a checkout charge on trial plan"
+                      />
+                    }
                     {APPROVED_FOR_AUTHORIZE.includes(data?.shop?.shopifyDomain) &&
                       <Field
                         label="Authorize new orders"

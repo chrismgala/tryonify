@@ -34,6 +34,7 @@ class Order < ApplicationRecord
                               .where("due_date < ?", Time.current)
                               .where(transactions: { kind: :sale, status: :failure })
                           }
+  scope :by_email, -> { where("REGEXP_REPLACE(email, '(\\+.*?(?=@))|\\.', '', 'g') = :email", :email => email.gsub('.', '')) }
 
   accepts_nested_attributes_for :line_items, :shipping_address
 

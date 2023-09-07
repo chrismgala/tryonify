@@ -92,6 +92,41 @@ FactoryBot.define do
         )
       end
     end
+
+    trait :with_prepaid_card do
+      shop { association(:shop) }
+
+      after(:create) do |order|
+        create(
+          :transaction,
+          kind: "sale",
+          authorization_expires_at: nil,
+          status: :success,
+          receipt: '{
+            "amount": 100,
+            "amount_capturable": 0,
+            "amount_received": 100,
+            "charges": {
+              "data": [
+                {
+                  "id": "ch_3Nks5QQvX6TsQr9p1N9jZ2R8",
+                  "object": "charge",
+                  "amount": 100,
+                  "payment_method_details": {
+                    "card": {
+                      "funding": "prepaid",
+                    },
+                    "type": "card"
+                  },
+                  "status": "succeeded",
+                }
+              ],
+            },
+          }',
+          order: order,
+        )
+      end
+    end
   end
 
   trait :with_return do
