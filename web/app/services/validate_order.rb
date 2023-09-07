@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-class ValidateOrder
+class ValidateOrder < ApplicationService
   def initialize(order)
+    super()
     @order = order
     @errors = []
   end
@@ -11,17 +12,18 @@ class ValidateOrder
 
     unless @errors.length.zero?
       if @order.shop.slack_token
-        service = SlackMessage.new(@order.shop)
-
+        
         message = "*Invalid Order #{@order.name}*\n\n"
 
         @errors.each do |error|
           message += "- #{error}\n"
         end
 
-        service.send(message)
+        SlackMessageJob.perform_later(@order.shop.id, message)
       end
     end
+
+    @errors
   end
 
   private
@@ -29,15 +31,23 @@ class ValidateOrder
   def validate
     # Customer already has an active trial
     has_same_email?
-    has_same_ip_address?
     has_similar_address?
+    has_same_ip_address?
+
+    # Customer has invalid payment method
+    has_prepaid_card?
+  end
+
+  def has_prepaid_card?
+    @order.transactions.any? { |transaction| transaction.prepaid_card? }
   end
 
   def has_same_email?
     # Pending order exists for same email and shop
-    orders = Order.where(email: @order.email, shop: @order.shop)
-      .where("total_outstanding > 0")
-      .where(fully_paid: false)
+    regex = '(\+.*?(?=@))|\.'
+    orders = Order.where(shop: @order.shop)
+      .where("regexp_replace(email, ?, '', 'g') = ?", regex, @order.email.gsub('.', ''))
+      .pending
       .where.not(id: @order.id)
 
     if orders.length.positive?
@@ -47,8 +57,7 @@ class ValidateOrder
 
   def has_same_ip_address?
     orders = Order.where(shop: @order.shop, ip_address: @order.ip_address)
-      .where("total_outstanding > 0")
-      .where(fully_paid: false)
+      .pending
       .where.not(id: @order.id)
 
     if orders.length.positive?
@@ -59,9 +68,10 @@ class ValidateOrder
   def has_similar_address?
     shipping_address = @order.shipping_address
 
+    return unless shipping_address
+
     orders = Order.where(shop: @order.shop)
-      .where("total_outstanding > 0")
-      .where(fully_paid: false)
+      .pending
       .where.not(id: @order.id)
       .address_search("#{shipping_address.city} #{shipping_address.address1} #{shipping_address.address2} #{shipping_address.zip}")
 
