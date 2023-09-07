@@ -10,7 +10,9 @@ class Shop < ActiveRecord::Base
   has_many :metafields, dependent: :destroy
 
   APPROVED_FOR_PREPAID = [
-    "fd4267.myshopify.com"
+    "fd4267.myshopify.com",
+    "camplane.myshopify.com",
+    "hello-lashesnz.myshopify.com"
   ].freeze
 
   def api_version
