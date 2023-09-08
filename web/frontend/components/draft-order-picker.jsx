@@ -21,9 +21,11 @@ export default function DraftOrderPicker({ onClick, open, onClose }) {
     query: '',
     first: 20,
   });
-  const [queryValue, setQueryValue] = useState('');
   const handleQueryValueChange = useCallback(
-    (value) => setQueryValue(value),
+    (value) => setPagination(prevValue => ({
+      ...prevValue,
+      query: value,
+    })),
     []
   );
   const handleQueryValueRemove = useCallback(() => setQueryValue(''), []);
@@ -63,7 +65,6 @@ export default function DraftOrderPicker({ onClick, open, onClose }) {
   // Reset data on close
   useEffect(() => {
     if (!open) {
-      setQueryValue([]);
       setPagination({
         query: '',
         first: 20
@@ -89,7 +90,7 @@ export default function DraftOrderPicker({ onClick, open, onClose }) {
 
   const filterControl = (
     <Filters
-      queryValue={queryValue}
+      queryValue={pagination?.query}
       filters={[]}
       onQueryChange={handleQueryValueChange}
       onQueryClear={handleQueryValueRemove}
