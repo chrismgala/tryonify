@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_30_164826) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_10_194208) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -23,6 +23,23 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_164826) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["shop_id"], name: "index_checkouts_on_shop_id"
+  end
+
+  create_table "enabled_flags", force: :cascade do |t|
+    t.bigint "shops_id"
+    t.bigint "feature_flags_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feature_flags_id"], name: "index_enabled_flags_on_feature_flags_id"
+    t.index ["shops_id"], name: "index_enabled_flags_on_shops_id"
+  end
+
+  create_table "feature_flags", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "unique_names", unique: true
   end
 
   create_table "line_items", force: :cascade do |t|
@@ -126,10 +143,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_164826) do
     t.bigint "shop_id"
     t.bigint "order_id"
     t.string "shopify_id"
-    t.string "title"
-    t.boolean "active", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "line_item_id"
+    t.integer "status"
+    t.integer "quantity"
+    t.index ["line_item_id"], name: "index_returns_on_line_item_id"
     t.index ["order_id"], name: "index_returns_on_order_id"
     t.index ["shop_id"], name: "index_returns_on_shop_id"
     t.index ["shopify_id"], name: "index_returns_on_shopify_id", unique: true
@@ -220,12 +239,25 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_30_164826) do
     t.index ["parent_transaction_id"], name: "index_transactions_on_parent_transaction_id"
   end
 
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
   add_foreign_key "checkouts", "shops"
   add_foreign_key "line_items", "orders"
   add_foreign_key "orders", "shops", on_delete: :cascade
   add_foreign_key "payments", "orders"
   add_foreign_key "payments", "transactions", column: "parent_transaction_id"
   add_foreign_key "products", "shops", on_delete: :cascade
+  add_foreign_key "returns", "line_items"
   add_foreign_key "returns", "orders", on_delete: :cascade
   add_foreign_key "selling_plan_groups", "shops", on_delete: :cascade
   add_foreign_key "selling_plans", "selling_plan_groups", on_delete: :cascade

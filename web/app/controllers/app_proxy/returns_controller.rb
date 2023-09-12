@@ -24,13 +24,14 @@ class AppProxy::ReturnsController < ApplicationController
 
   def create
     order = Order.find_by(shopify_id: return_params[:order_id])
+    line_item = LineItem.find_by(shopify_id: return_params[:line_item_id])
 
     if order.shop_id == @shop.id
       return_order = Return.new(
-        shopify_id: return_params[:line_item_id],
         title: return_params[:title],
         shop: @shop,
-        order:
+        order:,
+        line_item:
       )
 
       UpdateReturnOrderNoteJob.perform_later(@shop.id, return_order.id) if return_order.save
