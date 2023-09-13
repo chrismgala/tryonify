@@ -1,12 +1,14 @@
-desc 'Fetch orders from Shopify to persist on local DB'
+desc 'Bulk update orders from Shopify'
 task bulk_order_update: :environment do |_task, _args|
-  puts 'Fetching orders...'
+  puts 'Creating bulk operations...'
 
   shops = Shop.all
 
   shops.each do |shop|
-    puts "Fetching orders for #{shop.shopify_domain}"
-    FetchExistingOrdersJob.perform_later(shop.id, nil)
+    puts "Bulk order operation for #{shop.shopify_domain}"
+    shop.with_shopify_session do
+      Shopify::Orders::BulkFetch.call
+    end
   end
 
   puts 'done.'

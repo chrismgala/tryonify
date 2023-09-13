@@ -2,9 +2,9 @@
 
 class Shopify::Orders::BulkFetch < Shopify::Base
   def call
-    response = Shopify::BulkOperation.call(query: build_query)
-    data = response.body.dig('data', 'bulkOperation')
-
+    response = Shopify::BulkOperation.call(build_query)
+    data = response.body.dig('data', 'bulkOperationRunQuery', 'bulkOperation')
+    puts response.inspect
     if data
       bulk_operation = BulkOperation.create(
         shopify_id: data['id'],
@@ -23,58 +23,61 @@ class Shopify::Orders::BulkFetch < Shopify::Base
 
     query = <<~QUERY
       {
-        orders(query: created_at:>=#{created_at}) {
-          ... on Order {
-            id
-            legacyResourceId
-            name
-            createdAt
-            updatedAt
-            closedAt
-            cancelledAt
-            displayFinancialStatus
-            displayFulfillmentStatus
-            clientIp
-            customer {
-              email
-            }
-            note
-            tags
-            fullyPaid
-            totalOutstandingSet {
-              shopMoney {
-                amount
+        orders(query: "created_at:>=#{created_at}") {
+          edges {
+            node {
+              id
+              legacyResourceId
+              name
+              createdAt
+              updatedAt
+              closedAt
+              cancelledAt
+              displayFinancialStatus
+              displayFulfillmentStatus
+              clientIp
+              customer {
+                email
               }
-            }
-            paymentTerms {
-              overdue
-              paymentSchedules {
-                edges {
-                  node {
-                    dueAt
+              note
+              tags
+              fullyPaid
+              totalOutstandingSet {
+                shopMoney {
+                  amount
+                }
+              }
+              paymentTerms {
+                overdue
+                paymentSchedules {
+                  edges {
+                    node {
+                      id
+                      dueAt
+                    }
                   }
                 }
               }
-            }
-            paymentCollectionDetails {
-              vaultedPaymentMethods {
-                id
-              }
-            }
-            lineItems {
-              edges {
-                node {
+              paymentCollectionDetails {
+                vaultedPaymentMethods {
                   id
-                  title
-                  unfulfilledQuantity
-                  quantity
-                  restockable
-                  variantTitle
-                  image {
-                    url
-                  }
-                  sellingPlan {
-                    sellingPlanId
+                }
+              }
+              lineItems {
+                edges {
+                  node {
+                    id
+                    title
+                    unfulfilledQuantity
+                    quantity
+                    restockable
+                    variantTitle
+                    image {
+                      url
+                    }
+                    sellingPlan {
+                      sellingPlanId
+                    }
                   }
                 }
               }

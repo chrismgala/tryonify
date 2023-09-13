@@ -8,12 +8,11 @@ task update_webhooks: :environment do |_task, _args|
 
   shops.each do |shop|
     shop.with_shopify_session do
-      webhook = ShopifyAPI::Webhook.new
-      webhook.topic = "orders/create"
-      webhook.address = "https://tryonify.ngrok.io/api/webhooks/orders_create"
-      webhook.format = "json"
-
-      webhook.save!
+      session = ShopifyAPI::Context.active_session
+      ShopifyApp::WebhooksManager.recreate_webhooks!(session: session)
+      ShopifyApp::WebhooksManager.queue(session.shop, session.access_token)
+    rescue => err
+      puts err.inspect
     end
   end
 

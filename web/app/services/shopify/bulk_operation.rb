@@ -1,7 +1,7 @@
 # Performs a bulk operation on the Shopify API
 # Accepts a GraphQL query string for any Shopify resource
 
-class Shopify::BulkOperation < ApplicationService
+class Shopify::BulkOperation < Shopify::Base
   BULK_OPERATION_QUERY = <<~QUERY
     mutation bulkOperationRunQuery($query: String!) {
       bulkOperationRunQuery(query: $query) {
@@ -22,6 +22,7 @@ class Shopify::BulkOperation < ApplicationService
   QUERY
 
   def initialize(query)
+    super()
     @query = query
   end
 
@@ -35,6 +36,10 @@ class Shopify::BulkOperation < ApplicationService
 
     unless response.body["errors"].nil?
       raise response.body.dig("errors", 0, "message") and return
+    end
+
+    unless response.body.dig("data", "bulkOperationRunQuery", "userErrors").empty?
+      raise response.body.dig("data", "bulkOperationRunQuery", "userErrors", 0, "message") and return
     end
 
     response
