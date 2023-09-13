@@ -8,6 +8,7 @@ class Shop < ActiveRecord::Base
   has_many :selling_plan_groups, dependent: :destroy
   has_many :checkouts, dependent: :destroy
   has_many :metafields, dependent: :destroy
+  has_many :bulk_operations, dependent: :destroy
 
   APPROVED_FOR_PREPAID = [
     "fd4267.myshopify.com",
