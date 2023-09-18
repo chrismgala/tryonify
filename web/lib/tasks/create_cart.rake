@@ -10,7 +10,7 @@ task create_cart: :environment do |_task, _args|
     unless shop.storefront_access_token
       response = StorefrontAccessTokenCreate.call
       access_token = response.body.dig("data", "delegateAccessTokenCreate", "delegateAccessToken", "accessToken")
-      puts response.inspect
+
       if access_token
         shop.storefront_access_token = access_token
         return unless shop.save!
