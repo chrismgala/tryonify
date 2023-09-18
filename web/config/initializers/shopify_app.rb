@@ -9,6 +9,7 @@ ShopifyApp.configure do |config|
     { topic: "orders/updated", path: "api/webhooks/orders_updated" },
     { topic: "orders/edited", path: "api/webhooks/orders_edited" },
     { topic: "shop/update", path: "api/webhooks/shop_update" },
+    { topic: "bulk_operations/finish", path: "api/webhooks/bulk_operations_finish"}
   ]
   config.application_name = "TryOnify"
   config.old_secret = ""
@@ -63,7 +64,7 @@ Rails.application.config.after_initialize do
       user_agent_prefix: "ShopifyApp/#{ShopifyApp::VERSION}"
     )
 
-    add_gdpr_webhooks
+    # add_gdpr_webhooks
     ShopifyApp::WebhooksManager.add_registrations
   end
 end
