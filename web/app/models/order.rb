@@ -36,7 +36,7 @@ class Order < ApplicationRecord
                           }
   scope :by_email, -> { where("REGEXP_REPLACE(email, '(\\+.*?(?=@))|\\.', '', 'g') = :email", :email => email.gsub('.', '')) }
 
-  accepts_nested_attributes_for :line_items, :shipping_address
+  accepts_nested_attributes_for :line_items, :shipping_address, :transactions, allow_destroy: true
 
   attribute :calculated_due_date, :datetime
 
@@ -121,11 +121,6 @@ class Order < ApplicationRecord
 
   def ignored?
     ignored_at.present?
-  end
-
-  def line_items_attributes=(*attrs)
-    self.line_items = []
-    super(*attrs)
   end
 
   class << self
