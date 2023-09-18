@@ -10,12 +10,29 @@ class OrderUpdate < ApplicationService
   end
 
   def call
-    @order = Order.find_by!(shopify_id: order_attributes[:shopify_id]) unless @order
-    Order.transaction do
-      @order_attributes = @order_attributes.except(:email) if @order_attributes[:email].blank?
-      @order.line_items.destroy_all
-      @order.shipping_address&.destroy
-      @order.update!(@order_attributes)
+    @order = Order.find_by!(shopify_id: @order_attributes[:shopify_id]) unless @order
+    @order_attributes = @order_attributes.except(:email) if @order_attributes[:email].blank?
+    
+    update_associated(:line_items)
+    update_associated(:transactions)
+    puts @order.inspect
+    @order.update(@order_attributes)
+  end
+
+  private
+
+  def update_associated(association_name)
+    associated = @order.public_send association_name
+    nested_attribute_name = "#{association_name}_attributes".to_sym
+
+    associated.each do |item|
+      item_attribute = @order_attributes[nested_attribute_name].find {|x| x[:shopify_id] == item.shopify_id }
+
+      if item_attribute
+        item_attribute[:id] = item.id
+      else
+        @order_attributes[nested_attribute_name] << { id: item.id, _destroy: true }
+      end
     end
   end
 end

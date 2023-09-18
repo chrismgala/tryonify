@@ -2,14 +2,14 @@
 
 class Shopify::Orders::BulkFetch < Shopify::Base
   def call
-    response = Shopify::BulkOperation.call(build_query)
+    response = Shopify::BulkOperation::Run.call(build_query)
     data = response.body.dig('data', 'bulkOperationRunQuery', 'bulkOperation')
-    puts response.inspect
+
     if data
       bulk_operation = BulkOperation.create(
         shopify_id: data['id'],
         error_code: data['errorCode'],
-        status: data['status'],
+        status: data['status'].downcase,
         query: data['query'],
         shop: shop,
       )
@@ -19,11 +19,10 @@ class Shopify::Orders::BulkFetch < Shopify::Base
   private
 
   def build_query
-    created_at = 60.days.ago
-
+    period = 30.days.ago
     query = <<~QUERY
       {
-        orders(query: "created_at:>=#{created_at}") {
+        orders(query: "created_at:>=#{period.iso8601} AND status:OPEN") {
           edges {
             node {
               id
@@ -63,6 +62,16 @@ class Shopify::Orders::BulkFetch < Shopify::Base
                   id
                 }
               }
+              shippingAddress {
+                address1
+                address2
+                city
+                country
+                countryCodeV2
+                province
+                provinceCode
+                zip
+              }
               lineItems {
                 edges {
                   node {
@@ -78,6 +87,25 @@ class Shopify::Orders::BulkFetch < Shopify::Base
                     sellingPlan {
                       sellingPlanId
                     }
+                  }
+                }
+              }
+              transactions {
+                id
+                paymentId
+                parentTransaction {
+                  id
+                }
+                createdAt
+                receiptJson
+                kind
+                errorCode
+                authorizationExpiresAt
+                gateway
+                status
+                amountSet {
+                  shopMoney {
+                    amount
                   }
                 }
               }

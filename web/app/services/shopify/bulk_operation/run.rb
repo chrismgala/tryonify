@@ -1,7 +1,7 @@
 # Performs a bulk operation on the Shopify API
 # Accepts a GraphQL query string for any Shopify resource
 
-class Shopify::BulkOperation < Shopify::Base
+class Shopify::BulkOperation::Run < Shopify::Base
   BULK_OPERATION_QUERY = <<~QUERY
     mutation bulkOperationRunQuery($query: String!) {
       bulkOperationRunQuery(query: $query) {

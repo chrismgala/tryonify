@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'dotenv/load'
+
 ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../Gemfile", __dir__)
 ENV["HOST"] = "https://#{ENV["HOST"]}" unless ENV["HOST"]&.match(%r{https?://})
 

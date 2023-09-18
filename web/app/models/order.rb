@@ -36,7 +36,7 @@ class Order < ApplicationRecord
                           }
   scope :by_email, -> { where("REGEXP_REPLACE(email, '(\\+.*?(?=@))|\\.', '', 'g') = :email", :email => email.gsub('.', '')) }
 
-  accepts_nested_attributes_for :line_items, :shipping_address
+  accepts_nested_attributes_for :line_items, :shipping_address, :transactions, allow_destroy: true
 
   attribute :calculated_due_date, :datetime
 
@@ -100,7 +100,7 @@ class Order < ApplicationRecord
   end
 
   def calculated_due_date
-    latest_return = returns.where(active: true).order(created_at: :desc).first
+    latest_return = returns.where(status: "open").order(created_at: :desc).first
 
     # If return due date comes after order due date, use the return due date
     if latest_return
@@ -121,11 +121,6 @@ class Order < ApplicationRecord
 
   def ignored?
     ignored_at.present?
-  end
-
-  def line_items_attributes=(*attrs)
-    self.line_items = []
-    super(*attrs)
   end
 
   class << self
