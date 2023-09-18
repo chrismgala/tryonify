@@ -100,7 +100,7 @@ class Order < ApplicationRecord
   end
 
   def calculated_due_date
-    latest_return = returns.where(status: "open").order(created_at: :desc).first
+    latest_return = returns.where(active: true).order(created_at: :desc).first
 
     # If return due date comes after order due date, use the return due date
     if latest_return

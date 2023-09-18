@@ -10,10 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_10_194208) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_12_222339) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
+
+  create_table "bulk_operations", force: :cascade do |t|
+    t.string "shopify_id"
+    t.datetime "completed_at"
+    t.string "error_code"
+    t.string "url"
+    t.string "status"
+    t.text "query"
+    t.bigint "shop_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shop_id"], name: "index_bulk_operations_on_shop_id"
+    t.index ["shopify_id"], name: "index_bulk_operations_on_shopify_id", unique: true
+  end
 
   create_table "checkouts", force: :cascade do |t|
     t.string "draft_order_id", null: false
@@ -145,10 +159,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_10_194208) do
     t.string "shopify_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "line_item_id"
-    t.integer "status"
-    t.integer "quantity"
-    t.index ["line_item_id"], name: "index_returns_on_line_item_id"
+    t.boolean "active"
+    t.string "title"
     t.index ["order_id"], name: "index_returns_on_order_id"
     t.index ["shop_id"], name: "index_returns_on_shop_id"
     t.index ["shopify_id"], name: "index_returns_on_shopify_id", unique: true
@@ -251,13 +263,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_10_194208) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "bulk_operations", "shops"
   add_foreign_key "checkouts", "shops"
   add_foreign_key "line_items", "orders"
   add_foreign_key "orders", "shops", on_delete: :cascade
   add_foreign_key "payments", "orders"
   add_foreign_key "payments", "transactions", column: "parent_transaction_id"
   add_foreign_key "products", "shops", on_delete: :cascade
-  add_foreign_key "returns", "line_items"
   add_foreign_key "returns", "orders", on_delete: :cascade
   add_foreign_key "selling_plan_groups", "shops", on_delete: :cascade
   add_foreign_key "selling_plans", "selling_plan_groups", on_delete: :cascade
