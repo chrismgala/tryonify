@@ -28,7 +28,7 @@ class UpdateFromBulkOperation < ApplicationService
   def process_line(line)
     json = JSON.parse(line)
     model = json['id'].split('/')[-2]
-
+  
     case model
     when "Order"
       finalize_order if @current_order && @has_selling_plan
@@ -41,6 +41,10 @@ class UpdateFromBulkOperation < ApplicationService
       get_due_date(json)
     when "OrderTransaction"
       build_transaction(json)
+    when "Return"
+      build_return(json)
+    when "ReturnLineItem"
+      build_return_line_item(json)
     end
   end
 
@@ -62,6 +66,7 @@ class UpdateFromBulkOperation < ApplicationService
       ip_address: order_line['clientIp'],
       tags: order_line['tags'],
       line_items_attributes: [],
+      returns_attributes: [],
       transactions_attributes: order_line['transactions'].map {|transaction| build_transaction(transaction) }
     }
   end
@@ -95,6 +100,24 @@ class UpdateFromBulkOperation < ApplicationService
       authorization_expires_at: get_authorization_expiration_date(transaction),
       voided: transaction['kind'].downcase == 'authorization' && parent_transaction.present?
     }
+  end
+
+  def build_return(return_item)
+    return if return_item['status'] == 'CANCELED'
+    @current_order[:returns_attributes] << {
+      shopify_id: return_item['id'],
+      status: return_item['status'].downcase,
+    }
+  end
+
+  def build_return_line_item(return_line_item)
+    return_item = @current_order[:returns_attributes].find {|x| x[:shopify_id] == return_line_item['__parentId']}
+    line_item = LineItem.find_by(shopify_id: return_line_item.dig('fulfillmentLineItem', 'lineItem', 'id'))
+
+    if return_item
+      return_item[:quantity] = return_line_item['quantity']
+      return_item[:line_item_id] = line_item.id if line_item
+    end
   end
 
   def build_shipping_address(shipping_address)

@@ -12,9 +12,10 @@ class OrderUpdate < ApplicationService
   def call
     @order = Order.find_by!(shopify_id: @order_attributes[:shopify_id]) unless @order
     @order_attributes = @order_attributes.except(:email) if @order_attributes[:email].blank?
-
+    
     update_associated(:line_items)
     update_associated(:transactions)
+    update_associated(:returns)
 
     @order.update(@order_attributes)
   end

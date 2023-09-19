@@ -90,6 +90,27 @@ class Shopify::Orders::BulkFetch < Shopify::Base
                   }
                 }
               }
+              returns {
+                edges {
+                  node {
+                    id
+                    status
+                    returnLineItems {
+                      edges {
+                        node {
+                          id
+                          quantity
+                          fulfillmentLineItem {
+                            lineItem {
+                              id
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
               transactions {
                 id
                 paymentId
