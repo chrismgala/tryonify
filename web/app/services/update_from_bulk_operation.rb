@@ -93,6 +93,7 @@ class UpdateFromBulkOperation < ApplicationService
       payment_id: transaction['paymentId'],
       receipt: transaction['receiptJson'],
       kind: transaction['kind'].downcase,
+      error: transaction['errorCode'],
       amount: transaction.dig('amountSet', 'shopMoney', 'amount'),
       status: transaction['status'].downcase,
       gateway: transaction['gateway'],

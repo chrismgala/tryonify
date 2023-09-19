@@ -79,7 +79,7 @@ class Order < ApplicationRecord
   end
 
   def unfulfilled?
-    fulfillment_status == "UNFULFILLED"
+    (fulfillment_status == "UNFULFILLED") || (fulfillment_status.nil?)
   end
 
   def should_reauthorize?

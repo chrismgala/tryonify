@@ -32,6 +32,7 @@ class OrdersUpdatedJob < ApplicationJob
           fulfillment_status: webhook.dig("fulfillment_status")&.upcase,
           fully_paid: webhook.dig("financial_status")&.upcase == "PAID" ? true : false,
           total_outstanding: webhook.dig("total_outstanding"),
+          tags: webhook.dig("tags").split(",")
         })
 
         service = ProcessReturnFromWebhook.new(webhook)
