@@ -33,7 +33,7 @@ class FetchPaymentStatus
     }
 
     response = @client.query(query:, variables:)
-
+    puts response.inspect
     unless response.body["errors"].nil?
       raise FetchPaymentStatus::InvalidRequest,
         response.body.dig("errors", 0, "message") and return
@@ -41,6 +41,8 @@ class FetchPaymentStatus
 
     @status = response.body.dig("data", "orderPaymentStatus", "status")&.upcase
     @error = response.body.dig("data", "orderPaymentStatus", "errorMessage")
+
+    raise FetchPaymentStatus::InvalidRequest, "No payment status found" and return unless @status
 
     @payment.update!(status: @status, error: @error)
 
