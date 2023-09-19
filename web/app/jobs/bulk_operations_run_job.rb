@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class BulkOperationsRunJob < ApplicationJob
+  discard_on ShopifyAPI::Errors::HttpResponseError
+
   def perform(shop)
     if shop.nil?
       logger.error("#{self.class} failed: cannot find shop with domain '#{shop_domain}'")
