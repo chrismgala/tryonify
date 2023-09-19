@@ -6,9 +6,7 @@ task bulk_order_update: :environment do |_task, _args|
 
   shops.each do |shop|
     puts "Bulk order operation for #{shop.shopify_domain}"
-    shop.with_shopify_session do
-      Shopify::Orders::BulkFetch.call
-    end
+    BulkOperationsRunJob.perform_later(shop)
   end
 
   puts 'done.'
