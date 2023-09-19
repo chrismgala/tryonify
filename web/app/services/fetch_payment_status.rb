@@ -42,6 +42,8 @@ class FetchPaymentStatus
     @status = response.body.dig("data", "orderPaymentStatus", "status")&.upcase
     @error = response.body.dig("data", "orderPaymentStatus", "errorMessage")
 
+    raise FetchPaymentStatus::InvalidRequest, "No payment status found" and return unless @status
+
     @payment.update!(status: @status, error: @error)
 
     if RETRY_STATUS.include?(@status)
