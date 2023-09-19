@@ -33,7 +33,7 @@ class FetchPaymentStatus
     }
 
     response = @client.query(query:, variables:)
-    puts response.inspect
+
     unless response.body["errors"].nil?
       raise FetchPaymentStatus::InvalidRequest,
         response.body.dig("errors", 0, "message") and return
