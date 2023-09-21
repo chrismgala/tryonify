@@ -40,6 +40,7 @@ const APPROVED_FOR_AUTHORIZE = [
   'hello-lashesnz.myshopify.com',
   'getlumina.myshopify.com',
   'organic-erotic-oe.myshopify.com',
+  'theluxelend.myshopify.com',
 ]
 
 const APPROVED_FOR_PREPAID = [
@@ -47,6 +48,7 @@ const APPROVED_FOR_PREPAID = [
   'tryonify-dev.myshopify.com',
   'camplane.myshopify.com',
   'hello-lashesnz.myshopify.com',
+  'theluxelend.myshopify.com',
 ]
 
 export default function Settings() {
