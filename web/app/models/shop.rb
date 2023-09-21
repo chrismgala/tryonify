@@ -13,7 +13,8 @@ class Shop < ActiveRecord::Base
   APPROVED_FOR_PREPAID = [
     "fd4267.myshopify.com",
     "camplane.myshopify.com",
-    "hello-lashesnz.myshopify.com"
+    "hello-lashesnz.myshopify.com",
+    "theluxelend.myshopify.com"
   ].freeze
 
   def api_version
