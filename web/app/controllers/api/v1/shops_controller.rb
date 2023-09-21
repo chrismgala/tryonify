@@ -16,7 +16,8 @@ module Api
         "hello-lashesnz.myshopify.com",
         "fd4267.myshopify.com",
         "getlumina.myshopify.com",
-        "organic-erotic-oe.myshopify.com"
+        "organic-erotic-oe.myshopify.com",
+        "theluxelend.myshopify.com"
       ].freeze
 
       def show
