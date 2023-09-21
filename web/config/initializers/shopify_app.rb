@@ -10,6 +10,7 @@ ShopifyApp.configure do |config|
     { topic: "orders/edited", path: "api/webhooks/orders_edited" },
     { topic: "returns/request", path: "api/webhooks/returns_request" },
     { topic: "returns/approve", path: "api/webhooks/returns_approve" },
+    { topic: "returns/reopen", path: "api/webhooks/returns_reopen" },
     { topic: "returns/decline", path: "api/webhooks/returns_decline" },
     { topic: "returns/cancel", path: "api/webhooks/returns_cancel" },
     { topic: "shop/update", path: "api/webhooks/shop_update" },
