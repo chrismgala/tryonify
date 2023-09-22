@@ -16,8 +16,8 @@ class OrderUpdate < ApplicationService
     update_associated(:line_items)
     update_associated(:transactions)
     update_associated(:returns)
-
-    @order.update(@order_attributes)
+    puts @order_attributes.inspect if @order_attributes[:name] == "#1130"
+    @order.update!(@order_attributes)
   end
 
   private

@@ -28,6 +28,7 @@ class OrderBuild < ApplicationService
       shopify_created_at: @data.dig("createdAt"),
       shopify_updated_at: @data.dig("updatedAt"),
       mandate_id: @data.dig("paymentCollectionDetails", "vaultedPaymentMethods", 0, "id"),
+      payment_terms_id: @data.dig("paymentTerms", "id"),
       fulfillment_status: @data.dig("displayFulfillmentStatus"),
       closed_at: @data.dig("closedAt"),
       cancelled_at: @data.dig("cancelledAt"),

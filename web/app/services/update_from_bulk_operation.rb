@@ -56,6 +56,7 @@ class UpdateFromBulkOperation < ApplicationService
       financial_status: order_line['displayFinancialStatus'],
       email: order_line.dig('customer', 'email'),
       mandate_id: order_line.dig('paymentCollectionDetails', 'vaultedPaymentMethods', 0, 'id'),
+      payment_terms_id: order_line.dig('paymentTerms', 'id'),
       shopify_created_at: order_line['createdAt'],
       shopify_updated_at: order_line['updatedAt'],
       fulfillment_status: order_line['displayFulfillmentStatus'],
@@ -106,6 +107,7 @@ class UpdateFromBulkOperation < ApplicationService
   def build_return(return_item)
     return if return_item['status'] == 'CANCELED'
     @current_order[:returns_attributes] << {
+      shop_id: @bulk_operation.shop.id,
       shopify_id: return_item['id'],
       status: return_item['status'].downcase,
     }

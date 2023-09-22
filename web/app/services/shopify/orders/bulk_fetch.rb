@@ -47,6 +47,7 @@ class Shopify::Orders::BulkFetch < Shopify::Base
                 }
               }
               paymentTerms {
+                id
                 overdue
                 paymentSchedules {
                   edges {

@@ -14,11 +14,11 @@ import { useAppQuery } from '../hooks';
 import PaymentStatus from './payment-status';
 
 const getPaymentDueStatus = order => {
-  const { totalOutstanding, calculatedDueDate, fullyPaid } = order;
+  const { totalOutstanding, dueDate, fullyPaid } = order;
 
   if (totalOutstanding <= 0 || fullyPaid) return null;
 
-  const dt = DateTime.fromISO(calculatedDueDate);
+  const dt = DateTime.fromISO(dueDate);
 
   if (dt.toISODate() === DateTime.utc().toISODate()) {
     return 'DUE_TODAY';
@@ -63,7 +63,7 @@ export default function OrderList({ status, query }) {
         name,
         shopifyCreatedAt,
         financialStatus,
-        calculatedDueDate,
+        dueDate,
         cancelledAt,
         returns,
       } = order;
@@ -88,8 +88,8 @@ export default function OrderList({ status, query }) {
             {new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(shopifyCreatedAt))}
           </IndexTable.Cell>
           <IndexTable.Cell>
-            {(calculatedDueDate && !cancelledAt) ? (
-              new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(calculatedDueDate))
+            {(dueDate && !cancelledAt) ? (
+              new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(dueDate))
             ) : (
               <span>--</span>
             )}

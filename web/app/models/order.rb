@@ -38,8 +38,6 @@ class Order < ApplicationRecord
 
   accepts_nested_attributes_for :line_items, :shipping_address, :transactions, :returns, allow_destroy: true
 
-  attribute :calculated_due_date, :datetime
-
   pg_search_scope :search_by_name, against: :name, using: { tsearch: { prefix: true } }
 
   pg_search_scope :address_search,
@@ -57,7 +55,7 @@ class Order < ApplicationRecord
   end
 
   def pending?
-    return false if calculated_due_date.before?(DateTime.current)
+    return false if due_date.before?(DateTime.current)
     return false if cancelled_at
     return false if fully_paid
 
@@ -104,11 +102,15 @@ class Order < ApplicationRecord
 
     # If return due date comes after order due date, use the return due date
     if latest_return
-      return_due_date = latest_return.created_at + shop.return_period if latest_return
+      return_due_date = latest_return.created_at + shop.return_period.days if latest_return
       return return_due_date if return_due_date&.after?(due_date)
     end
 
     due_date
+  end
+
+  def update_due_date
+    OrderUpdateDueDateJob.perform_later(order: self, due_date: calculated_due_date) if pending? && calculated_due_date&.after?(due_date)
   end
 
   def cancel

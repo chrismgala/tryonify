@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_12_222339) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_21_171057) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -107,6 +107,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_12_222339) do
     t.string "ip_address"
     t.string "tags", array: true
     t.datetime "ignored_at"
+    t.string "payment_terms_id"
     t.index ["shop_id"], name: "index_orders_on_shop_id"
     t.index ["shopify_id"], name: "index_orders_on_shopify_id", unique: true
   end
