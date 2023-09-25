@@ -9,11 +9,11 @@ class Order < ApplicationRecord
   validate :has_selling_plan?, on: :create
 
   belongs_to :shop
-  has_many :line_items
-  has_many :returns
-  has_many :transactions
-  has_many :payments
-  has_one :shipping_address
+  has_many :line_items, dependent: :destroy
+  has_many :returns, dependent: :destroy
+  has_many :transactions, dependent: :destroy
+  has_many :payments, dependent: :destroy
+  has_one :shipping_address, dependent: :destroy
 
   scope :active, -> { where(ignored_at: nil) }
   scope :payment_due, lambda {

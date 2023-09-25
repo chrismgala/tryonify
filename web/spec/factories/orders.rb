@@ -131,7 +131,8 @@ FactoryBot.define do
 
   trait :with_return do
     after(:create) do |order|
-      create(:return, order_id: order.id, shop_id: order.shop.id)
+      line_item = order.line_items.first
+      create(:return, order_id: order.id, shop_id: order.shop.id, line_item_id: line_item.id)
     end
   end
 end

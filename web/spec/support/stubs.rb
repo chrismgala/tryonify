@@ -45,7 +45,24 @@ class Stubs
             address1: "",
           },
           lineItems: {
-            edges: [],
+            edges: order.line_items.map do |line_item|
+                {
+                  node: {
+                    id: line_item.shopify_id,
+                    image: {
+                      url: line_item.image_url
+                    },
+                    quantity: line_item.quantity,
+                    restockable: line_item.restockable,
+                    unfulfilledQuantity: line_item.unfulfilled_quantity,
+                    title: line_item.title,
+                    variantTitle: line_item.variant_title,
+                    sellingPlan: {
+                      sellingPlanId: line_item.selling_plan.shopify_id
+                    }
+                  }
+                }
+            end,
           },
         },
       },

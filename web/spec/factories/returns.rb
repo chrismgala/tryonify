@@ -3,6 +3,9 @@
 FactoryBot.define do
   factory :return do
     shopify_id { Faker::Number.number(digits: 10) }
-    active { true }
+    status { :open }
+    quantity { 1 }
+    line_item
+    order
   end
 end

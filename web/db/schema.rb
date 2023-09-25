@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_21_171057) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_22_174315) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -273,7 +273,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_21_171057) do
   add_foreign_key "payments", "orders"
   add_foreign_key "payments", "transactions", column: "parent_transaction_id"
   add_foreign_key "products", "shops", on_delete: :cascade
-  add_foreign_key "returns", "line_items"
+  add_foreign_key "returns", "line_items", on_delete: :cascade
   add_foreign_key "returns", "orders", on_delete: :cascade
   add_foreign_key "selling_plan_groups", "shops", on_delete: :cascade
   add_foreign_key "selling_plans", "selling_plan_groups", on_delete: :cascade
