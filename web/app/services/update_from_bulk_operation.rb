@@ -83,7 +83,6 @@ class UpdateFromBulkOperation < ApplicationService
 
   def build_transaction(transaction)
     parent_transaction = Transaction.find_by(shopify_id: transaction.dig('parentTransaction', 'id'))
-    puts parent_transaction.inspect
     parent_transaction.update!(voided: true) if parent_transaction.present? && parent_transaction.kind == "authorization" && parent_transaction.voided == false
     {
       shopify_id: transaction['id'],
