@@ -83,6 +83,7 @@ class UpdateFromBulkOperation < ApplicationService
 
   def build_transaction(transaction)
     parent_transaction = Transaction.find_by(shopify_id: transaction.dig('parentTransaction', 'id'))
+    parent_transaction.update!(voided: true) if parent_transaction.present? && parent_transaction.kind == "authorization" && parent_transaction.voided == false
     {
       shopify_id: transaction['id'],
       payment_id: transaction['paymentId'],
@@ -93,8 +94,7 @@ class UpdateFromBulkOperation < ApplicationService
       status: transaction['status'].downcase,
       gateway: transaction['gateway'],
       parent_transaction: parent_transaction,
-      authorization_expires_at: get_authorization_expiration_date(transaction),
-      voided: transaction['kind'].downcase == 'authorization' && parent_transaction.present?
+      authorization_expires_at: get_authorization_expiration_date(transaction)
     }
   end
 
