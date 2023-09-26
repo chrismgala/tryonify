@@ -15,6 +15,13 @@ RSpec.describe(ReauthorizeOrders) do
         ReauthorizeOrders.call(order.shop)
         expect(OrderAuthorizeJob).to(have_been_enqueued.with(order.id))
       end
+
+      it "should not reauthorize Shopify Payments if reauthorization is turned off" do
+        order.shop.reauthorize_shopify_payments = false
+        order.shop.save!
+        ReauthorizeOrders.call(order.shop)
+        expect(OrderAuthorizeJob).to_not(have_been_enqueued.with(order.id))
+      end
     end
 
     context "has no authorization that is expiring" do
@@ -55,6 +62,13 @@ RSpec.describe(ReauthorizeOrders) do
       it "should reauthorize the order" do
         ReauthorizeOrders.call(order.shop)
         expect(OrderAuthorizeJob).to(have_been_enqueued.with(order.id))
+      end
+
+      it "should not reauthorize if reauthorization is turned off" do
+        order.shop.reauthorize_paypal = false
+        order.shop.save!
+        ReauthorizeOrders.call(order.shop)
+        expect(OrderAuthorizeJob).to_not(have_been_enqueued.with(order.id))
       end
     end
   end

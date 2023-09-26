@@ -3,23 +3,6 @@
 module Api
   module V1
     class ShopsController < AuthenticatedController
-      APPROVED_FOR_AUTHORIZE = [
-        "tryonify.myshopify.com",
-        "tryonify-dev.myshopify.com",
-        "spongerevolution.myshopify.com",
-        "my-perfect-cosmetics-aus.myshopify.com",
-        "my-perfect-cosmetics.myshopify.com",
-        "ms-hair.myshopify.com",
-        "smooth-encore.myshopify.com",
-        "camplane.myshopify.com",
-        "jordanjack.myshopify.com",
-        "hello-lashesnz.myshopify.com",
-        "fd4267.myshopify.com",
-        "getlumina.myshopify.com",
-        "organic-erotic-oe.myshopify.com",
-        "theluxelend.myshopify.com"
-      ].freeze
-
       def show
         @shop = current_user
       end
@@ -57,27 +40,19 @@ module Api
       private
 
       def shop_params
-        if APPROVED_FOR_AUTHORIZE.include?(current_user.shopify_domain)
-          params.require(:shop).permit(
-            :klaviyo_public_key,
-            :klaviyo_private_key,
-            :onboarded,
-            :return_explainer,
-            :allow_automatic_payments,
-            :return_period,
-            :authorize_transactions,
-            :void_authorizations,
-          )
-        else
-          params.require(:shop).permit(
-            :klaviyo_public_key,
-            :klaviyo_private_key,
-            :onboarded,
-            :return_explainer,
-            :allow_automatic_payments,
-            :return_period,
-          )
-        end
+        params.require(:shop).permit(
+          :klaviyo_public_key,
+          :klaviyo_private_key,
+          :onboarded,
+          :return_explainer,
+          :allow_automatic_payments,
+          :return_period,
+          :authorize_transactions,
+          :void_authorizations,
+          :reauthorize_paypal,
+          :reauthorize_shopify_payments,
+          :cancel_prepaid_cards
+        )
       end
     end
   end
