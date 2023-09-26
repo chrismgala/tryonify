@@ -82,9 +82,7 @@ class UpdateFromBulkOperation < ApplicationService
   end
 
   def build_transaction(transaction)
-    parent_transaction = Transaction.find_by(shopify_id: transaction.dig('parentTransaction', 'id'))
-    parent_transaction.update!(voided: true) if parent_transaction.present? && parent_transaction.kind == "authorization" && parent_transaction.voided == false
-    {
+    transaction_attributes = {
       shopify_id: transaction['id'],
       payment_id: transaction['paymentId'],
       receipt: transaction['receiptJson'],
@@ -93,9 +91,16 @@ class UpdateFromBulkOperation < ApplicationService
       amount: transaction.dig('amountSet', 'shopMoney', 'amount'),
       status: transaction['status'].downcase,
       gateway: transaction['gateway'],
-      parent_transaction: parent_transaction,
       authorization_expires_at: get_authorization_expiration_date(transaction)
     }
+
+    parent_transaction = Transaction.find_by(shopify_id: transaction.dig('parentTransaction', 'id'))
+    if parent_transaction
+      parent_transaction.update!(voided: true) if parent_transaction.kind == "authorization" && parent_transaction.voided == false
+      transaction_attributes[:parent_transaction] = parent_transaction
+    end
+    
+    transaction_attributes
   end
 
   def build_shipping_address(shipping_address)
