@@ -85,6 +85,11 @@ class Order < ApplicationRecord
     return false if ignored?
     return false if transactions.failed_authorizations.count >= MAX_AUTHORIZATION_RETRY
 
+    gateway = transactions&.first&.gateway
+
+    return false if shop.reauthorize_paypal == false && gateway == "paypal"
+    return false if shop.reauthorize_shopify_payments == false && gateway == "shopify_payments"
+
     # If the order is pending
     if pending? && transactions.reauthorization_required.any?
       true

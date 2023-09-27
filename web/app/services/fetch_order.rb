@@ -64,6 +64,27 @@ class FetchOrder < ApplicationService
               endCursor
             }
           }
+          returns(first: 10) {
+            edges {
+              node {
+                id
+                status
+                returnLineItems(first: 10) {
+                  edges {
+                    node {
+                      id
+                      quantity
+                      fulfillmentLineItem {
+                        lineItem {
+                          id
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
           totalPriceSet {
             shopMoney {
               amount

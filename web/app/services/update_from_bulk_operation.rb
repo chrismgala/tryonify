@@ -88,9 +88,7 @@ class UpdateFromBulkOperation < ApplicationService
   end
 
   def build_transaction(transaction)
-    parent_transaction = Transaction.find_by(shopify_id: transaction.dig('parentTransaction', 'id'))
-    parent_transaction.update!(voided: true) if parent_transaction.present? && parent_transaction.kind == "authorization" && parent_transaction.voided == false
-    {
+    transaction_attributes = {
       shopify_id: transaction['id'],
       payment_id: transaction['paymentId'],
       receipt: transaction['receiptJson'],
@@ -99,9 +97,16 @@ class UpdateFromBulkOperation < ApplicationService
       amount: transaction.dig('amountSet', 'shopMoney', 'amount'),
       status: transaction['status'].downcase,
       gateway: transaction['gateway'],
-      parent_transaction: parent_transaction,
       authorization_expires_at: get_authorization_expiration_date(transaction)
     }
+
+    parent_transaction = Transaction.find_by(shopify_id: transaction.dig('parentTransaction', 'id'))
+    if parent_transaction
+      parent_transaction.update!(voided: true) if parent_transaction.kind == "authorization" && parent_transaction.voided == false
+      transaction_attributes[:parent_transaction] = parent_transaction
+    end
+    
+    transaction_attributes
   end
 
   def build_return(return_item)
@@ -110,6 +115,7 @@ class UpdateFromBulkOperation < ApplicationService
       shop_id: @bulk_operation.shop.id,
       shopify_id: return_item['id'],
       status: return_item['status'].downcase,
+      return_line_items_attributes: []
     }
   end
 
@@ -118,8 +124,12 @@ class UpdateFromBulkOperation < ApplicationService
     line_item = LineItem.find_by(shopify_id: return_line_item.dig('fulfillmentLineItem', 'lineItem', 'id'))
 
     if return_item
-      return_item[:quantity] = return_line_item['quantity']
-      return_item[:line_item_id] = line_item.id if line_item
+      return_line_item = {
+        shopify_id: return_line_item['id'],
+        quantity: return_line_item['quantity'],
+        line_item: line_item
+      }
+      return_item[:return_line_items_attributes] << return_line_item
     end
   end
 

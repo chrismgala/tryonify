@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import {
+  Badge,
   Button,
   Card,
   Form,
@@ -25,31 +26,9 @@ const initialValues = {
   returnExplainer: '',
   allowAutomaticPayments: true,
   cancelPrepaidCards: true,
+  reauthorizePaypal: true,
+  reauthorizeShopifyPayments: true,
 };
-
-const APPROVED_FOR_AUTHORIZE = [
-  'tryonify.myshopify.com',
-  'tryonify-dev.myshopify.com',
-  'spongerevolution.myshopify.com',
-  'my-perfect-cosmetics-aus.myshopify.com',
-  'my-perfect-cosmetics.myshopify.com',
-  'ms-hair.myshopify.com',
-  'smooth-encore.myshopify.com',
-  'camplane.myshopify.com',
-  'jordanjack.myshopify.com',
-  'hello-lashesnz.myshopify.com',
-  'getlumina.myshopify.com',
-  'organic-erotic-oe.myshopify.com',
-  'theluxelend.myshopify.com',
-]
-
-const APPROVED_FOR_PREPAID = [
-  'fd4267.myshopify.com',
-  'tryonify-dev.myshopify.com',
-  'camplane.myshopify.com',
-  'hello-lashesnz.myshopify.com',
-  'theluxelend.myshopify.com',
-]
 
 export default function Settings() {
   const toast = useToast();
@@ -119,31 +98,6 @@ export default function Settings() {
                 <Card sectioned>
                   <FormLayout>
                     <Field
-                      label="Allow automatic payments"
-                      name="allowAutomaticPayments"
-                      component={CheckboxField}
-                    />
-                    {APPROVED_FOR_PREPAID.includes(data?.shop?.shopifyDomain) &&
-                      <Field
-                        label="Cancel orders using pre-paid cards"
-                        name="cancelPrepaidCards"
-                        component={CheckboxField}
-                        helpText="Requires a checkout charge on trial plan"
-                      />
-                    }
-                    {APPROVED_FOR_AUTHORIZE.includes(data?.shop?.shopifyDomain) &&
-                      <Field
-                        label="Authorize new orders"
-                        name="authorizeTransactions"
-                        component={CheckboxField}
-                      />
-                    }
-                    {/* <Field
-                      label="Void authorizations immediately"
-                      name="voidAuthorizations"
-                      component={CheckboxField}
-                    /> */}
-                    <Field
                       label="Max trial items per order"
                       name="maxTrialItems"
                       autoComplete="off"
@@ -172,6 +126,47 @@ export default function Settings() {
                       )}
                     </FieldArray>
                   </FormLayout>
+                </Card>
+              </Layout.AnnotatedSection>
+              <Layout.AnnotatedSection
+                title="Payments"
+                description="How your program handles payments from the customer."
+              >
+                <Card>
+                  <Card.Section>
+                    <FormLayout>
+                      <Field
+                        label="Allow automatic payments"
+                        name="allowAutomaticPayments"
+                        component={CheckboxField}
+                      />
+                      <Field
+                        label={<span>Authorize new orders <Badge>Beta</Badge></span>}
+                        name="authorizeTransactions"
+                        component={CheckboxField}
+                      />
+                      <Field
+                        label={<span>Cancel orders using pre-paid cards <Badge>Beta</Badge></span>}
+                        name="cancelPrepaidCards"
+                        component={CheckboxField}
+                        helpText="Requires a checkout charge on trial plan or payment authorization"
+                      />
+                    </FormLayout>
+                  </Card.Section>
+                  <Card.Section title="Shopify Payments">
+                    <Field
+                      label="Re-authorize transactions"
+                      name="reauthorizeShopifyPayments"
+                      component={CheckboxField}
+                    />
+                  </Card.Section>
+                  <Card.Section title="PayPal Payments">
+                    <Field
+                      label="Re-authorize transactions"
+                      name="reauthorizePaypal"
+                      component={CheckboxField}
+                    />
+                  </Card.Section>
                 </Card>
               </Layout.AnnotatedSection>
               <Layout.AnnotatedSection

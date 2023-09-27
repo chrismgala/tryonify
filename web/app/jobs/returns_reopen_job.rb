@@ -21,23 +21,12 @@ class ReturnsReopenJob < ActiveJob::Base
       return
     end
 
-    line_items = webhook['return_line_items'].each do |return_line_item|
-      line_item = LineItem.find_by(shopify_id: return_line_item.dig('fulfillment_line_item', 'line_item', 'admin_graphql_api_id'))
-      next unless line_item&.selling_plan_id&.present?
-      persisted_return = Return.find_by(shopify_id: webhook['admin_graphql_api_id'])
-      if persisted_return
-        persisted_return.status = webhook['status']
-        persisted_return.save!
-      else
-        Return.create!(
-          shopify_id: webhook['admin_graphql_api_id'],
-          status: webhook['status'],
-          quantity: return_line_item.dig('quantity'),
-          shop:,
-          order:,
-          line_item:
-        )
-      end
+    persisted_return = Return.find_by(shopify_id: webhook['admin_graphql_api_id'])
+    if persisted_return
+      persisted_return.status = webhook['status']
+      persisted_return.save!
+    else
+      Shopify::Returns::SaveFromWebhook.call(webhook)
     end
   end
 end

@@ -15,7 +15,6 @@ class Transaction < ApplicationRecord
   scope :failed_authorizations, -> { where(kind: :authorization).where(status: :failure) }
   scope :reauthorization_required, -> {
                                      successful_authorizations
-                                       .where(parent_transaction_id: nil)
                                        .where("authorization_expires_at < ?", 2.hours.from_now)
                                    }
   INVALID_TRANSACTION_ERRORS = ["CARD_DECLINED", "EXPIRED_CARD", "INVALID_AMOUNT", "PICK_UP_CARD"].freeze

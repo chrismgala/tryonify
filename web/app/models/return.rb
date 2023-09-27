@@ -4,19 +4,10 @@ class Return < ApplicationRecord
   validates :shopify_id, presence: true, uniqueness: true
 
   belongs_to :shop
-  belongs_to :order, counter_cache: true
-  belongs_to :line_item
+  belongs_to :order, dependent: :destroy, counter_cache: true
+  has_many :return_line_items, dependent: :destroy
 
   enum :status, [:canceled, :closed, :declined, :open, :requested]
 
-  after_create_commit :update_order, if: :first_return?
-
-  # Only recalculate on the first return
-  def first_return?
-    Return.where(order_id: order_id).count == 1
-  end
-
-  def update_order
-    order.update_due_date
-  end
+  accepts_nested_attributes_for :return_line_items
 end

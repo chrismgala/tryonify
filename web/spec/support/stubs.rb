@@ -64,6 +64,31 @@ class Stubs
                 }
             end,
           },
+          returns: {
+            edges: order.returns.map do |return_item|
+              {
+                node: {
+                  id: return_item.shopify_id,
+                  status: return_item.status,
+                  returnLineItems: {
+                    edges: return_item.return_line_items.map do |return_line_item|
+                      {
+                        node: {
+                          id: return_line_item.shopify_id,
+                          quantity: return_line_item.quantity,
+                          fulfillmentLineItem: {
+                            lineItem: {
+                              id: return_line_item.line_item.shopify_id
+                            }
+                          }
+                        }
+                      }
+                    end
+                  }
+                }
+              }
+            end
+          }
         },
       },
     }

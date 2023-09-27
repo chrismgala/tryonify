@@ -1,0 +1,26 @@
+# frozen_string_literal: true
+
+class Shopify::Returns::SaveFromWebhook < ApplicationService
+  def initialize(webhook)
+    super()
+    @webhook = webhook
+  end
+
+  def call
+    Return.create!(
+      shopify_id: @webhook['admin_graphql_api_id'],
+      status: 'closed',
+      shopify_created_at: @webhook['created_at'],
+      shop:,
+      order:,
+      return_line_items_attributes: @webhook['return_line_items'].map do |return_line_item|
+        line_item = LineItem.find_by(shopify_id: return_line_item.dig('fulfillment_line_item', 'line_item', 'admin_graphql_api_id'))
+        {
+          shopify_id: return_line_item['admin_graphql_api_id'],
+          quantity: return_line_item['quantity'],
+          line_item: line_item
+        }
+      end
+    )
+  end
+end
