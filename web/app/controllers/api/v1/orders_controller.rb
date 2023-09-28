@@ -33,7 +33,7 @@ module Api
       end
 
       def show
-        order = Order.find(params[:id])
+        order = Order.includes(:returns, :line_items).find(params[:id])
 
         if order.line_items.length.zero?
           graphql_order = FetchOrder.call(id: order.shopify_id)
@@ -44,7 +44,7 @@ module Api
 
         # Check whether the user can view this order
         render_errors(:unauthorized) unless current_user.id == order.shop_id
-        render(json: { order:, returns: order.returns }, include: [:line_items])
+        render(json: order, include: [:returns, :line_items])
       end
 
       private
