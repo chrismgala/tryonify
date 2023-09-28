@@ -36,15 +36,15 @@ export default function EditSellingPlan() {
     plural: 'products'
   }
 
-  const rowMarkup = data?.order?.lineItems.map(lineItem => {
-    const { id, title, variantTitle, imageUrl, quantity } = lineItem;
+  const rowMarkup = data?.lineItems.map(lineItem => {
+    const { id, shopifyId, title, variantTitle, imageUrl, quantity } = lineItem;
     let status = { level: 'warning', label: 'Pending' };
 
-    if (data?.order?.financialStatus === 'PAID') {
+    if (data?.financialStatus === 'PAID') {
       status = { level: 'success', label: 'Paid' };
     }
 
-    const returnItem = data?.returns?.find(returnItem => returnItem.shopifyId === id);
+    const returnItem = data?.returns?.find(returnItem => returnItem.shopifyId === shopifyId);
 
     if (returnItem) {
       if (returnItem.active) {
@@ -79,12 +79,12 @@ export default function EditSellingPlan() {
   return (
     <Page
       breadcrumbs={[{ content: 'Back to overview', onAction: () => navigate('/') }]}
-      title={data?.order?.name}
+      title={data?.name}
       primaryAction={{
         content: 'View Order',
         onAction: () => navigate({
           name: 'Order',
-          resource: { id: data?.order?.shopifyId.split('/').pop() }
+          resource: { id: data?.shopifyId.split('/').pop() }
         })
       }}
     >
@@ -92,7 +92,7 @@ export default function EditSellingPlan() {
         <Layout.Section>
           <Card title='Line Items'>
             <IndexTable
-              itemCount={data?.order?.lineItems.length || 0}
+              itemCount={data?.lineItems.length || 0}
               resourceName={resourceName}
               headings={[
                 { title: 'Product' },
@@ -113,7 +113,7 @@ export default function EditSellingPlan() {
               {isLoading ? (
                 <SkeletonBodyText />
               ) : (
-                <span>{data?.order?.cancelledAt ? 'Cancelled' : DateTime.fromISO(data?.order?.calculatedDueDate).toLocaleString()}</span>
+                <span>{data?.cancelledAt ? 'Cancelled' : DateTime.fromISO(data?.calculatedDueDate).toLocaleString()}</span>
               )}
             </Card.Section>
           </Card>

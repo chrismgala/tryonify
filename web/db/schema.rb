@@ -159,10 +159,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_26_153234) do
     t.string "shopify_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "line_item_id"
+    t.integer "line_item_id"
     t.boolean "active"
     t.string "title"
-    t.index ["line_item_id"], name: "index_returns_on_line_item_id"
     t.index ["order_id"], name: "index_returns_on_order_id"
     t.index ["shop_id"], name: "index_returns_on_shop_id"
     t.index ["shopify_id"], name: "index_returns_on_shopify_id", unique: true
@@ -274,7 +273,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_26_153234) do
   add_foreign_key "payments", "orders"
   add_foreign_key "payments", "transactions", column: "parent_transaction_id"
   add_foreign_key "products", "shops", on_delete: :cascade
-  add_foreign_key "returns", "line_items"
   add_foreign_key "returns", "orders", on_delete: :cascade
   add_foreign_key "selling_plan_groups", "shops", on_delete: :cascade
   add_foreign_key "selling_plans", "selling_plan_groups", on_delete: :cascade
