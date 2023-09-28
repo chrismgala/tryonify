@@ -37,14 +37,14 @@ export default function EditSellingPlan() {
   }
 
   const rowMarkup = data?.lineItems.map(lineItem => {
-    const { id, title, variantTitle, imageUrl, quantity } = lineItem;
+    const { id, shopifyId, title, variantTitle, imageUrl, quantity } = lineItem;
     let status = { level: 'warning', label: 'Pending' };
 
     if (data?.financialStatus === 'PAID') {
       status = { level: 'success', label: 'Paid' };
     }
 
-    const returnItem = data?.returns?.find(returnItem => returnItem.shopifyId === id);
+    const returnItem = data?.returns?.find(returnItem => returnItem.shopifyId === shopifyId);
 
     if (returnItem) {
       if (returnItem.active) {
