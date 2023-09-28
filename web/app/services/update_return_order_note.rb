@@ -48,7 +48,7 @@ class UpdateReturnOrderNote
   end
 
   def fetch_order
-    service = FetchOrder.new(id: "gid://shopify/Order/#{@return.order.shopify_id}")
+    service = FetchOrder.new(id: @return.order.shopify_id)
     service.call
 
     service.order

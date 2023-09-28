@@ -5,6 +5,10 @@ class AppProxy::ReturnsController < ApplicationController
 
   before_action :current_shop
 
+  rescue_from ActiveRecord::RecordNotFound do
+    redirect_to("/a/trial/returns/search?err=not_found", allow_other_hosts: true)
+  end
+
   def index
     @shop.with_shopify_session do
       service = SearchOrder.new("(name:#{order_params[:name]}) AND (email:#{order_params[:email]}")
