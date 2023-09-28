@@ -16,7 +16,6 @@ class AppProxy::ReturnsController < ApplicationController
 
       if service.order
         @order = service.order
-        puts @order.inspect
         existing_order = Order.find_by!(shopify_id: @order.dig("id"))
         @returns = existing_order.returns
 
