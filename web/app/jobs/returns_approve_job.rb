@@ -26,7 +26,7 @@ class ReturnsApproveJob < ActiveJob::Base
       persisted_return.status = webhook['status']
       persisted_return.save!
     else
-      Shopify::Returns::SaveFromWebhook.call(webhook)
+      Shopify::Returns::SaveFromWebhook.call(order, webhook)
     end
   end
 end

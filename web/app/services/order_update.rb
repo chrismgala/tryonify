@@ -19,7 +19,7 @@ class OrderUpdate < ApplicationService
 
     @order.returns.each do |return_item|
       associated_attributes = @order_attributes[:returns_attributes].find {|x| x[:shopify_id] == return_item.shopify_id }
-      update_associated(target: return_item, attributes: associated_attributes, association_name: :return_line_items)
+      update_associated(target: return_item, attributes: associated_attributes || {}, association_name: :return_line_items)
     end
 
     @order.update!(@order_attributes)

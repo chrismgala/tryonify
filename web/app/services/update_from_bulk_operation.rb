@@ -5,6 +5,7 @@ class UpdateFromBulkOperation < ApplicationService
     super()
     @bulk_operation = bulk_operation
     @current_order = nil
+    @returns = []
     @has_selling_plan = false
   end
 
@@ -111,7 +112,7 @@ class UpdateFromBulkOperation < ApplicationService
 
   def build_return(return_item)
     return if return_item['status'] == 'CANCELED'
-    @current_order[:returns_attributes] << {
+    @returns << {
       shop_id: @bulk_operation.shop.id,
       shopify_id: return_item['id'],
       status: return_item['status'].downcase,
@@ -120,14 +121,13 @@ class UpdateFromBulkOperation < ApplicationService
   end
 
   def build_return_line_item(return_line_item)
-    return_item = @current_order[:returns_attributes].find {|x| x[:shopify_id] == return_line_item['__parentId']}
-    line_item = LineItem.find_by(shopify_id: return_line_item.dig('fulfillmentLineItem', 'lineItem', 'id'))
+    return_item = @returns.find {|x| x[:shopify_id] == return_line_item['__parentId']}
 
     if return_item
       return_line_item = {
         shopify_id: return_line_item['id'],
         quantity: return_line_item['quantity'],
-        line_item: line_item
+        shopify_line_item_id: return_line_item.dig('fulfillmentLineItem', 'lineItem', 'id'),
       }
       return_item[:return_line_items_attributes] << return_line_item
     end
@@ -163,14 +163,34 @@ class UpdateFromBulkOperation < ApplicationService
   end
 
   def finalize_order
-    order = Order.find_by(shopify_id: @current_order[:shopify_id])
+    order = Order.includes(:line_items, :returns, :transactions).find_by(shopify_id: @current_order[:shopify_id])
 
     if order
+      associate_return_line_items(order)
       OrderUpdate.call(order_attributes: @current_order, order: order)
     else
-      OrderCreate.call(@current_order)
+      # For new orders, we need to create the order and then create returns
+      # so that the returns can be associated with order line items
+      order = OrderCreate.call(@current_order)
+      associate_return_line_items(order)
+      @current_order[:returns_attributes].each do |return_item|
+        Return.create!(return_item.merge(order: order))
+      end
     end
+
     @current_order = nil
+    @returns = []
     @has_selling_plan = false
+  end
+
+  def associate_return_line_items(order)
+    @returns.each do |return_item|
+      return_item[:return_line_items_attributes].each do |return_line_item|
+        line_item = order.line_items.find_by(shopify_id: return_line_item[:shopify_line_item_id])
+        return_line_item[:line_item_id] = line_item.id if line_item
+        return_line_item.delete(:shopify_line_item_id)
+      end
+      @current_order[:returns_attributes] << return_item
+    end
   end
 end

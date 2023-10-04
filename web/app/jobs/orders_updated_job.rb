@@ -34,9 +34,6 @@ class OrdersUpdatedJob < ApplicationJob
           total_outstanding: webhook.dig("total_outstanding"),
           tags: webhook.dig("tags").split(",")
         })
-
-        service = ProcessReturnFromWebhook.new(webhook)
-        service.call
       end
     end
   end

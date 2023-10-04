@@ -14,6 +14,6 @@ class ReturnLineItem < ApplicationRecord
   end
 
   def update_due_date
-    order.update_due_date
+    self.return.order.update_due_date
   end
 end

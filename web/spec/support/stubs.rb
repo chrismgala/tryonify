@@ -93,7 +93,7 @@ class Stubs
       },
     }
 
-    WebMock.stub_request(:post, "https://test.myshopify.com/admin/api/2023-04/graphql.json")
+    WebMock.stub_request(:post, /graphql\.json/)
       .with(
         body: /fetchOrder/,
         headers: {
@@ -116,7 +116,7 @@ class Stubs
       },
     }
 
-    WebMock.stub_request(:post, "https://test.myshopify.com/admin/api/2023-04/graphql.json")
+    WebMock.stub_request(:post, /graphql\.json/)
       .with(
         body: /orderCreateMandatePayment/,
         headers: {
@@ -141,7 +141,7 @@ class Stubs
       },
     }
 
-    WebMock.stub_request(:post, "https://test.myshopify.com/admin/api/2023-04/graphql.json")
+    WebMock.stub_request(:post, /graphql\.json/)
       .with(
         body: /orderCapture/,
         headers: {
@@ -165,7 +165,7 @@ class Stubs
       },
     }.to_json
 
-    WebMock.stub_request(:post, "https://test.myshopify.com/admin/api/2023-04/graphql.json")
+    WebMock.stub_request(:post, /graphql\.json/)
       .with(
         body: /fetchPaymentStatus/,
         headers: {
@@ -184,7 +184,7 @@ class Stubs
   end
 
   def update_tags
-    WebMock.stub_request(:post, "https://test.myshopify.com/admin/api/2023-04/graphql.json")
+    WebMock.stub_request(:post, /graphql\.json/)
       .with(
         body: /updateOrder/,
         headers: {
@@ -218,7 +218,7 @@ class Stubs
   end
 
   def fetch_transactions(transactions = "")
-    WebMock.stub_request(:post, "https://test.myshopify.com/admin/api/2023-04/graphql.json")
+    WebMock.stub_request(:post, /graphql\.json/)
       .with(
         body: /fetchTransaction/,
         headers: {

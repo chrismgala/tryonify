@@ -106,12 +106,18 @@ class Order < ApplicationRecord
     latest_return = returns.order(created_at: :desc).first
 
     # If return due date comes after order due date, use the return due date
-    if latest_return
-      return_due_date = latest_return.created_at + shop.return_period.days if latest_return
+    if latest_return && latest_return.trial_return?
+      return_due_date = latest_return.created_at + shop.return_period.days
+      return_due_date = max_due_date if return_due_date&.after?(max_due_date)
       return return_due_date if return_due_date&.after?(due_date)
     end
 
     due_date
+  end
+
+  def max_due_date
+    selling_plan = line_items.find { |x| x.selling_plan_id.present? }.selling_plan
+    shopify_created_at + selling_plan.trial_days.days + shop.return_period.days
   end
 
   def update_due_date

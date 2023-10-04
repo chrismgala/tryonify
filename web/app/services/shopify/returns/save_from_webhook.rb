@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Shopify::Returns::SaveFromWebhook < ApplicationService
-  def initialize(webhook)
+  def initialize(order, webhook)
     super()
+    @order = order
     @webhook = webhook
   end
 
@@ -10,9 +11,8 @@ class Shopify::Returns::SaveFromWebhook < ApplicationService
     Return.create!(
       shopify_id: @webhook['admin_graphql_api_id'],
       status: 'closed',
-      shopify_created_at: @webhook['created_at'],
-      shop:,
-      order:,
+      shop: @order.shop,
+      order: @order,
       return_line_items_attributes: @webhook['return_line_items'].map do |return_line_item|
         line_item = LineItem.find_by(shopify_id: return_line_item.dig('fulfillment_line_item', 'line_item', 'admin_graphql_api_id'))
         {
