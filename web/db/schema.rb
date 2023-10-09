@@ -273,7 +273,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_26_153234) do
   add_foreign_key "payments", "orders"
   add_foreign_key "payments", "transactions", column: "parent_transaction_id"
   add_foreign_key "products", "shops", on_delete: :cascade
-  add_foreign_key "returns", "orders", on_delete: :cascade
+  add_foreign_key "returns", "orders"
   add_foreign_key "selling_plan_groups", "shops", on_delete: :cascade
   add_foreign_key "selling_plans", "selling_plan_groups", on_delete: :cascade
   add_foreign_key "transactions", "orders"
