@@ -73,6 +73,7 @@ class OrderCapture < ApplicationService
       Rails.logger.error("[OrderCapture ID: #{@order.id}]: #{error["message"]}")
       payment.error = "#{payment.error} #{error["message"]}"
       payment.status = "ERROR"
+      payment.save!
       @order.ignore!
       return
     end

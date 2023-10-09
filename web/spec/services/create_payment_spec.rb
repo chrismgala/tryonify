@@ -113,12 +113,12 @@ RSpec.describe(CreatePayment) do
       @stub.capture
     end
 
-    it "does not create a payment" do
+    it "uses order create mandate payment" do
       order.shop.with_shopify_session do
         CreatePayment.call(order.id)
       end
 
-      expect(Payment.where(order_id: order.id)).to_not(exist)
+      expect(Payment.where(order_id: order.id)).to(exist)
     end
 
     it "sets the order to ignored" do
