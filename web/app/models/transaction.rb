@@ -51,6 +51,10 @@ class Transaction < ApplicationRecord
     false
   end
 
+  def expired?
+    kind == "authorization" && authorization_expires_at < Time.current
+  end
+
   private
 
   def cancel_order
