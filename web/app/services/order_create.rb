@@ -12,6 +12,7 @@ class OrderCreate < ApplicationService
   def call
     return unless has_selling_plan?
 
+    @order_attributes[:max_due_date] = max_due_date
     @order = Order.create!(@order_attributes)
 
     # Fetch order transactions
@@ -37,6 +38,11 @@ class OrderCreate < ApplicationService
 
   def has_selling_plan?
     @order_attributes[:line_items_attributes].find { |line_item| !line_item[:selling_plan_id].nil? }
+  end
+
+  def max_due_date
+    selling_plan = @order_attributes[:line_items_attributes].find { |line_item| !line_item[:selling_plan_id].nil? }.selling_plan
+    @order_attributes[:shopify_created_at] + selling_plan.trial_days.days + @order_attributes[:shop].return_period.days 
   end
 
   def fetch_transactions

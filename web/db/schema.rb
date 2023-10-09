@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_03_172535) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_05_202738) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -108,6 +108,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_03_172535) do
     t.string "tags", array: true
     t.datetime "ignored_at"
     t.string "payment_terms_id"
+    t.datetime "max_due_date"
     t.index ["shop_id"], name: "index_orders_on_shop_id"
     t.index ["shopify_id"], name: "index_orders_on_shopify_id", unique: true
   end

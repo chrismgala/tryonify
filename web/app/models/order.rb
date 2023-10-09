@@ -116,8 +116,11 @@ class Order < ApplicationRecord
   end
 
   def max_due_date
+    return self[:max_due_date] if self[:max_due_date].present?
     selling_plan = line_items.find { |x| x.selling_plan_id.present? }.selling_plan
-    shopify_created_at + selling_plan.trial_days.days + shop.return_period.days
+    calculated_max_due_date = shopify_created_at + selling_plan.trial_days.days + shop.return_period.days
+    update(max_due_date: calculated_max_due_date)
+    calculated_max_due_date
   end
 
   def update_due_date
