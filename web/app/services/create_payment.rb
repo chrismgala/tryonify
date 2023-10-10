@@ -23,7 +23,7 @@ class CreatePayment < ApplicationService
     if can_charge?
       Rails.logger.info("[CreatePayment id=#{@order.id}]: Creating payment")
       # Charge the remaining balance
-      if @order.authorized?
+      if @order.authorized? && !@order.latest_authorization.expired?
         capture_authorization
       else
         create_mandate_payment

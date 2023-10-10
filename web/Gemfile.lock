@@ -433,7 +433,7 @@ DEPENDENCIES
   postmark-rails (~> 0.22.1)
   puma (~> 5.0)
   rack-cors (~> 1.1, >= 1.1.1)
-  rails (~> 7.0, >= 7.0.8)
+  rails (~> 7.0, >= 7.0.8, < 7.1)
   redis (~> 4.0)
   rest-client (~> 2.1)
   rspec-rails (~> 6.0, >= 6.0.1)
