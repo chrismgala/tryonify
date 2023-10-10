@@ -45,13 +45,8 @@ class CreatePayment < ApplicationService
     return false if @order.due_date.after?(Time.current)
 
     # Make sure there are no returns that haven't been processed
-    return_item = @order.returns.order(created_at: :desc).first
-    if return_item
-      # Check if the return grace period has passed
-      grace_period = @order.shop.return_period
-      deadline = return_item.created_at + grace_period.days
-
-      return false unless deadline.before?(Time.current)
+    if @order.trial_returns.any?
+      return false unless @order.due_date.before?(@order.calculated_due_date)
     end
 
     # Make sure order has actually been fulfilled

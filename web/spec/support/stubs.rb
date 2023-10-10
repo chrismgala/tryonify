@@ -12,6 +12,8 @@ class Stubs
       data: {
         order: {
           id: order.id,
+          createdAt: Time.current,
+          updatedAt: Time.current,
           paymentTerms: {
             paymentSchedules: {
               edges: [

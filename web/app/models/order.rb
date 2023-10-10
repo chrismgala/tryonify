@@ -76,10 +76,6 @@ class Order < ApplicationRecord
     transactions.failed_authorizations.any?
   end
 
-  def unfulfilled?
-    (fulfillment_status == "UNFULFILLED") || (fulfillment_status.nil?)
-  end
-
   def should_reauthorize?
     return false unless shop.authorize_transactions
     return false if ignored?
@@ -102,8 +98,16 @@ class Order < ApplicationRecord
     transactions.where(kind: :void).any?
   end
 
+  def unfulfilled?
+    (fulfillment_status == "UNFULFILLED") || (fulfillment_status.nil?)
+  end
+
+  def trial_returns
+    returns.joins(return_line_items: :line_item).where.not(return_line_items: { line_items: { selling_plan_id: nil } })
+  end
+
   def calculated_due_date
-    latest_return = returns.order(created_at: :desc).first
+    latest_return = trial_returns.order(created_at: :desc).first
 
     # If return due date comes after order due date, use the return due date
     if latest_return && latest_return.trial_return?
@@ -115,12 +119,19 @@ class Order < ApplicationRecord
     due_date
   end
 
-  def max_due_date
-    return self[:max_due_date] if self[:max_due_date].present?
+  def calculate_max_due_date
     selling_plan = line_items.find { |x| x.selling_plan_id.present? }.selling_plan
     calculated_max_due_date = shopify_created_at + selling_plan.trial_days.days + shop.return_period.days
     update(max_due_date: calculated_max_due_date)
     calculated_max_due_date
+  end
+
+  def max_due_date
+    if super.presence
+      super
+    else
+      calculate_max_due_date
+    end
   end
 
   def update_due_date

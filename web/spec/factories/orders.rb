@@ -8,8 +8,8 @@ FactoryBot.define do
     financial_status { "PARTIALLY_PAID" }
     mandate_id { "gid://shopify/PaymentMandate/#{Faker::Number.number(digits: 10)}" }
     email { Faker::Internet.email }
-    shopify_created_at { Time.new }
-    shopify_updated_at { Time.new }
+    shopify_created_at { Time.current }
+    shopify_updated_at { Time.current }
     fulfillment_status { "UNFULFILLED" }
     fully_paid { false }
     total_outstanding { 231.07 }
