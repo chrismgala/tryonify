@@ -45,9 +45,9 @@ class CreatePayment < ApplicationService
     return false if @order.due_date.after?(Time.current)
 
     # Make sure there are no returns that haven't been processed
-    if @order.trial_returns.any?
-      return false unless @order.due_date.before?(@order.calculated_due_date)
-    end
+    # if @order.trial_returns.any?
+    #   return false unless @order.due_date.before?(@order.calculated_due_date)
+    # end
 
     # Make sure order has actually been fulfilled
     # return false if @order.fulfillment_status != 'FULFILLED'

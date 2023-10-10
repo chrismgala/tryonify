@@ -88,6 +88,7 @@ class OrderBuild < ApplicationService
       return_item_node = return_item.dig("node")
 
       return_items_attributes << {
+        shop_id: @shop_id,
         shopify_id: return_item_node.dig("id"),
         status: return_item_node.dig("status").downcase,
         return_line_items_attributes: return_item_node.dig("returnLineItems", "edges").map do |return_line_item|

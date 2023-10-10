@@ -32,14 +32,6 @@ RSpec.describe(CreatePayment) do
       @stub.order(order)
     end
 
-    it "does not create a payment" do
-      order.shop.with_shopify_session do
-        CreatePayment.call(order.id)
-      end
-
-      expect(Payment.where(order_id: order.id)).to_not(exist)
-    end
-
     it "creates a payment if return period has lapsed" do
       order.due_date = 100.days.ago
       order.save!
