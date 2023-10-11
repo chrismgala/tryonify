@@ -28,6 +28,7 @@ class FetchOrder < ApplicationService
             }
           }
           paymentTerms {
+            id
             paymentSchedules(first: 1) {
               edges {
                 node {
@@ -61,6 +62,27 @@ class FetchOrder < ApplicationService
             pageInfo {
               hasNextPage
               endCursor
+            }
+          }
+          returns(first: 10) {
+            edges {
+              node {
+                id
+                status
+                returnLineItems(first: 10) {
+                  edges {
+                    node {
+                      id
+                      quantity
+                      fulfillmentLineItem {
+                        lineItem {
+                          id
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
           totalPriceSet {

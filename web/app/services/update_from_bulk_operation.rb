@@ -5,6 +5,7 @@ class UpdateFromBulkOperation < ApplicationService
     super()
     @bulk_operation = bulk_operation
     @current_order = nil
+    @returns = []
     @has_selling_plan = false
   end
 
@@ -28,7 +29,7 @@ class UpdateFromBulkOperation < ApplicationService
   def process_line(line)
     json = JSON.parse(line)
     model = json['id'].split('/')[-2]
-
+  
     case model
     when "Order"
       finalize_order if @current_order && @has_selling_plan
@@ -41,6 +42,10 @@ class UpdateFromBulkOperation < ApplicationService
       get_due_date(json)
     when "OrderTransaction"
       build_transaction(json)
+    when "Return"
+      build_return(json)
+    when "ReturnLineItem"
+      build_return_line_item(json)
     end
   end
 
@@ -52,6 +57,7 @@ class UpdateFromBulkOperation < ApplicationService
       financial_status: order_line['displayFinancialStatus'],
       email: order_line.dig('customer', 'email'),
       mandate_id: order_line.dig('paymentCollectionDetails', 'vaultedPaymentMethods', 0, 'id'),
+      payment_terms_id: order_line.dig('paymentTerms', 'id'),
       shopify_created_at: order_line['createdAt'],
       shopify_updated_at: order_line['updatedAt'],
       fulfillment_status: order_line['displayFulfillmentStatus'],
@@ -62,6 +68,7 @@ class UpdateFromBulkOperation < ApplicationService
       ip_address: order_line['clientIp'],
       tags: order_line['tags'],
       line_items_attributes: [],
+      returns_attributes: [],
       transactions_attributes: order_line['transactions'].map {|transaction| build_transaction(transaction) }
     }
   end
@@ -103,6 +110,29 @@ class UpdateFromBulkOperation < ApplicationService
     transaction_attributes
   end
 
+  def build_return(return_item)
+    return if return_item['status'] == 'CANCELED'
+    @returns << {
+      shop_id: @bulk_operation.shop.id,
+      shopify_id: return_item['id'],
+      status: return_item['status'].downcase,
+      return_line_items_attributes: []
+    }
+  end
+
+  def build_return_line_item(return_line_item)
+    return_item = @returns.find {|x| x[:shopify_id] == return_line_item['__parentId']}
+
+    if return_item
+      return_line_item = {
+        shopify_id: return_line_item['id'],
+        quantity: return_line_item['quantity'],
+        shopify_line_item_id: return_line_item.dig('fulfillmentLineItem', 'lineItem', 'id'),
+      }
+      return_item[:return_line_items_attributes] << return_line_item
+    end
+  end
+
   def build_shipping_address(shipping_address)
     @current_order[:shipping_address_attributes] = {
       address1: shipping_address['address1'],
@@ -133,14 +163,34 @@ class UpdateFromBulkOperation < ApplicationService
   end
 
   def finalize_order
-    order = Order.find_by(shopify_id: @current_order[:shopify_id])
+    order = Order.includes(:line_items, :returns, :transactions).find_by(shopify_id: @current_order[:shopify_id])
 
     if order
+      associate_return_line_items(order)
       OrderUpdate.call(order_attributes: @current_order, order: order)
     else
-      OrderCreate.call(@current_order)
+      # For new orders, we need to create the order and then create returns
+      # so that the returns can be associated with order line items
+      order = OrderCreate.call(@current_order)
+      associate_return_line_items(order)
+      @current_order[:returns_attributes].each do |return_item|
+        Return.create!(return_item.merge(order: order))
+      end
     end
+
     @current_order = nil
+    @returns = []
     @has_selling_plan = false
+  end
+
+  def associate_return_line_items(order)
+    @returns.each do |return_item|
+      return_item[:return_line_items_attributes].each do |return_line_item|
+        line_item = order.line_items.find_by(shopify_id: return_line_item[:shopify_line_item_id])
+        return_line_item[:line_item_id] = line_item.id if line_item
+        return_line_item.delete(:shopify_line_item_id)
+      end
+      @current_order[:returns_attributes] << return_item
+    end
   end
 end

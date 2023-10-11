@@ -47,6 +47,7 @@ class Shopify::Orders::BulkFetch < Shopify::Base
                 }
               }
               paymentTerms {
+                id
                 overdue
                 paymentSchedules {
                   edges {
@@ -86,6 +87,27 @@ class Shopify::Orders::BulkFetch < Shopify::Base
                     }
                     sellingPlan {
                       sellingPlanId
+                    }
+                  }
+                }
+              }
+              returns {
+                edges {
+                  node {
+                    id
+                    status
+                    returnLineItems {
+                      edges {
+                        node {
+                          id
+                          quantity
+                          fulfillmentLineItem {
+                            lineItem {
+                              id
+                            }
+                          }
+                        }
+                      }
                     }
                   }
                 }

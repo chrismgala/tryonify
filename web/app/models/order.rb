@@ -9,11 +9,11 @@ class Order < ApplicationRecord
   validate :has_selling_plan?, on: :create
 
   belongs_to :shop
-  has_many :line_items
-  has_many :returns
-  has_many :transactions
-  has_many :payments
-  has_one :shipping_address
+  has_many :line_items, dependent: :destroy
+  has_many :returns, dependent: :destroy
+  has_many :transactions, dependent: :destroy
+  has_many :payments, dependent: :destroy
+  has_one :shipping_address, dependent: :destroy
 
   scope :active, -> { where(ignored_at: nil) }
   scope :payment_due, lambda {
@@ -36,9 +36,7 @@ class Order < ApplicationRecord
                           }
   scope :by_email, -> { where("REGEXP_REPLACE(email, '(\\+.*?(?=@))|\\.', '', 'g') = :email", :email => email.gsub('.', '')) }
 
-  accepts_nested_attributes_for :line_items, :shipping_address, :transactions, allow_destroy: true
-
-  attribute :calculated_due_date, :datetime
+  accepts_nested_attributes_for :line_items, :shipping_address, :transactions, :returns, allow_destroy: true
 
   pg_search_scope :search_by_name, against: :name, using: { tsearch: { prefix: true } }
 
@@ -57,7 +55,7 @@ class Order < ApplicationRecord
   end
 
   def pending?
-    return false if calculated_due_date.before?(DateTime.current)
+    return false if due_date.before?(DateTime.current)
     return false if cancelled_at
     return false if fully_paid
 
@@ -76,10 +74,6 @@ class Order < ApplicationRecord
 
   def authorization_invalid?
     transactions.failed_authorizations.any?
-  end
-
-  def unfulfilled?
-    (fulfillment_status == "UNFULFILLED") || (fulfillment_status.nil?)
   end
 
   def should_reauthorize?
@@ -104,16 +98,44 @@ class Order < ApplicationRecord
     transactions.where(kind: :void).any?
   end
 
+  def unfulfilled?
+    (fulfillment_status == "UNFULFILLED") || (fulfillment_status.nil?)
+  end
+
+  def trial_returns
+    returns.joins(return_line_items: :line_item).where.not(return_line_items: { line_items: { selling_plan_id: nil } })
+  end
+
   def calculated_due_date
-    latest_return = returns.where(active: true).order(created_at: :desc).first
+    latest_return = trial_returns.order(created_at: :desc).first
 
     # If return due date comes after order due date, use the return due date
-    if latest_return
-      return_due_date = latest_return.created_at + shop.return_period if latest_return
+    if latest_return && latest_return.trial_return?
+      return_due_date = latest_return.created_at + shop.return_period.days
+      return_due_date = max_due_date if return_due_date&.after?(max_due_date)
       return return_due_date if return_due_date&.after?(due_date)
     end
 
     due_date
+  end
+
+  def calculate_max_due_date
+    selling_plan = line_items.find { |x| x.selling_plan_id.present? }.selling_plan
+    calculated_max_due_date = shopify_created_at + selling_plan.trial_days.days + shop.return_period.days
+    update(max_due_date: calculated_max_due_date)
+    calculated_max_due_date
+  end
+
+  def max_due_date
+    if super.presence
+      super
+    else
+      calculate_max_due_date
+    end
+  end
+
+  def update_due_date
+    OrderUpdateDueDateJob.perform_later(order: self, due_date: calculated_due_date) if pending? && calculated_due_date&.after?(due_date)
   end
 
   def cancel
