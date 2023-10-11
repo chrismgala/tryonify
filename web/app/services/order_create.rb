@@ -50,7 +50,7 @@ class OrderCreate < ApplicationService
 
     return nil unless shop.present?
 
-    @order_attributes[:shopify_created_at] + selling_plan.trial_days.days + shop.return_period.days
+    Time.parse(@order_attributes[:shopify_created_at]) + selling_plan.trial_days.days + shop.return_period.days
   end
 
   def fetch_transactions

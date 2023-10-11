@@ -61,26 +61,6 @@ class FetchOrders < ApplicationService
                 endCursor
               }
             }
-            returns(first: 10) {
-              edges {
-                node {
-                  id
-                  status
-                  returnLineItems(first: 10) {
-                    edges {
-                      node {
-                        fulfillmentLineItem {
-                          quantity
-                          lineItem {
-                            id
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
           }
         }
         pageInfo {
