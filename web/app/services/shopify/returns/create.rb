@@ -7,9 +7,9 @@
 #   returnReason: https://shopify.dev/docs/api/admin-graphql/unstable/enums/ReturnReason
 
 
-class Shopify::Returns::Create < ApplicationService
+class Shopify::Returns::Create < Shopify::Base
   CREATE_RETURN_QUERY = <<~QUERY
-    mutation returnCreate(returnInput: ReturnInput!) {
+    mutation returnCreate($returnInput: ReturnInput!) {
       returnCreate(returnInput: $returnInput) {
         return {
           id
@@ -19,24 +19,31 @@ class Shopify::Returns::Create < ApplicationService
     }
   QUERY
 
-  def initialize(order_id:, line_items:, quantity:, return_reason:, return_reason_note:)
+  def initialize(order_id:, line_items:)
     super()
     @order_id = order_id
     @line_items = line_items
-    @quantity = quantity
-    @return_reason = return_reason
-    @return_reason_note = return_reason_note
+    @return_reason = 'UNWANTED'
+    @return_reason_note = ''
   end
 
   def call
     query = CREATE_RETURN_QUERY
+
+    @line_items.each do |line_item|
+      line_item[:returnReason] = @return_reason
+      line_item[:returnReasonNote] = @return_reason_note
+    end
+
     variables = {
-      orderId: @order_id,
-      returnLineItems: @line_items,
-      notifyCustomer: true
+      returnInput: {
+        orderId: @order_id,
+        returnLineItems: @line_items,
+        notifyCustomer: true
+      }
     }
 
-    response = @client.query(query:, variables:)
+    response = client.query(query:, variables:)
 
     unless response.body["errors"].nil?
       raise response.body.dig("errors", 0, "message") and return

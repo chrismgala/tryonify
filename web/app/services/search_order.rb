@@ -36,6 +36,28 @@ class SearchOrder
                   }
                 }
               }
+              fulfillments(first: 50) {
+                fulfillmentLineItems(first: 50) {
+                  edges {
+                    node {
+                      id
+                      quantity
+                      lineItem {
+                        id
+                        title
+                        variantTitle
+                        image {
+                          url
+                        }
+                        sellingPlan {
+                          name
+                          sellingPlanId
+                        }
+                      }
+                    }
+                  }
+                }
+              }
               lineItems(first: 50) {
                 edges {
                   node {
@@ -44,26 +66,6 @@ class SearchOrder
                     variantTitle
                     quantity
                     unfulfilledQuantity
-                    discountAllocations {
-                      allocatedAmountSet {
-                        presentmentMoney {
-                          amount
-                          currencyCode
-                        }
-                      }
-                    }
-                    discountedTotalSet {
-                      presentmentMoney {
-                        amount
-                        currencyCode
-                      }
-                    }
-                    discountedUnitPriceSet {
-                      presentmentMoney {
-                        amount
-                        currencyCode
-                      }
-                    }
                     sellingPlan {
                       name
                       sellingPlanId
