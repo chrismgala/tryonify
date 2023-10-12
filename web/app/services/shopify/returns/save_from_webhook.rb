@@ -18,7 +18,8 @@ class Shopify::Returns::SaveFromWebhook < ApplicationService
         {
           shopify_id: return_line_item['admin_graphql_api_id'],
           quantity: return_line_item['quantity'],
-          line_item: line_item
+          line_item: line_item,
+          fulfillment_line_item_id: return_line_item.dig('fulfillment_line_item', 'admin_graphql_api_id'),
         }
       end
     )

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_05_202738) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_12_222614) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -162,6 +162,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_05_202738) do
     t.integer "quantity", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "fulfillment_line_item_id", null: false
     t.index ["line_item_id"], name: "index_return_line_items_on_line_item_id"
     t.index ["return_id"], name: "index_return_line_items_on_return_id"
     t.index ["shopify_id"], name: "index_return_line_items_on_shopify_id", unique: true

@@ -128,6 +128,7 @@ class UpdateFromBulkOperation < ApplicationService
         shopify_id: return_line_item['id'],
         quantity: return_line_item['quantity'],
         shopify_line_item_id: return_line_item.dig('fulfillmentLineItem', 'lineItem', 'id'),
+        fulfillment_line_item_id: return_line_item.dig('fulfillmentLineItem', 'id')
       }
       return_item[:return_line_items_attributes] << return_line_item
     end
