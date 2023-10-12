@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :return do
+  factory :return_line_item do
     shopify_id { Faker::Number.number(digits: 10) }
-    status { :open }
-    order
+    quantity { 1 }
   end
 end

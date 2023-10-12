@@ -6,6 +6,7 @@ class LineItem < ApplicationRecord
 
   belongs_to :order
   belongs_to :selling_plan, optional: true
+  has_one :return_line_item, dependent: :destroy
 
   enum status: [:pending, :paid, :returning, :returned]
 end

@@ -28,6 +28,7 @@ class OrderBuild < ApplicationService
       shopify_created_at: @data.dig("createdAt"),
       shopify_updated_at: @data.dig("updatedAt"),
       mandate_id: @data.dig("paymentCollectionDetails", "vaultedPaymentMethods", 0, "id"),
+      payment_terms_id: @data.dig("paymentTerms", "id"),
       fulfillment_status: @data.dig("displayFulfillmentStatus"),
       closed_at: @data.dig("closedAt"),
       cancelled_at: @data.dig("cancelledAt"),
@@ -54,6 +55,7 @@ class OrderBuild < ApplicationService
     end
 
     order[:line_items_attributes] = line_items(@data)
+    order[:returns_attributes] = returns(@data)
     order
   end
 
@@ -74,5 +76,33 @@ class OrderBuild < ApplicationService
       }
     end
     line_items_attributes
+  end
+
+  def returns(order)
+    return_items_attributes = []
+    returns = order.dig("returns", "edges")
+
+    return return_items_attributes if returns.blank?
+    
+    order.dig("returns", "edges").each do |return_item|
+      return_item_node = return_item.dig("node")
+
+      return_items_attributes << {
+        shop_id: @shop_id,
+        shopify_id: return_item_node.dig("id"),
+        status: return_item_node.dig("status").downcase,
+        return_line_items_attributes: return_item_node.dig("returnLineItems", "edges").map do |return_line_item|
+          return_line_item_node = return_line_item.dig("node")
+          line_item = LineItem.find_by(shopify_id: return_line_item_node.dig("fulfillmentLineItem", "lineItem", "id"))
+          {
+            shopify_id: return_line_item_node.dig("id"),
+            line_item: line_item,
+            quantity: return_line_item_node.dig("quantity"),
+          }
+        end
+      }
+    end
+
+    return_items_attributes
   end
 end

@@ -20,7 +20,7 @@ RSpec.describe(ReauthorizeOrders) do
         order.shop.reauthorize_shopify_payments = false
         order.shop.save!
         ReauthorizeOrders.call(order.shop)
-        expect(OrderAuthorizeJob).to_not(have_been_enqueued.with(order.id))
+        expect(OrderAuthorizeJob).not_to(have_been_enqueued.with(order.id))
       end
     end
 

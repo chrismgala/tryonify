@@ -12,6 +12,8 @@ class Stubs
       data: {
         order: {
           id: order.id,
+          createdAt: Time.current,
+          updatedAt: Time.current,
           paymentTerms: {
             paymentSchedules: {
               edges: [
@@ -45,13 +47,55 @@ class Stubs
             address1: "",
           },
           lineItems: {
-            edges: [],
+            edges: order.line_items.map do |line_item|
+                {
+                  node: {
+                    id: line_item.shopify_id,
+                    image: {
+                      url: line_item.image_url
+                    },
+                    quantity: line_item.quantity,
+                    restockable: line_item.restockable,
+                    unfulfilledQuantity: line_item.unfulfilled_quantity,
+                    title: line_item.title,
+                    variantTitle: line_item.variant_title,
+                    sellingPlan: {
+                      sellingPlanId: line_item.selling_plan.shopify_id
+                    }
+                  }
+                }
+            end,
           },
+          returns: {
+            edges: order.returns.map do |return_item|
+              {
+                node: {
+                  id: return_item.shopify_id,
+                  status: return_item.status,
+                  returnLineItems: {
+                    edges: return_item.return_line_items.map do |return_line_item|
+                      {
+                        node: {
+                          id: return_line_item.shopify_id,
+                          quantity: return_line_item.quantity,
+                          fulfillmentLineItem: {
+                            lineItem: {
+                              id: return_line_item.line_item.shopify_id
+                            }
+                          }
+                        }
+                      }
+                    end
+                  }
+                }
+              }
+            end
+          }
         },
       },
     }
 
-    WebMock.stub_request(:post, "https://test.myshopify.com/admin/api/2023-04/graphql.json")
+    WebMock.stub_request(:post, /graphql\.json/)
       .with(
         body: /fetchOrder/,
         headers: {
@@ -74,7 +118,7 @@ class Stubs
       },
     }
 
-    WebMock.stub_request(:post, "https://test.myshopify.com/admin/api/2023-04/graphql.json")
+    WebMock.stub_request(:post, /graphql\.json/)
       .with(
         body: /orderCreateMandatePayment/,
         headers: {
@@ -99,7 +143,7 @@ class Stubs
       },
     }
 
-    WebMock.stub_request(:post, "https://test.myshopify.com/admin/api/2023-04/graphql.json")
+    WebMock.stub_request(:post, /graphql\.json/)
       .with(
         body: /orderCapture/,
         headers: {
@@ -123,7 +167,7 @@ class Stubs
       },
     }.to_json
 
-    WebMock.stub_request(:post, "https://test.myshopify.com/admin/api/2023-04/graphql.json")
+    WebMock.stub_request(:post, /graphql\.json/)
       .with(
         body: /fetchPaymentStatus/,
         headers: {
@@ -142,7 +186,7 @@ class Stubs
   end
 
   def update_tags
-    WebMock.stub_request(:post, "https://test.myshopify.com/admin/api/2023-04/graphql.json")
+    WebMock.stub_request(:post, /graphql\.json/)
       .with(
         body: /updateOrder/,
         headers: {
@@ -176,7 +220,7 @@ class Stubs
   end
 
   def fetch_transactions(transactions = "")
-    WebMock.stub_request(:post, "https://test.myshopify.com/admin/api/2023-04/graphql.json")
+    WebMock.stub_request(:post, /graphql\.json/)
       .with(
         body: /fetchTransaction/,
         headers: {

@@ -8,8 +8,8 @@ FactoryBot.define do
     financial_status { "PARTIALLY_PAID" }
     mandate_id { "gid://shopify/PaymentMandate/#{Faker::Number.number(digits: 10)}" }
     email { Faker::Internet.email }
-    shopify_created_at { Time.new }
-    shopify_updated_at { Time.new }
+    shopify_created_at { Time.current }
+    shopify_updated_at { Time.current }
     fulfillment_status { "UNFULFILLED" }
     fully_paid { false }
     total_outstanding { 231.07 }
@@ -131,7 +131,9 @@ FactoryBot.define do
 
   trait :with_return do
     after(:create) do |order|
-      create(:return, order_id: order.id, shop_id: order.shop.id)
+      line_item = order.line_items.first
+      return_line_item = build(:return_line_item, line_item: line_item, quantity: 1)
+      create(:return, order_id: order.id, shop_id: order.shop.id, return_line_items: [return_line_item])
     end
   end
 end

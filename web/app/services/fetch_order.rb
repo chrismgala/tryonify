@@ -28,6 +28,7 @@ class FetchOrder < ApplicationService
             }
           }
           paymentTerms {
+            id
             paymentSchedules(first: 1) {
               edges {
                 node {

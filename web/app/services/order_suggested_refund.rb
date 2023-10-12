@@ -10,6 +10,26 @@ class OrderSuggestedRefund < ApplicationService
               amount
             }
           }
+          refundLineItems {
+            lineItem {
+              id
+            }
+            location {
+              id
+            }
+            quantity
+          }
+          suggestedTransactions {
+            parentTransaction {
+              id
+            }
+            amountSet {
+              shopMoney {
+                amount
+              }
+            }
+            gateway
+          }
         }
       }
     }
@@ -32,7 +52,11 @@ class OrderSuggestedRefund < ApplicationService
     response = @client.query(query: FETCH_SUGGESTED_REFUND, variables: {
       id: @order.shopify_id,
     })
-    suggested_refund = response.body.dig("data", "order", "suggestedRefund", "amountSet", "shopMoney", "amount")
-    suggested_refund
+
+    unless response.body["errors"].nil?
+      raise response.body.dig("errors", 0, "message") and return
+    end
+    
+    response
   end
 end

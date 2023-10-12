@@ -20,6 +20,32 @@ class Shopify::Orders::BulkFetch < Shopify::Base
 
   def build_query
     period = 30.days.ago
+    returns = ''
+    if shop.access_scopes.include?('write_returns')
+      returns = '
+        returns {
+          edges {
+            node {
+              id
+              status
+              returnLineItems {
+                edges {
+                  node {
+                    id
+                    quantity
+                    fulfillmentLineItem {
+                      lineItem {
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }'
+    end
+
     query = <<~QUERY
       {
         orders(query: "created_at:>=#{period.iso8601} AND status:OPEN") {
@@ -47,6 +73,7 @@ class Shopify::Orders::BulkFetch < Shopify::Base
                 }
               }
               paymentTerms {
+                id
                 overdue
                 paymentSchedules {
                   edges {
@@ -90,6 +117,7 @@ class Shopify::Orders::BulkFetch < Shopify::Base
                   }
                 }
               }
+              #{returns}
               transactions {
                 id
                 paymentId
