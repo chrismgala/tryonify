@@ -53,5 +53,6 @@ class OrderTransactionFetch < ApplicationService
   rescue StandardError => e
     Rails.logger.error("[OrderTransactionFetch]: #{e.message}")
     @error = e.message
+    raise e
   end
 end
