@@ -34,6 +34,7 @@ class Shopify::Orders::BulkFetch < Shopify::Base
                     id
                     quantity
                     fulfillmentLineItem {
+                      id
                       lineItem {
                         id
                       }
