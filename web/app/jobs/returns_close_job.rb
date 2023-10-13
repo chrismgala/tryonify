@@ -1,4 +1,4 @@
-class ReturnsReopenJob < ActiveJob::Base
+class ReturnsCloseJob < ActiveJob::Base
   extend ShopifyAPI::Webhooks::Handler
 
   class << self
@@ -7,7 +7,7 @@ class ReturnsReopenJob < ActiveJob::Base
     end
   end
 
-  def perform(topic:, shop_domain:, webhook:)        
+  def perform(topic:, shop_domain:, webhook:)
     shop = Shop.find_by(shopify_domain: shop_domain)
     
     if shop.nil?

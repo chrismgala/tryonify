@@ -6,7 +6,7 @@ class ReturnLineItem < ApplicationRecord
 
   validates :quantity, presence: true, numericality: { greater_than: 0 }
 
-  after_create_commit :update_due_date, if: :trial_return?
+  after_create_commit :create_tasks, if: :trial_return?
 
   # Only recalculate on the first return
   def trial_return?
@@ -15,5 +15,13 @@ class ReturnLineItem < ApplicationRecord
 
   def update_due_date
     self.return.order.update_due_date
+  end
+
+  private
+
+  def create_tasks
+    update_due_date
+
+    broadcast_update_to line_item
   end
 end

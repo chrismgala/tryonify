@@ -14,31 +14,47 @@ class Shopify::Returns::Create < Shopify::Base
         return {
           id
           status
+          returnLineItems(first: 20) {
+            edges {
+              node {
+                id
+                fulfillmentLineItem {
+                  id
+                  lineItem {
+                    id
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
   QUERY
 
-  def initialize(order_id:, line_items:)
+  def initialize(order_id:, line_items:, return_reason: 'UNWANTED', return_reason_note: '')
     super()
     @order_id = order_id
     @line_items = line_items
-    @return_reason = 'UNWANTED'
-    @return_reason_note = ''
+    @return_reason = return_reason
+    @return_reason_note = return_reason_note
   end
 
   def call
     query = CREATE_RETURN_QUERY
-
-    @line_items.each do |line_item|
-      line_item[:returnReason] = @return_reason
-      line_item[:returnReasonNote] = @return_reason_note
+    return_line_items = @line_items.map do |line_item|
+      {
+        fulfillmentLineItemId: line_item[:fulfillment_line_item_id],
+        quantity: line_item[:quantity].to_i,
+        returnReason: @return_reason,
+        returnReasonNote: @return_reason_note
+      }
     end
 
     variables = {
       returnInput: {
         orderId: @order_id,
-        returnLineItems: @line_items,
+        returnLineItems: return_line_items,
         notifyCustomer: true
       }
     }

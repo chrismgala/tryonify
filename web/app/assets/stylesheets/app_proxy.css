@@ -17,9 +17,19 @@
   margin-top: 15px;
 }
 
+.tryonify-payment-due {
+  display: flex;
+  justify-content: space-between;
+  background-color: #d6e3ef;
+  padding: 10px 15px;
+  border-radius: 4px;
+  color: #444;
+}
+
 .tryonify-input {
   padding: 5px;
   border: 1px solid #ddd;
+  border-radius: 4px;
   width: 100%;
 }
 
@@ -31,38 +41,120 @@
   background: #444;
   color: #fff;
   border: 0;
-  padding: 5px 10px;
+  border-radius: 4px;
+  padding: 10px 15px;
   cursor: pointer;
+}
+
+.tryonify-button:disabled {
+  opacity: 0.7;
+}
+
+.tryonify-button--full {
+  width: 100%;
 }
 
 .tryonify-line-items {
   padding: 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%;
 }
 
 .tryonify-line-item {
+  border-bottom: 1px solid #ddd;
   list-style: none;
-  display: flex;
-  align-items: center;
-  width: 100%;
+  padding: 15px;
+}
+
+.tryonify-line-item:last-child {
+  border-bottom: 0;
 }
 
 .tryonify-product-details {
   font-size: 14px;
-}
-
-.tryonify-product-details .tryonify-product-title {
   margin: 0 0 10px;
-  font-size: 20px;
+  display: flex;
+  flex-flow: row wrap;
 }
 
 .tryonify-thumbnail {
-  width: 150px;
+  width: 100px;
   margin-right: 15px;
-  border: 1px solid #ddd;
+  display: block;
 }
 
 .tryonify-thumbnail img {
   width: 100%;
   height: auto;
   display: block;
+  border: 1px solid #ddd;
+}
+
+.tryonify-product-title h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.tryonify-product-title span {
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.tryonify-quantity {
+  margin-bottom: 15px;
+}
+
+.tryonify-quantity-selector {
+  display: flex;
+  flex-flow: row;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  position: relative;
+  max-width: 100px;
+  overflow: hidden;
+}
+
+.tryonify-quantity-selector input {
+  border: 0;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: 0;
+  line-height: 1;
+  padding: 0 5px;
+  display: block;
+  text-align: center;
+  width: 40px;
+  height: 30px;
+  flex-basis: 50%;
+}
+
+.tryonify-quantity-selector input:focus {
+  outline: 0;
+  box-shadow: none;
+}
+
+.tryonify-quantity-selector::after {
+  content: "/";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #ddd;
+}
+
+.tryonify-return-status {
+  padding: 5px 15px;
+  border-radius: 20px;
+  background-color: #ddd;
+  color: #444;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.tryonify-return-status--success {
+  background-color: #9eee9e;
 }
