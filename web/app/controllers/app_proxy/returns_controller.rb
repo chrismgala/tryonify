@@ -17,7 +17,7 @@ class AppProxy::ReturnsController < ApplicationController
       service.call
 
       if service.order
-        @order = Order.find_by!(shopify_id: service.order.dig("id"))
+        @order = Order.includes({ line_items: [:return_line_item, :selling_plan] }).find_by!(shopify_id: service.order.dig("id"))
         @fulfillments = service.order.dig('fulfillments')
 
         render(layout: false, content_type: "application/liquid")
@@ -31,16 +31,16 @@ class AppProxy::ReturnsController < ApplicationController
     order = Order.find_by(shopify_id: return_params[:order_id])
 
     current_shop.with_shopify_session do
-      response = Shopify::Returns::Create.call(
+      response = Shopify::Returns::Request.call(
         order_id: return_params[:order_id],
         line_items: return_params[:return_line_items]
       )
 
-      return_item = Return.find_or_create_by!(shopify_id: response.body.dig("data", "returnCreate", "return", "id")) do |return_item|
+      @return = Return.create!(shopify_id: response.body.dig("data", "returnRequest", "return", "id")) do |return_item|
         return_item.shop = current_shop
         return_item.order = order
-        return_item.status = response.body.dig("data", "returnCreate", "return", "status").downcase
-        return_item.return_line_items = response.body.dig("data", "returnCreate", "return", "returnLineItems", "edges").map do |edge|
+        return_item.status = response.body.dig("data", "returnRequest", "return", "status").downcase
+        return_item.return_line_items = response.body.dig("data", "returnRequest", "return", "returnLineItems", "edges").map do |edge|
           line_item = LineItem.find_by!(shopify_id: edge.dig("node", "fulfillmentLineItem", "lineItem", "id"))
           ReturnLineItem.new(
             line_item: line_item,
@@ -51,7 +51,10 @@ class AppProxy::ReturnsController < ApplicationController
         end
       end
   
-      json render: return_item
+      respond_to do |format|
+        format.json { render json: @return }
+        format.turbo_stream { flash.now[:notice] = "Return requested successfully" }
+      end
     end
   end
 
@@ -77,7 +80,7 @@ class AppProxy::ReturnsController < ApplicationController
     params.permit(
       :order_id,
       :return_reason,
-      :return_reason_note,
+      :customer_note,
       return_line_items: [
         :line_item_id,
         :fulfillment_line_item_id,

@@ -1,4 +1,5 @@
-<li id="<%= dom_id(line_item) %>" class="tryonify-line-item" data-controller="return-line-item">
+<%= turbo_frame_tag line_item do %>
+<li class="tryonify-line-item" data-controller="return-line-item">
   <div class="tryonify-product-details">
     <% if line_item.image_url %>
       <div class="tryonify-thumbnail">
@@ -13,33 +14,22 @@
   </div>
 
   <div class="tryonify-return-options">
-    <%
-      fulfillment_line_item_id = nil
-      fulfilled_quantity = 0
-      @fulfillments.each do |fulfillment|
-        fulfillment.dig('fulfillmentLineItems', 'edges').each do |fulfillment_line_item|
-          if fulfillment_line_item.dig('node', 'lineItem', 'id') == line_item.shopify_id
-            fulfillment_line_item_id = fulfillment_line_item.dig('node', 'id')
-            fulfilled_quantity = fulfillment_line_item.dig('node', 'quantity')
-          end
-        end
-      end
-    %>
     <% if fulfillment_line_item_id %>
       <% if !line_item.return_line_item %>
         <div class="tryonify-quantity" data-controller="quantity">
           <b>{{ 'customer.order.quantity' | t }}</b>
           <div class="tryonify-quantity-selector">
-            <input type="text" pattern="[0-9]" data-quantity-target="selector" data-return-line-item-target="quantity" data-action="blur->quantity#handleBlur" data-min="1" data-max="<%= fulfilled_quantity %>" value="<%= line_item.quantity - line_item.unfulfilled_quantity %>" />
-            <input type="text" readonly value="<%= line_item.quantity - line_item.unfulfilled_quantity %>" />
+            <input type="text" pattern="[0-9]" data-quantity-target="selector" data-return-line-item-target="quantity" data-action="blur->quantity#handleBlur" data-min="1" data-max="<%= quantity %>" value="<%= quantity %>" />
+            <input type="text" readonly value="<%= quantity %>" />
           </div>
         </div>
 
-        <% if !line_item.return_line_item %>
+        <div class="tryonify-return-actions" data-return-line-item-target="actions">
           <button
             class="tryonify-button"
             data-action="return-line-item#add"
             data-return-line-item-target="returnButton"
+            data-return-line-item-line-item-id-param="<%= line_item.id %>"
             data-return-line-item-fulfillment-line-item-id-param="<%= fulfillment_line_item_id %>"
           >
             Return
@@ -52,9 +42,8 @@
           >
             Keep
           </button>
-        <% end %>
+        </div>
       <% else %>
-        <%= line_item.return_line_item.id %>
         <% status = line_item.return_line_item&.return&.status %>
         <% if status == "closed" %>
           <p class="tryonify-return-status tryonify-return-status--success">Return complete</p>
@@ -69,3 +58,4 @@
     <% end %>
   </div>
 </li>
+<% end %>

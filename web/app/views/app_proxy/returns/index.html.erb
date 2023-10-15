@@ -4,47 +4,77 @@
 <div class="tryonify-order">
   <div class="tryonify-header">
     <h1>Order <%= @order[:name] %></h1>
-    <div class="tryonify-payment-due"><b>Payment Due</b> <span>{{ '<%= @order[:due_at] %>' | date: '%B %d, %Y' }}</span></div>
+    <div class="tryonify-payment-due"><b>Payment Due</b> <span>{{ '<%= @order.due_date %>' | date: '%B %d, %Y' }}</span></div>
   </div>
 
   <% if @shop.return_explainer %>
     <p class="tryonify-return-instructions"><%= @shop.return_explainer %></p>
   <% end %>
-  <ul class="tryonify-line-items">
-  <% @order.line_items.each do |line_item| %>
-    <% next unless line_item.selling_plan %>
-    <%= render partial: "app_proxy/returns/partials/line_item", locals: { line_item: line_item } %>
-  <% end %>
-  </ul>
-  <div
+
+  <form
+    action="/a/trial/returns" 
+    method="POST" 
+    class="tryonify-return-form"
     data-controller="return" 
     data-return-return-line-item-outlet=".tryonify-line-item"
-    data-return-order-id-value="<%= @order.shopify_id %>"
   >
-    <form class="tryonify-return-form">
-      <div class="tryonify-input-group">
-        <label for="return_reason">Reason for return</label>
-        <div>
-          <select id="return_reason" class="tryonify-input" data-return-target="returnReason">
-            <option value="UNWANTED">Do not want</option>
-            <option value="WRONG_ITEM">Wrong item</option>
-            <option value="DEFECTIVE">Defective</option>
-            <option value="NOT_AS_DESCRIBED">Not as described</option>
-            <option value="COLOR">Color</option>
-            <option value="SIZE_TOO_LARGE">Size too large</option>
-            <option value="SIZE_TOO_SMALL">Size too small</option>
-            <option value="STYLE">Did not like style</option>
-            <option value="OTHER">Other</option>
-          </select>
-        </div>
+    <%= turbo_frame_tag dom_id(@order) do %>
+      <input type="hidden" name="order_id" value="<%= @order.shopify_id %>" />
+      <ul class="tryonify-line-items">
+        <% @order.line_items.each do |line_item| %>
+          <% next unless line_item.selling_plan %>
+
+          <%
+            fulfillment_line_item_id = nil
+            quantity = 0
+            @fulfillments.each do |fulfillment|
+              fulfillment.dig('fulfillmentLineItems', 'edges').each do |fulfillment_line_item|
+                if fulfillment_line_item.dig('node', 'lineItem', 'id') == line_item.shopify_id
+                  fulfillment_line_item_id = fulfillment_line_item.dig('node', 'id')
+                  quantity = fulfillment_line_item.dig('node', 'quantity')
+                end
+              end
+            end
+          %>
+
+          <%= render partial: "app_proxy/returns/partials/line_item", locals: { line_item:, fulfillment_line_item_id:, quantity: } %>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <div class="tryonify-input-group">
+      <label for="return_reason">Reason for return</label>
+      <div>
+        <select id="return_reason" class="tryonify-input" data-return-target="returnReason">
+          <option value="UNWANTED">Do not want</option>
+          <option value="WRONG_ITEM">Wrong item</option>
+          <option value="DEFECTIVE">Defective</option>
+          <option value="NOT_AS_DESCRIBED">Not as described</option>
+          <option value="COLOR">Color</option>
+          <option value="SIZE_TOO_LARGE">Size too large</option>
+          <option value="SIZE_TOO_SMALL">Size too small</option>
+          <option value="STYLE">Did not like style</option>
+          <option value="OTHER">Other</option>
+        </select>
       </div>
-      <div class="tryonify-input-group">
-        <label for="return_reason_note">Additional details</label>
-        <div>
-          <textarea id="return_reason_note" class="tryonify-input" data-return-target="returnReasonNote" rows="5" maxlength="255"></textarea>
-        </div>
+    </div>
+    <div class="tryonify-input-group">
+      <label for="customer_note">Additional details</label>
+      <div>
+        <textarea id="customer_note" class="tryonify-input" data-return-target="customerNote" rows="5" maxlength="255"></textarea>
       </div>
-      <button class="tryonify-button tryonify-button--full" data-return-target="submitButton" data-action="return#submit return-line-item:add@window->return#toggleSubmitDisable return-line-item:remove@window->return#toggleSubmitDisable">Submit Return</button>
-    </form>
-  </div>
+    </div>
+    <button 
+      type="submit"
+      class="tryonify-button tryonify-button--full" 
+      data-return-target="submitButton"
+      data-action="return-line-item:add@window->return#toggleSubmitDisable return-line-item:remove@window->return#toggleSubmitDisable"
+    >Request Return</button>
+  </form>
 </div>
+
+<%= turbo_frame_tag @order, "flash" do %>
+  <div class="tryonify-flash">
+    <%= render "app_proxy/flash" %>
+  </div>
+<% end %>
