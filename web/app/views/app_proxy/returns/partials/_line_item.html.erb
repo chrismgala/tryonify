@@ -1,4 +1,5 @@
 <%= turbo_frame_tag line_item do %>
+<% return_line_item = line_item.return_line_items.find { |x| x.fulfillment_line_item_id == fulfillment_line_item_id } %>
 <li class="tryonify-line-item" data-controller="return-line-item">
   <div class="tryonify-product-details">
     <% if line_item.image_url %>
@@ -15,7 +16,7 @@
 
   <div class="tryonify-return-options">
     <% if fulfillment_line_item_id %>
-      <% if !line_item.return_line_item %>
+      <% if return_line_item.blank? %>
         <div class="tryonify-quantity" data-controller="quantity">
           <b>{{ 'customer.order.quantity' | t }}</b>
           <div class="tryonify-quantity-selector">
@@ -44,11 +45,13 @@
           </button>
         </div>
       <% else %>
-        <% status = line_item.return_line_item&.return&.status %>
+        <% status = return_line_item&.return&.status %>
         <% if status == "closed" %>
           <p class="tryonify-return-status tryonify-return-status--success">Return complete</p>
         <% elsif status == "declined" %>
           <p class="tryonify-return-status tryonify-return-status--failure">Return declined</p>
+        <% elsif status == "requested" %>
+          <p class="tryonify-return-status">Return pending approval</p>
         <% else %>
           <p class="tryonify-return-status">Return in progress</p>
         <% end %>

@@ -17,7 +17,7 @@ class AppProxy::ReturnsController < ApplicationController
       service.call
 
       if service.order
-        @order = Order.includes({ line_items: [:return_line_item, :selling_plan] }).find_by!(shopify_id: service.order.dig("id"))
+        @order = Order.includes({ line_items: [{ return_line_items: :return }, :selling_plan] }).find_by!(shopify_id: service.order.dig("id"))
         @fulfillments = service.order.dig('fulfillments')
 
         render(layout: false, content_type: "application/liquid")
