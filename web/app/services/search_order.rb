@@ -44,15 +44,6 @@ class SearchOrder
                       quantity
                       lineItem {
                         id
-                        title
-                        variantTitle
-                        image {
-                          url
-                        }
-                        sellingPlan {
-                          name
-                          sellingPlanId
-                        }
                       }
                     }
                   }

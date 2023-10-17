@@ -6,6 +6,7 @@ class Return < ApplicationRecord
   belongs_to :shop
   belongs_to :order, counter_cache: true
   has_many :return_line_items, dependent: :destroy
+  has_many :line_items, through: :return_line_items
 
   enum :status, [:canceled, :closed, :declined, :open, :requested]
 

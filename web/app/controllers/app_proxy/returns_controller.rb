@@ -17,49 +17,9 @@ class AppProxy::ReturnsController < ApplicationController
       service.call
 
       if service.order
-        order = service.order
-        existing_order = Order.find_by!(shopify_id: order.dig("id"))
+        @order = Order.includes({ line_items: [{ return_line_items: :return }, :selling_plan] }).find_by!(shopify_id: service.order.dig("id"))
+        @fulfillments = service.order.dig('fulfillments')
 
-        @return_order = {
-          id: order.dig("id"),
-          name: order.dig("name"),
-          financial_status: order.dig("displayFinancialStatus"),
-          due_at: order.dig("paymentTerms", "paymentSchedules", "nodes", 0, "dueAt"),
-          fulfillments: [],
-          line_items: order.dig("lineItems", "edges").map do |edge|
-            next if edge.dig("node", "unfulfilledQuantity") == 0
-
-            {
-              id: edge.dig("node", "id"),
-              selling_plan_id: edge.dig("node", "sellingPlan", "sellingPlanId"),
-              title: edge.dig("node", "title"),
-              variant_title: edge.dig("node", "variantTitle"),
-              image_url: edge.dig("node", "image", "url"),
-              unfulfilled_quantity: edge.dig("node", "unfulfilledQuantity"),
-              quantity: edge.dig("node", "quantity"),
-            }
-          end.compact
-        }
-
-        order.dig('fulfillments').each do |edge|
-          edge.dig('fulfillmentLineItems', 'edges').each do |fulfillment_edge|
-            next if existing_order.returns.each do |return_item|
-              return_item.return_line_items.find {|x| x.fulfillment_line_item_id == fulfillment_edge.dig('node', 'id')}
-            end
-            @return_order[:fulfillments] << {
-              id: fulfillment_edge.dig('node', 'id'),
-              quantity: fulfillment_edge.dig('node', 'quantity'),
-              line_item: {
-                id: fulfillment_edge.dig('node', 'lineItem', 'id'),
-                title: fulfillment_edge.dig('node', 'lineItem', 'title'),
-                variant_title: fulfillment_edge.dig('node', 'lineItem', 'variantTitle'),
-                image_url: fulfillment_edge.dig('node', 'lineItem', 'image', 'url'),
-                selling_plan_id: fulfillment_edge.dig('node', 'lineItem', 'sellingPlan', 'sellingPlanId'),
-              }
-            }
-          end
-        end
-        
         render(layout: false, content_type: "application/liquid")
       else
         redirect_to("/a/trial/returns/search?err=not_found", allow_other_hosts: true)
@@ -71,16 +31,31 @@ class AppProxy::ReturnsController < ApplicationController
     order = Order.find_by(shopify_id: return_params[:order_id])
 
     current_shop.with_shopify_session do
-      Shopify::Returns::Create.call(
+      response = Shopify::Returns::Request.call(
         order_id: return_params[:order_id],
-        line_items: [
-          fulfillmentLineItemId: return_params[:fulfillment_line_item_id],
-          quantity: return_params[:quantity].to_i,
-        ],
+        line_items: return_params[:return_line_items]
       )
-    end
 
-    redirect_to("/a/trial/returns?name=#{CGI.escape(order.name)}&email=#{CGI.escape(order.email)}")
+      @return = Return.create!(shopify_id: response.body.dig("data", "returnRequest", "return", "id")) do |return_item|
+        return_item.shop = current_shop
+        return_item.order = order
+        return_item.status = response.body.dig("data", "returnRequest", "return", "status").downcase
+        return_item.return_line_items = response.body.dig("data", "returnRequest", "return", "returnLineItems", "edges").map do |edge|
+          line_item = LineItem.find_by!(shopify_id: edge.dig("node", "fulfillmentLineItem", "lineItem", "id"))
+          ReturnLineItem.new(
+            line_item: line_item,
+            shopify_id: edge.dig("node", "id"),
+            fulfillment_line_item_id: edge.dig("node", "fulfillmentLineItem", "id"),
+            quantity: edge.dig("node", "quantity").to_i
+          )
+        end
+      end
+  
+      respond_to do |format|
+        format.json { render json: @return }
+        format.turbo_stream { flash.now[:notice] = "Return requested successfully" }
+      end
+    end
   end
 
   def search
@@ -104,8 +79,13 @@ class AppProxy::ReturnsController < ApplicationController
   def return_params
     params.permit(
       :order_id,
-      :fulfillment_line_item_id,
-      :quantity,
+      :return_reason,
+      :customer_note,
+      return_line_items: [
+        :line_item_id,
+        :fulfillment_line_item_id,
+        :quantity,
+      ]
     )
   end
 end

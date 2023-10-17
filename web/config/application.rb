@@ -29,7 +29,7 @@ module ShopifyAppTemplateRuby
     config.active_job.queue_adapter = :sidekiq
 
     # Camelcasing
-    excluded_routes = ->(env) { !env['PATH_INFO'].match(%r{^/api}) }
+    excluded_routes = ->(env) { !env['PATH_INFO'].match(%r{^/api|^/app_proxy}) }
     config.middleware.use OliveBranch::Middleware,
                           inflection: 'camel',
                           exclude_params: excluded_routes,

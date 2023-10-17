@@ -13,6 +13,7 @@ ShopifyApp.configure do |config|
     { topic: "returns/approve", path: "api/webhooks/returns_approve" },
     { topic: "returns/reopen", path: "api/webhooks/returns_reopen" },
     { topic: "returns/decline", path: "api/webhooks/returns_decline" },
+    { topic: "returns/close", path: "api/webhooks/returns_close" },
     { topic: "returns/cancel", path: "api/webhooks/returns_cancel" },
     { topic: "shop/update", path: "api/webhooks/shop_update" },
     { topic: "bulk_operations/finish", path: "api/webhooks/bulk_operations_finish"}

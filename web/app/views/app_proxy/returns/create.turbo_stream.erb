@@ -1,0 +1,7 @@
+<% @return.return_line_items.each do |return_line_item| %>
+  <%= turbo_stream.replace dom_id(return_line_item.line_item), partial: "app_proxy/returns/partials/line_item", locals: { 
+    line_item: return_line_item.line_item, 
+    fulfillment_line_item_id: return_line_item.fulfillment_line_item_id,
+    quantity: return_line_item.quantity
+  } %>
+<% end %>
