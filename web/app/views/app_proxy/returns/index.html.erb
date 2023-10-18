@@ -20,16 +20,20 @@
   >
     <%= turbo_frame_tag dom_id(@order) do %>
       <input type="hidden" name="order_id" value="<%= @order.shopify_id %>" />
-      <ul class="tryonify-line-items">
-        <% @fulfillments.each do |fulfillment| %>
-          <% fulfillment.dig('fulfillmentLineItems', 'edges')&.each do |fulfillment_line_item| %>
-            <% line_item = @order.line_items.find { |x| x.shopify_id == fulfillment_line_item.dig('node', 'lineItem', 'id') } %>
-            <% next unless line_item&.selling_plan %>
+      <% if @fulfillments.length > 0 %>
+        <ul class="tryonify-line-items">
+          <% @fulfillments.each do |fulfillment| %>
+            <% fulfillment.dig('fulfillmentLineItems', 'edges')&.each do |fulfillment_line_item| %>
+              <% line_item = @order.line_items.find { |x| x.shopify_id == fulfillment_line_item.dig('node', 'lineItem', 'id') } %>
+              <% next unless line_item&.selling_plan %>
 
-            <%= render partial: "app_proxy/returns/partials/line_item", locals: { line_item:, fulfillment_line_item_id: fulfillment_line_item.dig('node', 'id'), quantity: fulfillment_line_item.dig('node', 'quantity') } %>
+              <%= render partial: "app_proxy/returns/partials/line_item", locals: { line_item:, fulfillment_line_item_id: fulfillment_line_item.dig('node', 'id'), quantity: fulfillment_line_item.dig('node', 'quantity') } %>
+            <% end %>
           <% end %>
-        <% end %>
-      </ul>
+        </ul>
+      <% else %>
+        <p class="tryonify-no-items">No items to return</p>
+      <% end %>
     <% end %>
 
     <div class="tryonify-input-group">
