@@ -4,6 +4,9 @@ class AppProxyController < ApplicationController
   include ShopifyApp::AppProxyVerification
 
   def index
-    redirect_to '/a/trial/returns/search', allow_other_hosts: true
+    shop = Shop.find_by(shopify_domain: params[:shop])
+    redirect_to '/', allow_other_host: true and return unless shop.present?
+
+    redirect_to "https://#{shop.shopify_domain}/a/trial/returns/search", allow_other_host: true
   end
 end

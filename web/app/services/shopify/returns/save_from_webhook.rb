@@ -10,7 +10,7 @@ class Shopify::Returns::SaveFromWebhook < ApplicationService
   def call
     Return.create!(
       shopify_id: @webhook['admin_graphql_api_id'],
-      status: 'closed',
+      status: @webhook['status'],
       shop: @order.shop,
       order: @order,
       return_line_items_attributes: @webhook['return_line_items'].map do |return_line_item|
