@@ -169,14 +169,17 @@ export default function EditSellingPlan() {
             </IndexTable>
           </Card>
         </Layout.Section>
-
+  
         <Layout.Section oneThird>
           <Card title='Payment Details'>
             <Card.Section title='Due Date'>
               {isLoading ? (
                 <SkeletonBodyText />
               ) : (
-                <Popover
+                (data?.cancelledAt || data?.fullyPaid) ? (
+                  <span>{data?.cancelledAt ? 'Cancelled' : selectedDueDate.toLocaleDateString()}</span>
+                ) : (
+                  <Popover
                   active={dueDateActive}
                   activator={activator}
                   onClose={toggleDueDateActive}
@@ -191,6 +194,7 @@ export default function EditSellingPlan() {
                     allowRange={false}
                   />
                 </Popover>
+                )
               )}
             </Card.Section>
           </Card>

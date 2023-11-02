@@ -53,6 +53,7 @@ module Api
         order = Order.find(params[:id])
 
         head :unauthorized and return unless current_user.id == order.shop_id
+        render json: { message: 'Order must be pending' }, status: :unprocessable_entity and return if order.fully_paid || order.cancelled_at.present?
 
         current_user.with_shopify_session do
           response = Shopify::PaymentTerms::Update.call(
