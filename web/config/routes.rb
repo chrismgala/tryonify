@@ -31,7 +31,7 @@ Rails.application.routes.draw do
         resources :products, controller: "selling_plan_products", only: [:index, :create]
       end
       resources :products, only: [:index]
-      resources :orders, only: [:index, :show]
+      resources :orders, only: [:index, :show, :update]
       resources :draft_orders, only: [:index]
       resources :checkouts, only: [:index, :create] do
         collection do
