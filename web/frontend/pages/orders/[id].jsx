@@ -130,7 +130,7 @@ export default function EditSellingPlan() {
 
   const activator = isLoading ? null : (
     <Button onClick={toggleDueDateActive}>
-      <span>{data?.cancelledAt ? 'Cancelled' : selectedDueDate.toLocaleDateString()}</span>
+      <span>{data?.cancelledAt ? 'Cancelled' : selectedDueDate?.toLocaleDateString()}</span>
     </Button>
   )
 
@@ -177,7 +177,7 @@ export default function EditSellingPlan() {
                 <SkeletonBodyText />
               ) : (
                 (data?.cancelledAt || data?.fullyPaid) ? (
-                  <span>{data?.cancelledAt ? 'Cancelled' : selectedDueDate.toLocaleDateString()}</span>
+                  <span>{data?.cancelledAt ? 'Cancelled' : selectedDueDate?.toLocaleDateString()}</span>
                 ) : (
                   <Popover
                   active={dueDateActive}
