@@ -13,11 +13,9 @@
   },
   "dependencies": {
     "@shopify/admin-ui-extensions-react": "^1.0.4",
-    "@shopify/app": "^3.31.1",
+    "@shopify/app": "^3.50.1",
     "@shopify/checkout-ui-extensions-react": "^0.20.0",
-    "@shopify/cli": "^3.31.1",
-    "iso8601-duration": "^2.1.1",
-    "react": "^17.0.0"
+    "@shopify/cli": "^3.50.1"
   },
   "author": "davidw",
   "devDependencies": {

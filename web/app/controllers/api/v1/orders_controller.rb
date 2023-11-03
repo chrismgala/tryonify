@@ -3,6 +3,8 @@
 module Api
   module V1
     class OrdersController < AuthenticatedController
+      rescue_from ActiveRecord::RecordNotFound, with: :render_errors
+
       def index
         orders = case pagination_params[:status]
         when "overdue"
@@ -47,7 +49,35 @@ module Api
         render(json: order, include: [:line_items, :returns])
       end
 
+      def update
+        order = Order.find(params[:id])
+
+        head :unauthorized and return unless current_user.id == order.shop_id
+        render json: { message: 'Order must be pending' }, status: :unprocessable_entity and return if order.fully_paid || order.cancelled_at.present?
+
+        current_user.with_shopify_session do
+          response = Shopify::PaymentTerms::Update.call(
+            payment_terms_id: order.payment_terms_id,
+            due_date: params[:due_date]
+          )
+    
+          updated_due_date = response.body.dig('data', 'paymentTermsUpdate', 'paymentTerms', 'paymentSchedules', 'edges', 0, 'node', 'dueAt')
+          order.update(due_date: updated_due_date) if updated_due_date.present?
+
+          render json: order
+        end
+      rescue StandardError => err
+        render_errors(err)
+      end
+
       private
+
+      def order_params
+        params.permit(
+          :id,
+          :due_date
+        )
+      end
 
       def pagination_params
         params.permit(

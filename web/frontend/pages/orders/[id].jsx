@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Badge,
+  Button,
+  DatePicker,
   Page,
+  Popover,
   Layout,
   Card,
   IndexTable,
@@ -14,22 +17,71 @@ import { ImageMajor } from '@shopify/polaris-icons';
 import { useParams } from 'react-router-dom';
 import { useNavigate, useToast } from '@shopify/app-bridge-react';
 import { DateTime } from 'luxon';
-import { useAppQuery } from '../../hooks';
+import { useMutation, useQueryClient } from 'react-query';
+import { useAppQuery, useAuthenticatedFetch } from '../../hooks';
+import SaveBar from '../../components/save-bar';
 
 export default function EditSellingPlan() {
   const params = useParams();
   const toast = useToast();
   const navigate = useNavigate();
+  const fetch = useAuthenticatedFetch();
+  const queryClient = useQueryClient();
+  const [dueDateActive, setDueDateActive] = useState(false);
+  const [selectedDueDate, setSelectedDueDate] = useState(null);
+  const [selectedYearMonth, setSelectedYearMonth] = useState({year: 1, month: 0});
   const { isLoading, error, data } = useAppQuery({
     url: `/api/v1/orders/${encodeURIComponent(params.id)}`,
     reactQueryOptions: {
       retry: false,
+      onSuccess: (data) => {
+        setSelectedDueDate(DateTime.fromISO(data?.dueDate).toJSDate());
+        setSelectedYearMonth({year: DateTime.fromISO(data?.dueDate).year, month: DateTime.fromISO(data?.dueDate).month - 1});
+      },
       onError: (err) => {
         navigate('/');
         toast.show('Order not found', { duration: 2000, isError: true });
       }
     }
   });
+
+  const saveMutation = useMutation(
+    (dueDate) => fetch(`/api/v1/orders/${encodeURIComponent(params.id)}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ dueDate })
+    }).then(async (response) => await response.json()),
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(`/api/v1/orders/${encodeURIComponent(params.id)}`);
+        toast.show('Order updated', { duration: 2000 });
+      },
+      onError: (err) => {
+        toast.show('Order not updated', { duration: 2000, isError: true });
+      }
+    }
+  )
+
+  const toggleDueDateActive = useCallback(
+    () => setDueDateActive((dueDateActive) => !dueDateActive),
+    [],
+  );
+
+  const handleMonthChange = useCallback(
+    (month, year) => setSelectedYearMonth({month, year}), []
+  )
+
+  const handleSave = useCallback(
+    () => saveMutation.mutate(selectedDueDate), [selectedDueDate]
+  )
+
+  const handleReset = useCallback(
+    () => {
+      setSelectedDueDate(DateTime.fromISO(data?.dueDate).toJSDate());
+    }, [data]
+  )
 
   const resourceName = {
     singular: 'product',
@@ -76,6 +128,12 @@ export default function EditSellingPlan() {
     )
   })
 
+  const activator = isLoading ? null : (
+    <Button onClick={toggleDueDateActive}>
+      <span>{data?.cancelledAt ? 'Cancelled' : selectedDueDate.toLocaleDateString()}</span>
+    </Button>
+  )
+
   return (
     <Page
       breadcrumbs={[{ content: 'Back to overview', onAction: () => navigate('/') }]}
@@ -88,6 +146,11 @@ export default function EditSellingPlan() {
         })
       }}
     >
+      <SaveBar
+        dirty={isLoading ? false : (DateTime.fromISO(data?.dueDate).toMillis() !== DateTime.fromJSDate(selectedDueDate).toMillis())}
+        submitForm={handleSave}
+        resetForm={handleReset}
+      />
       <Layout>
         <Layout.Section>
           <Card title='Line Items'>
@@ -106,14 +169,32 @@ export default function EditSellingPlan() {
             </IndexTable>
           </Card>
         </Layout.Section>
-
+  
         <Layout.Section oneThird>
           <Card title='Payment Details'>
             <Card.Section title='Due Date'>
               {isLoading ? (
                 <SkeletonBodyText />
               ) : (
-                <span>{data?.cancelledAt ? 'Cancelled' : DateTime.fromISO(data?.dueDate).toLocaleString()}</span>
+                (data?.cancelledAt || data?.fullyPaid) ? (
+                  <span>{data?.cancelledAt ? 'Cancelled' : selectedDueDate.toLocaleDateString()}</span>
+                ) : (
+                  <Popover
+                  active={dueDateActive}
+                  activator={activator}
+                  onClose={toggleDueDateActive}
+                  sectioned
+                >
+                  <DatePicker
+                    month={selectedYearMonth.month}
+                    year={selectedYearMonth.year}
+                    onChange={({ start }) => setSelectedDueDate(start)}
+                    onMonthChange={handleMonthChange}
+                    selected={selectedDueDate}
+                    allowRange={false}
+                  />
+                </Popover>
+                )
               )}
             </Card.Section>
           </Card>
