@@ -17364,3 +17364,4 @@ For more info, visit https://reactjs.org/link/mock-scheduler`);
     return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(Banner2, { title, status, children: text });
   }
 })();
+//# sourceMappingURL=checkout-extension.js.map
