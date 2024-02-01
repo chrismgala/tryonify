@@ -47,8 +47,10 @@ export default function Settings() {
       body: JSON.stringify(shop)
     }).then(async (response) => await response.json()),
     {
-      onSuccess: (response) => {
-        queryClient.setQueryData("/api/v1/shop", response);
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["/api/v1/shop"]
+        });
       },
     }
   );
@@ -69,8 +71,9 @@ export default function Settings() {
   }, [tag])
 
   useEffect(() => {
-    if (saveMutation.isSuccess) toast.show('Save successful!', { duration: 2000 })
-  }, [saveMutation.isSuccess])
+    if (saveMutation.isSuccess) toast.show('Save successful!', { duration: 2000 });
+    if (saveMutation.isError) toast.show('Save failed!', { isError: true, duration: 2000 });
+  }, [saveMutation.isSuccess, saveMutation.isError])
 
   if (isLoading) {
     return null;
