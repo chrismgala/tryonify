@@ -1,0 +1,18 @@
+query RunInput {
+  cart {
+    lines {
+      quantity
+      sellingPlanAllocation {
+        sellingPlan {
+          id
+          name
+        }
+      }
+    }
+  }
+  validation {
+    metafield(namespace: "$app:settings", key: "maxTrialItems") {
+      value
+    }
+  }
+}

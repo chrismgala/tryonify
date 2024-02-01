@@ -12,17 +12,11 @@ module Api
 
         render_errors(@shop) and return unless @shop.update(shop_params)
 
-        service = CreateMetafield.new
-
-        if params[:max_trial_items].to_i != @shop.get_metafield("maxTrialItems")&.value
-          service.call({
-            key: "maxTrialItems",
-            namespace: "settings",
-            type: "number_integer",
-            value: params[:max_trial_items].to_i,
-          })
+        if params[:max_trial_items].to_i != @shop.max_trial_items || params[:validation_enabled] != @shop.validation_enabled
+          Shopify::Validations::ConfigureCartValidation.call(max_trials: params[:max_trial_items].to_i, enable: params[:validation_enabled])
         end
 
+        # TODO: Have tags as a validation metafield
         if params[:allowed_tags] != @shop.get_metafield("allowedTags")&.value&.split(",")
           if params[:allowed_tags].length > 0
             service.call({

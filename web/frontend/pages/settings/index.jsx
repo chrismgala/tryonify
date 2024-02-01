@@ -92,17 +92,24 @@ export default function Settings() {
             <SaveBar dirty={dirty} submitForm={submitForm} resetForm={resetForm} />
             <Layout>
               <Layout.AnnotatedSection
-                title="General"
-                description="Settings for general behavior of the application."
+                title="Rules"
+                description="Add rules for your trial program."
               >
                 <Card sectioned>
                   <FormLayout>
+                    <Field
+                      label="Enable rules"
+                      name="validationEnabled"
+                      component={CheckboxField}
+                    />
+                    
                     <Field
                       label="Max trial items per order"
                       name="maxTrialItems"
                       autoComplete="off"
                       component={TextField}
                     />
+                    
                     <FieldArray name="allowedTags">
                       {arrayHelpers => (
                         <Stack vertical>
