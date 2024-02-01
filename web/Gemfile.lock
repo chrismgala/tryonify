@@ -58,7 +58,7 @@ GEM
     activerecord (7.0.8)
       activemodel (= 7.0.8)
       activesupport (= 7.0.8)
-    activeresource (6.0.0)
+    activeresource (6.1.0)
       activemodel (>= 6.0)
       activemodel-serializers-xml (~> 1.0)
       activesupport (>= 6.0)
@@ -77,10 +77,11 @@ GEM
     addressable (2.8.4)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
+    bigdecimal (3.1.6)
     bindex (0.8.1)
     bootsnap (1.13.0)
       msgpack (~> 1.2)
-    browser_sniffer (2.2.0)
+    browser_sniffer (2.4.0)
     builder (3.2.4)
     bullet (7.0.7)
       activesupport (>= 3.0.0)
@@ -206,7 +207,8 @@ GEM
       racc (~> 1.4)
     nokogiri (1.15.4-x86_64-linux)
       racc (~> 1.4)
-    oj (3.16.1)
+    oj (3.16.3)
+      bigdecimal (>= 3.0)
     olive_branch (4.0.1)
       multi_json
       rails (>= 4.0)
@@ -214,7 +216,7 @@ GEM
       stringio
       time
       uri
-    openssl (3.1.0)
+    openssl (3.2.0)
     parallel (1.22.1)
     parser (3.1.2.1)
       ast (~> 2.4.1)
@@ -318,7 +320,7 @@ GEM
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    securerandom (0.2.2)
+    securerandom (0.3.1)
     selenium-webdriver (4.4.0)
       childprocess (>= 0.5, < 5.0)
       rexml (~> 3.2, >= 3.2.5)
@@ -329,7 +331,7 @@ GEM
       sentry-ruby (~> 5.4.2)
     sentry-ruby (5.4.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    shopify_api (13.1.0)
+    shopify_api (13.4.0)
       activesupport
       concurrent-ruby
       hash_diff
@@ -340,14 +342,14 @@ GEM
       securerandom
       sorbet-runtime
       zeitwerk (~> 2.5)
-    shopify_app (21.6.0)
+    shopify_app (21.10.0)
       activeresource
       addressable (~> 2.7)
       browser_sniffer (~> 2.0)
       jwt (>= 2.2.3)
       rails (> 5.2.1)
       redirect_safely (~> 1.0)
-      shopify_api (~> 13.1)
+      shopify_api (~> 13.4)
       sprockets-rails (>= 2.0.0)
     sidekiq (6.5.6)
       connection_pool (>= 2.2.5)
@@ -360,7 +362,7 @@ GEM
       gli
       hashie
       websocket-driver
-    sorbet-runtime (0.5.11010)
+    sorbet-runtime (0.5.11222)
     sprockets (4.2.0)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
@@ -446,7 +448,7 @@ DEPENDENCIES
   selenium-webdriver
   sentry-rails
   sentry-ruby
-  shopify_app (~> 21.6)
+  shopify_app (~> 21.10)
   sidekiq (~> 6.5, >= 6.5.1)
   slack-ruby-client (~> 2.0)
   sprockets-rails
