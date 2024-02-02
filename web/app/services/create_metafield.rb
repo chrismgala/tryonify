@@ -39,8 +39,8 @@ class CreateMetafield
     variables = {
       metafields: [{
         key: attributes[:key],
-        namespace: attributes[:namespace],
-        ownerId: service.app["id"], # App owned metafield
+        namespace: "$app:#{attributes[:namespace]}",
+        ownerId: attributes[:ownerId],
         type: attributes[:type],
         value: attributes[:value].to_s,
       }],

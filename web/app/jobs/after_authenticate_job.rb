@@ -12,6 +12,7 @@ class AfterAuthenticateJob < ActiveJob::Base
     shop.with_shopify_session do
       shopify_shop = ShopifyAPI::Shop.all.first
 
+      shop.shopify_id = "gid://shopify/Shop/#{shopify_shop.id}"
       shop.email = shopify_shop.email
       shop.order_number_format_prefix = shopify_shop.order_number_format_prefix
       shop.order_number_format_suffix = shopify_shop.order_number_format_suffix
