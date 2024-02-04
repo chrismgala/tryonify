@@ -10,6 +10,7 @@ class Shop < ActiveRecord::Base
   has_many :checkouts, dependent: :destroy
   has_many :metafields, dependent: :destroy
   has_many :bulk_operations, dependent: :destroy
+  has_one :validation, dependent: :destroy
 
   def api_version
     ShopifyApp.configuration.api_version

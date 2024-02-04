@@ -11,12 +11,10 @@ query RunInput {
     }
   }
   shop {
-    metafield(namespace: "$app:tryonify", key: "sellingPlans") {
+    sellingPlans: metafield(namespace: "$app:tryonify", key: "sellingPlans") {
       value
     }
-  }
-  validation {
-    metafield(namespace: "$app:settings", key: "maxTrialItems") {
+    maxTrialItems: metafield(namespace: "$app:settings", key: "maxTrialItems") {
       value
     }
   }

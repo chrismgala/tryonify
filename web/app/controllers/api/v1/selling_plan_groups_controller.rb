@@ -108,14 +108,14 @@ module Api
         if current_user.selling_plans.any?
           selling_plans = current_user.selling_plans.pluck(:shopify_id)
           attributes = {
-            key: "selling_plans",
-            namespace: "tryonify",
+            key: "sellingPlans",
+            namespace: "settings",
             ownerId: current_user.shopify_id,
             type: "json_string",
             value: selling_plans.to_json,
           }
           service = CreateMetafield.new
-          service.call(attributes)
+          service.call([attributes])
         end
       end
 

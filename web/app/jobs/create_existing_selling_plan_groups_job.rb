@@ -17,13 +17,12 @@ class CreateExistingSellingPlanGroupsJob < ApplicationJob
         selling_plans = shop.selling_plans.pluck(:shopify_id)
         attributes = {
           key: "sellingPlans",
-          namespace: "tryonify",
+          namespace: "$app:settings",
           ownerId: shop.shopify_id,
-          type: "json_string",
+          type: "json",
           value: selling_plans.to_json,
         }
-        service = CreateMetafield.new
-        service.call(attributes)
+        Shopify::Metafields::Create.call([attributes])
       end
     end
   end

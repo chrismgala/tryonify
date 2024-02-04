@@ -9,10 +9,10 @@
  * @param {RunInput} input
  * @returns {FunctionRunResult}
  */
-export function run({ cart, shop, validation }) {
+export function run({ cart, shop }) {
   const errors = [];
-  const sellingPlans = shop?.metafield?.value;
-  const max = validation?.metafield?.value;
+  const sellingPlans = shop?.sellingPlans?.value;
+  const max = shop?.maxTrialItems?.value;
 
   if (!sellingPlans || !max) return { errors };
 
@@ -23,8 +23,6 @@ export function run({ cart, shop, validation }) {
     }
     return acc;
   }, 0);
-
-  console.log(sellingPlanArray);
 
   if (trialCount > parseInt(max)) {
     errors.push({

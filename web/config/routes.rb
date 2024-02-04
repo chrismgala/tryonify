@@ -39,6 +39,7 @@ Rails.application.routes.draw do
         end
       end
       resources :returns, only: [:index, :update, :destroy]
+      resources :validations, only: [:index]
 
       get "/chart", to: "chart#index"
 
