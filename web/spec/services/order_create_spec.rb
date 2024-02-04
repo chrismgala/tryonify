@@ -12,7 +12,10 @@ RSpec.describe(OrderCreate) do
     @shop = FactoryBot.create(:shop)
     selling_plan = FactoryBot.create(:selling_plan_group, shop: @shop).selling_plan
     @order_hash = FactoryBot.build(:order, shop: @shop).attributes
-    @order_hash[:line_items_attributes] =
+
+    @order_hash['shopify_created_at'] = @order_hash['shopify_created_at'].to_fs(:long)
+    @order_hash['shopify_updated_at'] = @order_hash['shopify_updated_at'].to_fs(:long)
+    @order_hash['line_items_attributes'] =
       FactoryBot.build_list(:line_item, 2, selling_plan:).map(&:attributes)
     @order_hash.deep_symbolize_keys!
   end
