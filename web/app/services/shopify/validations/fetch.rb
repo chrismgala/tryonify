@@ -7,6 +7,7 @@ class Shopify::Validations::Fetch < Shopify::Base
         edges {
           node {
             id
+            enabled
             shopifyFunction {
               apiType
               app {
@@ -19,13 +20,8 @@ class Shopify::Validations::Fetch < Shopify::Base
     }
   QUERY
 
-  def initialize
-    @session = ShopifyAPI::Context.active_session
-    @client = ShopifyAPI::Clients::Graphql::Admin.new(session: @session)
-  end
-
   def call
-    response = @client.query(query: FETCH_VALIDATIONS_QUERY)
+    response = client.query(query: FETCH_VALIDATIONS_QUERY)
 
     unless response.body["errors"].nil?
       raise response.body.dig("errors", 0, "message") and return

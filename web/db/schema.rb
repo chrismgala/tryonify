@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_01_052711) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_02_183422) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -244,7 +244,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_01_052711) do
     t.boolean "cancel_prepaid_cards", default: true
     t.boolean "reauthorize_paypal", default: true
     t.boolean "reauthorize_shopify_payments", default: true
-    t.boolean "validation_enabled", default: false
+    t.string "shopify_id"
     t.index ["plan_id"], name: "index_shops_on_plan_id"
     t.index ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
   end
@@ -278,6 +278,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_01_052711) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "validations", force: :cascade do |t|
+    t.string "shopify_id", null: false
+    t.boolean "enabled", default: false
+    t.bigint "shop_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shop_id"], name: "index_validations_on_shop_id"
+    t.index ["shopify_id"], name: "index_validations_on_shopify_id", unique: true
   end
 
   add_foreign_key "bulk_operations", "shops"

@@ -38,6 +38,9 @@ export default function Settings() {
   const { isLoading, error, data } = useAppQuery({
     url: "/api/v1/shop"
   });
+  const { isLoading: validationLoading, data: validation } = useAppQuery({
+    url: "/api/v1/validations"
+  });
   const saveMutation = useMutation(
     (shop) => fetch('/api/v1/shop', {
       method: 'PUT',
@@ -49,7 +52,7 @@ export default function Settings() {
     {
       onSettled: () => {
         queryClient.invalidateQueries({
-          queryKey: ["/api/v1/shop"]
+          queryKey: ["/api/v1/shop", "/api/v1/validations"]
         });
       },
     }
@@ -75,16 +78,17 @@ export default function Settings() {
     if (saveMutation.isError) toast.show('Save failed!', { isError: true, duration: 2000 });
   }, [saveMutation.isSuccess, saveMutation.isError])
 
-  if (isLoading) {
+  if (isLoading || validationLoading) {
     return null;
   }
-
+  
   return (
     <Page title="Settings">
       <Formik
         initialValues={{
           ...initialValues,
           ...data?.shop,
+          validationEnabled: validation?.enabled,
         }}
         onSubmit={onSubmit}
       >

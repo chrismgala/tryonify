@@ -6,6 +6,6 @@ class AuthenticatedController < ApplicationController
   private
 
   def current_user
-    Shop.find_by(shopify_domain: current_shopify_session.shop)
+    @shop ||= Shop.find_by(shopify_domain: current_shopify_session.shop)
   end
 end

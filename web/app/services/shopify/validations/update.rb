@@ -6,6 +6,7 @@ class Shopify::Validations::Update < Shopify::Base
       validationUpdate(id: $id, validation: $validation) {
         validation {
           id
+          enabled
         }
         userErrors {
           field
@@ -31,5 +32,7 @@ class Shopify::Validations::Update < Shopify::Base
     unless response.body.dig("data", "validationUpdate", "userErrors").empty?
       raise response.body.dig("data", "validationUpdate", "userErrors", 0, "message") and return
     end
+
+    response
   end
 end
