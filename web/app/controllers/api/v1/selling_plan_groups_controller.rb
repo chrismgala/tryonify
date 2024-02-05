@@ -109,13 +109,12 @@ module Api
           selling_plans = current_user.selling_plans.pluck(:shopify_id)
           attributes = {
             key: "sellingPlans",
-            namespace: "settings",
+            namespace: "$app:settings",
             ownerId: current_user.shopify_id,
-            type: "json_string",
+            type: "json",
             value: selling_plans.to_json,
           }
-          service = CreateMetafield.new
-          service.call([attributes])
+          Shopify::Metafields::Create.call([attributes])
         end
       end
 
