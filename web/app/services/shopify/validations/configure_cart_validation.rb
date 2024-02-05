@@ -7,6 +7,7 @@ class Shopify::Validations::ConfigureCartValidation < Shopify::Base
   end
 
   def call
+    verify_shop_id
     set_max_trials_metafield
     configure_validation
   rescue StandardError => e
@@ -14,6 +15,14 @@ class Shopify::Validations::ConfigureCartValidation < Shopify::Base
   end
 
   private
+
+  def verify_shop_id
+    unless shop.shopify_id.present?
+      shopify_shop = ShopifyAPI::Shop.all.first
+      shop.shopify_id = "gid://shopify/Shop/#{shopify_shop.id}"
+      raise 'Shop missing Shopify ID' unless shop.save!
+    end
+  end
 
   def set_max_trials_metafield
     Shopify::Metafields::Create.call([{
