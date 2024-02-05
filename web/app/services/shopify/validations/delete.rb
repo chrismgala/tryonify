@@ -4,7 +4,7 @@ class Shopify::Validations::Delete < Shopify::Base
   VALIDATION_DELETE_QUERY = <<~QUERY
     mutation validationDelete($id: ID!) {
       validationDelete(id: $id) {
-        deleteId
+        deletedId
         userErrors {
           field
           message
