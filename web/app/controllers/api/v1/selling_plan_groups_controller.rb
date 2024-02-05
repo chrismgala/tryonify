@@ -32,6 +32,8 @@ module Api
               "node", "id")
             selling_plan_group.save!
 
+            create_selling_plans_metafield_on_shop
+
             render(json: service.selling_plan_group)
           else
             render_errors(service.error)
@@ -86,6 +88,8 @@ module Api
 
         selling_plan_group = SellingPlanGroup.find_by(shopify_id: params[:id])
         selling_plan_group.destroy! if selling_plan_group
+
+        create_selling_plans_metafield_on_shop
       end
 
       # Get products attached to selling plan group
@@ -99,6 +103,20 @@ module Api
       end
 
       private
+
+      def create_selling_plans_metafield_on_shop
+        if current_user.selling_plans.any?
+          selling_plans = current_user.selling_plans.pluck(:shopify_id)
+          attributes = {
+            key: "sellingPlans",
+            namespace: "$app:settings",
+            ownerId: current_user.shopify_id,
+            type: "json",
+            value: selling_plans.to_json,
+          }
+          Shopify::Metafields::Create.call([attributes])
+        end
+      end
 
       def selling_plan_params
         params.permit(

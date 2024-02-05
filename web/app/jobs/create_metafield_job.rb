@@ -10,12 +10,12 @@ class CreateMetafieldJob < ActiveJob::Base
     end
 
     shop.with_shopify_session do
-      service = CreateMetafield.new({
+      service = CreateMetafield.new([{
         key: attributes[:key],
         namespace: attributes[:namespace],
         type: attributes[:type],
         value: attributes[:value],
-      })
+      }])
       service.call
     end
   end

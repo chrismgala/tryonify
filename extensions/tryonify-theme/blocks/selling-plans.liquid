@@ -2,6 +2,8 @@
   assign cart_trial_items = 0
   assign allowed_trial = true
   assign allowed_tags = app.metafields.settings.allowedTags | split: ","
+  assign appId = app.metafields.settings.appId
+  assign namespace = 'app--' | append: appId | append: '--settings'
 
   for item in cart.items 
     if item.selling_plan_allocation
@@ -24,15 +26,22 @@
 %}
 
 {% if allowed_trial %}
-<div class="tryonify-selling-plan-wrapper">
-  {% if block.settings.style == 'expanded' %}
-    {% render 'expanded', cart_trial_items: cart_trial_items, show_buy_now_price: block.settings.show_buy_now_price, default_trial: block.settings.default_trial %}
-  {% endif %}
+  {% for selling_plan_group in product.selling_plan_groups %}
+    {% if selling_plan_group.app_id == "tryonify" %}
+      <div class="tryonify-selling-plan-wrapper">
+        {% if block.settings.style == 'expanded' %}
+          {% render 'expanded', selling_plan_group: selling_plan_group, cart_trial_items: cart_trial_items, show_buy_now_price: block.settings.show_buy_now_price, default_trial: block.settings.default_trial %}
+        {% endif %}
 
-  {% if block.settings.style == 'compact' %}
-    {% render 'compact', cart_trial_items: cart_trial_items, button_text: block.settings.button_text, button_class: block.settings.button_class %}
-  {% endif %}
-</div>
+        {% if block.settings.style == 'compact' %}
+          {% render 'compact', selling_plan_group: selling_plan_group, cart_trial_items: cart_trial_items, button_text: block.settings.button_text, button_class: block.settings.button_class %}
+        {% endif %}
+        {% if block.settings.show_trial_quantity and shop.metafields[namespace].maxTrialItems %}
+          <div class="tryonify-trial-count tryonify-text--small">{{ block.settings.trial_quantity_text | replace: '%d', shop.metafields[namespace].maxTrialItems }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% endfor %}
 {% endif %}
 
 {% schema %}
@@ -93,6 +102,23 @@
       "id": "button_class",
       "label": "Button Class",
       "default": "tryonify-button"
+    },
+    {
+      "type": "header",
+      "content": "Trial Rules"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trial_quantity",
+      "label": "Show trial quantity",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "trial_quantity_text",
+      "label": "Trial quantity text",
+      "default": "Limit of %d trials per order.",
+      "info": "Use %d as placeholder for trial count."
     }
   ]
 }

@@ -1,0 +1,21 @@
+query RunInput {
+  cart {
+    lines {
+      quantity
+      sellingPlanAllocation {
+        sellingPlan {
+          id
+          name
+        }
+      }
+    }
+  }
+  shop {
+    sellingPlans: metafield(namespace: "$app:settings", key: "sellingPlans") {
+      value
+    }
+    maxTrialItems: metafield(namespace: "$app:settings", key: "maxTrialItems") {
+      value
+    }
+  }
+}

@@ -38,6 +38,9 @@ export default function Settings() {
   const { isLoading, error, data } = useAppQuery({
     url: "/api/v1/shop"
   });
+  const { isLoading: validationLoading, data: validation } = useAppQuery({
+    url: "/api/v1/validations"
+  });
   const saveMutation = useMutation(
     (shop) => fetch('/api/v1/shop', {
       method: 'PUT',
@@ -47,8 +50,10 @@ export default function Settings() {
       body: JSON.stringify(shop)
     }).then(async (response) => await response.json()),
     {
-      onSuccess: (response) => {
-        queryClient.setQueryData("/api/v1/shop", response);
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["/api/v1/shop", "/api/v1/validations"]
+        });
       },
     }
   );
@@ -69,19 +74,21 @@ export default function Settings() {
   }, [tag])
 
   useEffect(() => {
-    if (saveMutation.isSuccess) toast.show('Save successful!', { duration: 2000 })
-  }, [saveMutation.isSuccess])
+    if (saveMutation.isSuccess) toast.show('Save successful!', { duration: 2000 });
+    if (saveMutation.isError) toast.show('Save failed!', { isError: true, duration: 2000 });
+  }, [saveMutation.isSuccess, saveMutation.isError])
 
-  if (isLoading) {
+  if (isLoading || validationLoading) {
     return null;
   }
-
+  
   return (
     <Page title="Settings">
       <Formik
         initialValues={{
           ...initialValues,
           ...data?.shop,
+          validationEnabled: validation?.enabled,
         }}
         onSubmit={onSubmit}
       >
@@ -92,17 +99,24 @@ export default function Settings() {
             <SaveBar dirty={dirty} submitForm={submitForm} resetForm={resetForm} />
             <Layout>
               <Layout.AnnotatedSection
-                title="General"
-                description="Settings for general behavior of the application."
+                title="Rules"
+                description="Add rules for your trial program."
               >
                 <Card sectioned>
                   <FormLayout>
+                    <Field
+                      label="Enable rules"
+                      name="validationEnabled"
+                      component={CheckboxField}
+                    />
+                    
                     <Field
                       label="Max trial items per order"
                       name="maxTrialItems"
                       autoComplete="off"
                       component={TextField}
                     />
+                    
                     <FieldArray name="allowedTags">
                       {arrayHelpers => (
                         <Stack vertical>

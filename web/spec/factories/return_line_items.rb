@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :return_line_item do
     shopify_id { Faker::Number.number(digits: 10) }
+    fulfillment_line_item_id { Faker::Number.number(digits: 10) }
     quantity { 1 }
   end
 end

@@ -3,27 +3,36 @@
 module Api
   module V1
     class ShopsController < AuthenticatedController
+      before_action :verify_data
+
       def show
-        @shop = current_user
+        current_user
       end
 
       def update
-        @shop = current_user
+        current_user
 
-        render_errors(@shop) and return unless @shop.update(shop_params)
+        render_errors(current_user) and return unless current_user.update(shop_params)
 
-        service = CreateMetafield.new
+        if params[:max_trial_items].to_i != current_user.max_trial_items || params[:validation_enabled] != current_user&.validation&.enabled
+          Shopify::MetafieldDefinitions::ConfigureMetafieldDefinitions.call
+          Shopify::Validations::ConfigureCartValidation.call(max_trials: params[:max_trial_items].to_i, enable: params[:validation_enabled])
 
-        if params[:max_trial_items].to_i != @shop.get_metafield("maxTrialItems")&.value
-          service.call({
-            key: "maxTrialItems",
-            namespace: "settings",
-            type: "number_integer",
-            value: params[:max_trial_items].to_i,
-          })
+          if current_user.selling_plans.any?
+            selling_plans = current_user.selling_plans.pluck(:shopify_id)
+            attributes = {
+              key: "sellingPlans",
+              namespace: "$app:settings",
+              ownerId: current_user.shopify_id,
+              type: "json",
+              value: selling_plans.to_json,
+            }
+            Shopify::Metafields::Create.call([attributes])
+          end
         end
 
-        if params[:allowed_tags] != @shop.get_metafield("allowedTags")&.value&.split(",")
+        # TODO: Have tags as a validation metafield
+        if params[:allowed_tags] != current_user.get_metafield("allowedTags")&.value&.split(",")
           if params[:allowed_tags].length > 0
             service.call({
               key: "allowedTags",
@@ -31,13 +40,21 @@ module Api
               type: "single_line_text_field",
               value: params[:allowed_tags].join(","),
             })
-          elsif @shop.get_metafield("allowedTags")
-            DeleteMetafield.new.call(@shop.get_metafield("allowedTags").shopify_id)
+          elsif current_user.get_metafield("allowedTags")
+            DeleteMetafield.new.call(current_user.get_metafield("allowedTags").shopify_id)
           end
         end
       end
 
       private
+
+      def verify_data
+        unless current_user.shopify_id.present?
+          shopify_shop = ShopifyAPI::Shop.all.first
+          current_user.shopify_id = "gid://shopify/Shop/#{shopify_shop.id}"
+          current_user.save!
+        end
+      end
 
       def shop_params
         params.require(:shop).permit(

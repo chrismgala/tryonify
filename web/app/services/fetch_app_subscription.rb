@@ -17,6 +17,9 @@ class FetchAppSubscription
       query appSubscription {
         currentAppInstallation {
           id
+          app {
+            id
+          }
           activeSubscriptions {
             id, name, test, trialDays
           }
