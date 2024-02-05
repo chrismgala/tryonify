@@ -7,6 +7,7 @@ class Shopify::Validations::ConfigureCartValidation < Shopify::Base
   end
 
   def call
+    set_app_id_metafield
     set_max_trials_metafield
     configure_validation
   rescue StandardError => e
@@ -14,6 +15,22 @@ class Shopify::Validations::ConfigureCartValidation < Shopify::Base
   end
 
   private
+
+  def set_app_id_metafield
+    # Set app metafield
+    service = FetchAppSubscription.new
+    service.call
+
+    raise 'Could not get app' unless service.app
+
+    Shopify::Metafields::Create.call([{
+      key: "appId",
+      namespace: "settings",
+      ownerId: service.app['id'],
+      type: "string",
+      value: service.app.dig('app', 'id').split('/').last
+    }])
+  end
 
   def set_max_trials_metafield
     Shopify::Metafields::Create.call([{
