@@ -14,7 +14,7 @@ module Api
 
         render_errors(current_user) and return unless current_user.update(shop_params)
 
-        if params[:max_trial_items].to_i != current_user.max_trial_items || params[:validation_enabled] != current_user.validation.enabled
+        if params[:max_trial_items].to_i != current_user.max_trial_items || params[:validation_enabled] != current_user&.validation&.enabled
           Shopify::MetafieldDefinitions::ConfigureMetafieldDefinitions.call
           Shopify::Validations::ConfigureCartValidation.call(max_trials: params[:max_trial_items].to_i, enable: params[:validation_enabled])
 
