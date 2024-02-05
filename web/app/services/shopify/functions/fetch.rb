@@ -2,7 +2,7 @@
 
 class Shopify::Functions::Fetch < Shopify::Base
   FETCH_SHOPIFY_FUNCTIONS_QUERY = <<~QUERY
-    query shopifyFunctions(apiType: String!) {
+    query shopifyFunctions($apiType: String!) {
       shopifyFunctions(apiType: $apiType, first: 100) {
         edges {
           node {

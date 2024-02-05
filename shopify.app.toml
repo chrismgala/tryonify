@@ -1,4 +1,2 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-[build]
-include_config_on_deploy = true
