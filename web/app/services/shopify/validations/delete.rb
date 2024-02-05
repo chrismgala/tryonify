@@ -29,6 +29,9 @@ class Shopify::Validations::Delete < Shopify::Base
       raise response.body.dig("data", "validationDelete", "userErrors", 0, "message") and return
     end
 
+    validation = Validation.find_by(shopify_id: @id)
+    validation.destroy! if validation
+
     response
   end
 end
