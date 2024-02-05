@@ -7,7 +7,6 @@ class Shopify::Validations::ConfigureCartValidation < Shopify::Base
   end
 
   def call
-    verify_shop_id
     set_max_trials_metafield
     configure_validation
   rescue StandardError => e
@@ -15,14 +14,6 @@ class Shopify::Validations::ConfigureCartValidation < Shopify::Base
   end
 
   private
-
-  def verify_shop_id
-    unless shop.shopify_id.present?
-      shopify_shop = ShopifyAPI::Shop.all.first
-      shop.shopify_id = "gid://shopify/Shop/#{shopify_shop.id}"
-      raise 'Shop missing Shopify ID' unless shop.save!
-    end
-  end
 
   def set_max_trials_metafield
     Shopify::Metafields::Create.call([{
@@ -32,25 +23,60 @@ class Shopify::Validations::ConfigureCartValidation < Shopify::Base
       type: "number_integer",
       value: @max_trials
     }])
+    shop.update!(max_trial_items: @max_trials)
   end
 
   def configure_validation
-    response = Shopify::Validations::Fetch.call
-    validations = response.body.dig("data", "validations", "edges")
     configuration = {
       blockOnFailure: true,
       enable: @enable,
     }
 
-    if validations.any?
-      shopify_validation = validations.find { |validation| validation.dig("node", "shopifyFunction", "apiType") == "cart_checkout_validation" && validation.dig("node", "shopifyFunction", "app", "apiKey") == ENV["SHOPIFY_API_KEY"] }
-      if shopify_validation.present?
-        response = Shopify::Validations::Update.call(id: shopify_validation.dig("node", "id"), validation: configuration)
-        validation = Validation.find_or_create_by!(shop: shop, shopify_id: response.body.dig("data", "validationUpdate", "validation", "id"))
-        validation.enabled = response.body.dig("data", "validationUpdate", "validation", "enabled")
-        validation.save!
-        shop.update!(max_trial_items: @max_trials)
-      end
+    find_existing_validations unless shop.validation.present?
+
+    if shop.validation.present?
+      update_validation(configuration)
+    else
+      create_validation(configuration)
+    end
+  end
+
+  def update_validation(configuration)
+    response = Shopify::Validations::Update.call(id: shop.validation.shopify_id, validation: configuration)
+    shopify_validation = response.body.dig("data", "validationUpdate", "validation")
+    shop.validation.update!(enabled: shopify_validation["enabled"])
+  end
+
+  def create_validation(configuration)
+    shopify_function_id = find_shopify_function_id
+
+    raise "Could not find Shopify function" unless shopify_function_id
+
+    configuration[:functionId] = shopify_function_id
+
+    response = Shopify::Validations::Create.call(validation: configuration)
+    shopify_validation = response.body.dig("data", "validationCreate", "validation")
+    Validation.create!(shop: shop, shopify_id: shopify_validation["id"], enabled: shopify_validation["enabled"])
+  end
+
+  def find_shopify_function_id
+    response = Shopify::Functions::Fetch.call
+    functions = response.body.dig("data", "shopifyFunctions", "edges")
+    app_function = functions.find { |function| function.dig("node", "app", "apiKey") == ENV["SHOPIFY_API_KEY"] }
+    app_function.dig("node", "id")
+  end
+
+  def find_existing_validations
+    response = Shopify::Validations::Fetch.call
+    validations = response.body.dig("data", "validations", "edges")
+
+    return nil unless validations.any?
+
+    shopify_validation = validations.find { |validation| validation.dig("node", "shopifyFunction", "apiType") == "cart_checkout_validation" && validation.dig("node", "shopifyFunction", "app", "apiKey") == ENV["SHOPIFY_API_KEY"] }
+    if shopify_validation.present?
+      Validation.create!(shop: shop, shopify_id: shopify_validation.dig("node", "id"), enabled: shopify_validation.dig("node", "enabled"))
+    else
+      nil
     end
   end
 end
