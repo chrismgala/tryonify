@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Order < ApplicationRecord
-  include PgSearch::Model
+  include PgSearchable
 
   validates :shopify_id, :email, :financial_status, presence: true
   # validates :due_date, presence: true, if: -> { cancelled_at.nil? }
@@ -37,14 +37,6 @@ class Order < ApplicationRecord
   scope :by_email, -> { where("REGEXP_REPLACE(email, '(\\+.*?(?=@))|\\.', '', 'g') = :email", :email => email.gsub('.', '')) }
 
   accepts_nested_attributes_for :line_items, :shipping_address, :transactions, :returns, allow_destroy: true
-
-  pg_search_scope :search_by_name, against: :name, using: { tsearch: { prefix: true } }
-
-  pg_search_scope :address_search,
-    associated_against: {
-      shipping_address: [:city, :address1, :address2, :zip],
-    },
-    using: :trigram
 
   MAX_AUTHORIZATION_RETRY = 3
 
@@ -148,15 +140,5 @@ class Order < ApplicationRecord
 
   def ignored?
     ignored_at.present?
-  end
-
-  class << self
-    def search(query)
-      if query.present?
-        search_by_name(query)
-      else
-        order(shopify_created_at: :desc)
-      end
-    end
   end
 end
