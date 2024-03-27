@@ -1,9 +1,8 @@
 module PgSearchable
+  include PgSearch::Model
   extend ActiveSupport::Concern
 
   included do
-    include PgSearch::Model
-
     pg_search_scope :search_by_name, against: :name, using: { tsearch: { prefix: true } }
 
     pg_search_scope :address_search,
