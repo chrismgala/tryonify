@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_02_183422) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_31_203517) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -109,6 +109,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_02_183422) do
     t.datetime "ignored_at"
     t.string "payment_terms_id"
     t.datetime "max_due_date"
+    t.string "aasm_state"
     t.index ["shop_id"], name: "index_orders_on_shop_id"
     t.index ["shopify_id"], name: "index_orders_on_shopify_id", unique: true
   end
@@ -245,6 +246,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_02_183422) do
     t.boolean "reauthorize_paypal", default: true
     t.boolean "reauthorize_shopify_payments", default: true
     t.string "shopify_id"
+    t.boolean "charge_failed_reauthorizations", default: false
     t.index ["plan_id"], name: "index_shops_on_plan_id"
     t.index ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
   end
@@ -291,7 +293,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_02_183422) do
   end
 
   add_foreign_key "bulk_operations", "shops"
-  add_foreign_key "checkouts", "shops"
+  add_foreign_key "checkouts", "shops", on_delete: :cascade
   add_foreign_key "line_items", "orders", on_delete: :cascade
   add_foreign_key "orders", "shops", on_delete: :cascade
   add_foreign_key "payments", "orders"
