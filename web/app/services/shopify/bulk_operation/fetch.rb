@@ -1,4 +1,7 @@
 # Fetch a bulk operation from the Shopify API
+# This is used to get the status of a bulk operation
+# and the URL to download the results. The ID is created
+# in the database when the bulk operation is created.
 
 class Shopify::BulkOperation::Fetch < Shopify::Base
   BULK_OPERATION_FETCH_QUERY = <<~QUERY
