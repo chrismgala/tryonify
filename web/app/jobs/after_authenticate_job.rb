@@ -10,13 +10,12 @@ class AfterAuthenticateJob < ActiveJob::Base
     end
 
     shop.with_shopify_session do
-      shopify_shop = ShopifyAPI::Shop.all.first
+      service = Shopify::Store::Fetch.call
+      shopify_shop = service.body.dig('data', 'shop')
 
-      shop.shopify_id = "gid://shopify/Shop/#{shopify_shop.id}"
-      shop.email = shopify_shop.email
-      shop.order_number_format_prefix = shopify_shop.order_number_format_prefix
-      shop.order_number_format_suffix = shopify_shop.order_number_format_suffix
-      shop.currency_code = shopify_shop.currency
+      shop.shopify_id = shopify_shop['id']
+      shop.email = shopify_shop['email']
+      shop.currency_code = shopify_shop['currencyCode']
       shop.save!
 
       # Set app metafield
