@@ -7,7 +7,7 @@ task list_webhooks: :environment do |_task, _args|
   shops.each do |shop|
     shop.with_shopify_session do
       puts "Shop: #{shop.shopify_domain}"
-      webhooks = ShopifyAPI::Webhook.all
+      webhooks = Shopify::Webhooks::FetchAll.call
       puts webhooks.inspect
     end
   end
