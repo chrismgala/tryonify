@@ -12,7 +12,7 @@ dev_store_url = "tryonify-dev.myshopify.com"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_all_orders,read_customers,read_draft_orders,read_orders,read_payment_mandate,read_payment_terms,read_products,read_purchase_options,read_validations,write_orders,write_payment_mandate,write_products,write_purchase_options"
+scopes = "read_all_orders,read_customers,read_draft_orders,read_orders,read_payment_mandate,read_payment_terms,read_products,read_purchase_options,read_validations,write_orders,write_payment_mandate,write_products,write_purchase_options,write_returns"
 
 [auth]
 redirect_urls = [

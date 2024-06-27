@@ -14,6 +14,7 @@ class Order < ApplicationRecord
   has_many :transactions, dependent: :destroy
   has_many :payments, dependent: :destroy
   has_one :shipping_address, dependent: :destroy
+  has_many :jobs, as: :jobable, dependent: :destroy
 
   scope :active, -> { where(ignored_at: nil) }
   scope :payment_due, lambda {

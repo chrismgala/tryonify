@@ -21,13 +21,24 @@ class OrderCancel < ApplicationService
   private
 
   def cancel_order
-    Shopify::Orders::Cancel.call(
+    response = Shopify::Orders::Cancel.call(
       order_id: @order.shopify_id,
       refund: @refund,
       restock: true,
       reason: "DECLINED",
       staff_note: "Cancelled by TryOnify"
     )
+
+    job = response.body.dig("data", "orderCancel", "job")
+
+    if job.present?
+      job = Jobs::OrderCancelJob.create!(
+        shop: @order.shop,
+        jobable: @order,
+        shopify_id: job["id"],
+      )
+      FetchJobStatusJob.set(wait: 1.minute).perform_later(job)
+    end
   end
 
   def send_notifications
