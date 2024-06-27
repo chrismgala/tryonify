@@ -50,8 +50,8 @@ module Api
 
       def verify_data
         unless current_user.shopify_id.present?
-          shopify_shop = ShopifyAPI::Shop.all.first
-          current_user.shopify_id = "gid://shopify/Shop/#{shopify_shop.id}"
+          service = Shopify::Store::Fetch.call
+          current_user.shopify_id = service.body.dig('data', 'shop', 'id')
           current_user.save!
         end
       end
