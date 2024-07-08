@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_31_203517) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_26_232903) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -54,6 +54,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_31_203517) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "unique_names", unique: true
+  end
+
+  create_table "jobs", force: :cascade do |t|
+    t.string "shopify_id", null: false
+    t.string "type"
+    t.boolean "done", default: false
+    t.string "jobable_type"
+    t.bigint "jobable_id"
+    t.bigint "shop_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["jobable_type", "jobable_id"], name: "index_jobs_on_jobable"
+    t.index ["shop_id"], name: "index_jobs_on_shop_id"
+    t.index ["shopify_id"], name: "index_jobs_on_shopify_id", unique: true
   end
 
   create_table "line_items", force: :cascade do |t|
@@ -294,6 +308,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_31_203517) do
 
   add_foreign_key "bulk_operations", "shops"
   add_foreign_key "checkouts", "shops", on_delete: :cascade
+  add_foreign_key "jobs", "shops"
   add_foreign_key "line_items", "orders", on_delete: :cascade
   add_foreign_key "orders", "shops", on_delete: :cascade
   add_foreign_key "payments", "orders"
