@@ -123,6 +123,12 @@ pnpm run dev
 
 Open the URL generated in your console. Once you grant permission to the app, you can start development.
 
+To run the background worker, navigate to the /web directory and run:
+
+```shell
+bundle exec sidekiq
+```
+
 ## Deployment
 
 ### Application Storage
@@ -167,6 +173,10 @@ SHOPIFY_API_KEY=REPLACE_ME yarn build
 cd ..
 rake build:all
 ```
+
+### TOML files
+
+When interacting with the Shopify CLI, it will try to create and populate TOML files with the app configuration. Locally, you will use this file to set access scopes for OAuth, but you will pretty much ignore it otherwise. The important thing to realize about these TOML files is that they will update the app configuration on Shopify for whichever app they are associated with. Make sure not to use the deploy command with the wrong TOML file or you will end up changing the app configuration. If this does happen, you can fix it by updating the app configuration from the Partner Dashboard, but it could lead to unintended interruptions.
 
 ## Hosting
 
