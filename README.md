@@ -100,26 +100,18 @@ cd ..
 [The Shopify CLI](https://shopify.dev/apps/tools/cli) connects to an app in your Partners dashboard.
 It provides environment variables, runs commands in parallel, and updates application URLs for easier development.
 
-You can develop locally using your preferred Node.js package manager.
-Run one of the following commands from the root of your app:
-
-Using yarn:
-
-```shell
-yarn dev
-```
-
-Using npm:
+Shopify CLI will create a tunnel for you and update the app URLs to the tunnel for you, but it does not work for webhooks.
+For this reason, it is better to use your own SSH tunnel with something like ngrok or CloudFlare Tunnel. It is recommended
+that you use a dedicated URL so you don't have to keep updating the app configuration. When you have the URL, you will need to pass it
+as an argument when you start the server, along with the port.
 
 ```shell
-npm run dev
+yarn dev --tunnel-url=https://tryonify.ngrok.io:3000
 ```
 
-Using pnpm:
-
-```shell
-pnpm run dev
-```
+When the CLI starts the development server, it will push the extensions from your /extensions directory to make sure they are up-to-date. It 
+will also watch that folder for changes and push updates to Shopify. It can take a varying degree of time for the update to start working
+on Shopify.
 
 Open the URL generated in your console. Once you grant permission to the app, you can start development.
 
@@ -130,6 +122,43 @@ bundle exec sidekiq
 ```
 
 ## Deployment
+
+### Deploying to Render
+
+With Render, you can connect the services to your GitHub repository to enable automatic deployments. The staging services should deploy from
+the staging branch. The production services should deploy from the main branch. If there are new migrations, the database will be updated automatically.
+
+When you have automatic deployments set up on Render, any time you push a change to the branch, it will automatically update the services. If there is a build error
+it will roll back to the latest working deployment. Generally, you don't have to touch the servers at all manually when there are updates to the application.
+
+A typical flow when pushing changes would be to push the branch you are working on to GitHub, then create a pull request to the staging branch. Once you accept the
+merge request and merge it to the staging branch, wait for the services to update and test it on a store using the staging application. If everything looks good,
+create a pull request merging the staging branch to the main branch. It is not recommended to skip the staging branch, as the staging server is there to prevent any
+broken code from reaching the production server. If the two servers are out of sync, you won't know exactly what to expect when changes are deployed.
+
+### Deploying changes to extensions
+
+In order for extensions to be deployed to the staging or production applications, you need to use the CLI to deploy the changes using `yarn deploy`.
+__Be careful not to deploy configuration changes to the wrong app.__ If you push a configuration file to the wrong application, you run the risk of
+pointing the app to the wrong server. It is recommended to have toml files for each environment. You can find more information [here](https://shopify.dev/docs/apps/build/cli-for-apps/manage-app-config-files).
+When you are ready to deploy to an app use the deploy command and point to the configuration file it should use, for example `yarn deploy -c shopify.app.staging.toml`.
+
+### One-off Jobs
+
+If you need to run a task on the server for any reason, Render allows shell access to the service from their admin. However, the recommended way to run jobs is using their [Jobs](https://docs.render.com/jobs)
+API. Using a service like Postman or Bruno, you can send a job is a similar format to how you would run it from the CLI. The API will boot a new instance of the app using the same configuration as the service to run the job, thereby 
+avoiding any potential interruptions to the service. You can view the status of the jobs from the Job menu in the service admin.
+
+For example, in Bruno, you would create a new POST request. Set the URL to be `https://api.render.com/v1/services/[YOUR_SERVICE_ID]/jobs`. In the Auth tab choose Bearer Token and add the API token from your Render dashboard.
+In the Body tab, choose JSON and add:
+
+```json
+{
+  "startCommand": "rake whatever_command"
+}
+```
+
+When you send this command, it will create the new instance and then run `rake whatever_command`, and then shut down the instance once the job is complete.
 
 ### Application Storage
 
