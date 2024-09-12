@@ -34,12 +34,18 @@ module Api
         # TODO: Have tags as a validation metafield
         if params[:allowed_tags] != current_user.get_metafield("allowedTags")&.value&.split(",")
           if params[:allowed_tags].length > 0
-            service.call({
+            service = FetchAppSubscription.new
+            service.call
+
+            raise 'Could not get app' unless service.app
+
+            Shopify::Metafields::Create.call([{
               key: "allowedTags",
               namespace: "settings",
+              ownerId: service.app['id'],
               type: "single_line_text_field",
               value: params[:allowed_tags].join(","),
-            })
+            }])
           elsif current_user.get_metafield("allowedTags")
             DeleteMetafield.new.call(current_user.get_metafield("allowedTags").shopify_id)
           end
