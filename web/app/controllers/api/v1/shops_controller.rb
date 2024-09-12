@@ -32,13 +32,22 @@ module Api
         end
 
         # TODO: Have tags as a validation metafield
+        update_allowed_tags
+      end
+
+      private
+
+      def update_allowed_tags
         if params[:allowed_tags] != current_user.get_metafield("allowedTags")&.value&.split(",")
           if params[:allowed_tags].length > 0
+            # Fetch the App ID to set as owner of the metafield
             service = FetchAppSubscription.new
             service.call
 
             raise 'Could not get app' unless service.app
 
+            # Save the allowed tags as a metafield for easy use
+            # within app block extensions
             Shopify::Metafields::Create.call([{
               key: "allowedTags",
               namespace: "settings",
@@ -51,8 +60,6 @@ module Api
           end
         end
       end
-
-      private
 
       def verify_data
         unless current_user.shopify_id.present?
