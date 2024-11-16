@@ -25,7 +25,7 @@ class AfterAuthenticateJob < ActiveJob::Base
 
       raise 'Could not get app' unless service.app
 
-      mantle_client = Mantle::Client.new(
+      mantle_client = Mantle::MantleClient.new(
         app_id: ENV["MANTLE_APP_ID"],
         api_key: ENV["MANTLE_APP_KEY"], # Use nil if calling from the client-side
         customer_api_token: nil, # Use the customer's API token if calling from the client-side
