@@ -27,10 +27,12 @@ class AfterAuthenticateJob < ActiveJob::Base
 
       mantle_client = Mantle::MantleClient.new(
         app_id: ENV["MANTLE_APP_ID"],
-        api_key: ENV["MANTLE_APP_KEY"], # Use nil if calling from the client-side
-        customer_api_token: nil, # Use the customer's API token if calling from the client-side
+        api_key: ENV["MANTLE_APP_KEY"],
+        customer_api_token: nil,
         api_url: 'https://appapi.heymantle.com/v1'
       )
+
+      raise 'Could not create mantle client' unless mantle_client
 
       customer_response = mantle_client.identify(
         platform_id: shopify_shop['id'],
