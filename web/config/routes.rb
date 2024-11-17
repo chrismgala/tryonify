@@ -68,8 +68,6 @@ Rails.application.routes.draw do
     # AppProxy::ReviewsController#index, for example
   end
 
-  get "/metafield/:shopify_id", to: "metafield#show"
-
   # Any other routes will just render the react app
   match "*path" => "home#index", via: [:get, :post]
 end
