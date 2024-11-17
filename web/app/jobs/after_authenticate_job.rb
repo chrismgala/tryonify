@@ -19,11 +19,15 @@ class AfterAuthenticateJob < ActiveJob::Base
       shop.currency_code = shopify_shop['currencyCode']
       shop.save!
 
+      logger.info("#{self.class} updated shop #{shopify_shop['url']}")
+
       # Set app metafield
       service = FetchAppSubscription.new
       service.call
 
       raise 'Could not get app' unless service.app
+
+      logger.info("#{self.class} got app installation #{service.app}")
 
       mantle_client = Mantle::MantleClient.new(
         app_id: ENV["MANTLE_APP_ID"],
@@ -34,6 +38,8 @@ class AfterAuthenticateJob < ActiveJob::Base
 
       raise 'Could not create mantle client' unless mantle_client
 
+      logger.info("#{self.class} created mantle client")
+
       customer_response = mantle_client.identify(
         platform_id: shopify_shop['id'],
         myshopify_domain: shopify_shop['url'],
@@ -42,9 +48,14 @@ class AfterAuthenticateJob < ActiveJob::Base
         email: shopify_shop['email']
       )
 
+      raise 'Could not identify customer with mantle' unless customer_response
+
       logger.info("#{self.class} identified customer in Mantle with API token #{customer_response['apiToken']}")
 
       current_customer = mantle_client.get_customer
+
+      raise 'Could not get current customer with mantle' unless current_customer
+
       logger.info("#{self.class} current customer: #{current_customer}")
 
       Shopify::Metafields::Create.call([{
