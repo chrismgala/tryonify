@@ -8,6 +8,7 @@ module Shopify
           id
           url
           email
+          name
           currencyCode
           plan {
             displayName

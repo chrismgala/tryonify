@@ -10,6 +10,7 @@ class AfterAuthenticateJob < ActiveJob::Base
     end
 
     shop.with_shopify_session do
+      session = ShopifyAPI::Context.active_session
       service = Shopify::Store::Fetch.call
       shopify_shop = service.body.dig('data', 'shop')
 
@@ -23,6 +24,26 @@ class AfterAuthenticateJob < ActiveJob::Base
       service.call
 
       raise 'Could not get app' unless service.app
+
+      mantle_client = Mantle::MantleClient.new(
+        app_id: ENV["MANTLE_APP_ID"],
+        api_key: ENV["MANTLE_APP_KEY"], # Use nil if calling from the client-side
+        customer_api_token: nil, # Use the customer's API token if calling from the client-side
+        api_url: 'https://appapi.heymantle.com/v1'
+      )
+
+      customer_response = mantle_client.identify(
+        platform_id: shopify_shop['id'],
+        myshopify_domain: shopify_shop['url'],
+        access_token: session.access_token,
+        name: shopify_shop['name'],
+        email: shopify_shop['email']
+      )
+
+      logger.info("#{self.class} identified customer in Mantle with API token #{customer_response['apiToken']}")
+
+      current_customer = mantle_client.get_customer
+      logger.info("#{self.class} current customer: #{current_customer}")
 
       Shopify::Metafields::Create.call([{
         key: "appId",

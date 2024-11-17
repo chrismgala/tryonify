@@ -7,7 +7,7 @@ Rails.application.configure do
     config.hosts << /[-\w]+\.myshopify\.com/
   rescue StandardError
     []
-  end << /[-\w]+\.ngrok\.io/
+  end << /[-\w]+\.ngrok-free\.app/
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded any time
