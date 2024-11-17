@@ -9,7 +9,7 @@ class Mantle::MantleClient
 
   def initialize(app_id:, api_key: nil, customer_api_token: nil, api_url: "https://appapi.heymantle.com/v1")
     raise ArgumentError, "MantleClient app_id is required" unless app_id
-    raise ArgumentError, "MantleClient apiKey should never be used in the browser" if defined?(Rails) && api_key
+    raise ArgumentError, "MantleClient apiKey should never be used in the browser" if defined?(Rails::Console) && api_key
     raise ArgumentError, "MantleClient one of apiKey or customerApiToken is required" unless api_key || customer_api_token
 
     @app_id = app_id
