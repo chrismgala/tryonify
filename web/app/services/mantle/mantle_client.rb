@@ -45,9 +45,8 @@ class Mantle::MantleClient
               end
 
     request.body = body.to_json if body
-
+    puts "[mantleRequest] #{request}"
     response = http.request(request)
-    puts "[mantleRequest] #{response}"
     JSON.parse(response.body)
   rescue => e
     puts "[mantleRequest] #{path} error: #{e.message}"
