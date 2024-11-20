@@ -6,7 +6,13 @@ module EnsureBilling
   extend ActiveSupport::Concern
 
   # List of shops that get app for free
-  EXCLUDED_FROM_BILLING = ["sa-shashank.myshopify.com", "26910b-2.myshopify.com", "fd4267.myshopify.com", "alagsirhc.myshopify.com"].freeze
+  EXCLUDED_FROM_BILLING = [
+    "sa-shashank.myshopify.com",
+    "26910b-2.myshopify.com",
+    "fd4267.myshopify.com",
+    "alagsirhc.myshopify.com",
+    "ayyildizstore-6559.myshopify.com"
+  ].freeze
 
   included do
     before_action :check_billing
