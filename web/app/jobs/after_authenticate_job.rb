@@ -29,7 +29,7 @@ class AfterAuthenticateJob < ActiveJob::Base
         app_id: ENV["MANTLE_APP_ID"],
         api_key: ENV["MANTLE_APP_KEY"],
         customer_api_token: nil,
-        api_url: 'https://appapi.heymantle.com/v1'
+        api_url: 'https://appapi.heymantle.com/v1/'
       )
 
       raise 'Could not create mantle client' unless mantle_client
