@@ -22,6 +22,7 @@ class Mantle::MantleClient
     uri = URI.join(@api_url, path)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = uri.scheme == "https"
+    http.set_debug_output($stdout)
 
     headers = {
       "Content-Type" => "application/json",
@@ -46,6 +47,7 @@ class Mantle::MantleClient
 
     request.body = body.to_json if body
     puts "[mantleRequest] #{request}"
+    puts "[mantleRequest] #{request.body}"
     response = http.request(request)
     JSON.parse(response.body)
   rescue => e
