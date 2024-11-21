@@ -54,7 +54,7 @@ class Mantle::MantleClient
   end
 
   def identify(platform_id:, myshopify_domain:, platform: "shopify", access_token:, name:, email:, custom_fields: nil)
-    mantle_request(path: "identify", method: "POST", body: { platform_id: platform_id, myshopify_domain: myshopify_domain, platform: platform, access_token: access_token, name: name, email: email, custom_fields: custom_fields })
+    mantle_request(path: "identify", method: "POST", body: { platformId: platform_id, myshopifyDomain: myshopify_domain, platform: platform, access_token: access_token, name: name, email: email, custom_fields: custom_fields })
   end
 
   def get_customer
