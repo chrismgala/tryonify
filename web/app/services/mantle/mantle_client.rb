@@ -7,7 +7,7 @@ require "json"
 class Mantle::MantleClient
   attr_accessor :app_id, :api_key, :customer_api_token, :api_url
 
-  def initialize(app_id:, api_key: nil, customer_api_token: nil, api_url: "https://appapi.heymantle.com/v1")
+  def initialize(app_id:, api_key: nil, customer_api_token: nil, api_url: "https://appapi.heymantle.com/v1/")
     raise ArgumentError, "MantleClient app_id is required" unless app_id
     raise ArgumentError, "MantleClient apiKey should never be used in the browser" if defined?(Rails::Console) && api_key
     raise ArgumentError, "MantleClient one of apiKey or customerApiToken is required" unless api_key || customer_api_token
@@ -46,8 +46,6 @@ class Mantle::MantleClient
               end
 
     request.body = body.to_json if body
-    puts "[mantleRequest] #{request}"
-    puts "[mantleRequest] #{request.body}"
     response = http.request(request)
     JSON.parse(response.body)
   rescue => e
