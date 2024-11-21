@@ -35,8 +35,8 @@ class AfterAuthenticateJob < ActiveJob::Base
       raise 'Could not create mantle client' unless mantle_client
 
       customer_response = mantle_client.identify(
-        platform_id: shopify_shop['id'],
-        myshopify_domain: shopify_shop['url'],
+        platform_id: shopify_shop['id'][19..], # Strip out 'gid://shopify/Shop/'
+        myshopify_domain: shopify_shop['url'][8..], # Strip out 'https://'
         access_token: session.access_token,
         name: shopify_shop['name'],
         email: shopify_shop['email']
