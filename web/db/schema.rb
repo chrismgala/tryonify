@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_26_232903) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_23_073116) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -260,7 +260,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_26_232903) do
     t.boolean "reauthorize_paypal", default: true
     t.boolean "reauthorize_shopify_payments", default: true
     t.string "shopify_id"
-    t.boolean "charge_failed_reauthorizations", default: false
+    t.string "mantle_api_token"
     t.index ["plan_id"], name: "index_shops_on_plan_id"
     t.index ["shopify_domain"], name: "index_shops_on_shopify_domain", unique: true
   end
