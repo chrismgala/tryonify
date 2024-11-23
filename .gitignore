@@ -1,4 +1,5 @@
 **/node_modules
+web/config/credentials.yml.enc
 
 .idea
 .vscode

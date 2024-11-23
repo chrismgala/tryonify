@@ -46,6 +46,9 @@ class AfterAuthenticateJob < ActiveJob::Base
 
       logger.info("#{self.class} identified customer in Mantle with API token #{customer_response['apiToken']}")
 
+      shop.mantle_api_token = customer_response['apiToken']
+      shop.save!
+
       current_customer = mantle_client.get_customer
 
       logger.info("#{self.class} current customer: #{current_customer}")
