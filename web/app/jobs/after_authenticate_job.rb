@@ -42,6 +42,8 @@ class AfterAuthenticateJob < ActiveJob::Base
         email: shopify_shop['email']
       )
 
+      mantle_client.set_customer_api_token(customer_api_token: customer_response['apiToken'])
+
       logger.info("#{self.class} identified customer in Mantle with API token #{customer_response['apiToken']}")
 
       current_customer = mantle_client.get_customer

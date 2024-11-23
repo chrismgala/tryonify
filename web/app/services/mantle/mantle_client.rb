@@ -18,6 +18,10 @@ class Mantle::MantleClient
     @api_url = api_url
   end
 
+  def set_customer_api_token(customer_api_token:)
+    @customer_api_token = customer_api_token
+  end
+
   def mantle_request(path:, method: "GET", body: nil)
     uri = URI.join(@api_url, path)
     http = Net::HTTP.new(uri.host, uri.port)
@@ -53,8 +57,28 @@ class Mantle::MantleClient
     raise e
   end
 
-  def identify(platform_id:, myshopify_domain:, platform: "shopify", access_token:, name:, email:, custom_fields: nil)
-    mantle_request(path: "identify", method: "POST", body: { platformId: platform_id, myshopifyDomain: myshopify_domain, platform: platform, access_token: access_token, name: name, email: email, custom_fields: custom_fields })
+  def identify(
+    platform_id:,
+    myshopify_domain:,
+    platform: "shopify",
+    access_token:,
+    name:,
+    email:,
+    custom_fields: nil
+  )
+    mantle_request(
+      path: "identify",
+      method: "POST",
+      body: {
+        platformId: platform_id,
+        myshopifyDomain: myshopify_domain,
+        platform: platform,
+        accessToken: access_token,
+        name: name,
+        email: email,
+        custom_fields: custom_fields
+      }
+    )
   end
 
   def get_customer
