@@ -17,7 +17,6 @@ class AfterAuthenticateJob < ActiveJob::Base
       shop.shopify_id = shopify_shop['id']
       shop.email = shopify_shop['email']
       shop.currency_code = shopify_shop['currencyCode']
-      shop.save!
 
       # Set app metafield
       service = FetchAppSubscription.new
@@ -44,14 +43,10 @@ class AfterAuthenticateJob < ActiveJob::Base
 
       mantle_client.set_customer_api_token(customer_api_token: customer_response['apiToken'])
 
-      logger.info("#{self.class} identified customer in Mantle with API token #{customer_response['apiToken']}")
-
       shop.mantle_api_token = customer_response['apiToken']
       shop.save!
 
       current_customer = mantle_client.get_customer
-
-      logger.info("#{self.class} current customer: #{current_customer}")
 
       Shopify::Metafields::Create.call([{
         key: "appId",
