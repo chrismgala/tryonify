@@ -33,8 +33,8 @@ class Mantle::MantleClient
       "Accept" => "application/json",
       "X-Mantle-App-Id" => @app_id
     }
-    headers["X-Mantle-App-Api-Key"] = @api_key if @api_key
-    headers["X-Mantle-Customer-Api-Token"] = @customer_api_token if @customer_api_token
+    headers["X-Mantle-App-Api-Key"] = @api_key if @api_key && path == "identify"
+    headers["X-Mantle-Customer-Api-Token"] = @customer_api_token if @customer_api_token && path == "customer"
 
     request = case method
               when "GET"
