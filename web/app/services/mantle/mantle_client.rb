@@ -34,7 +34,7 @@ class Mantle::MantleClient
       "X-Mantle-App-Id" => @app_id
     }
     headers["X-Mantle-App-Api-Key"] = @api_key if @api_key && path == "identify"
-    headers["X-Mantle-Customer-Api-Token"] = @customer_api_token if @customer_api_token && path == "customer"
+    headers["X-Mantle-Customer-Api-Token"] = @customer_api_token if @customer_api_token && (path == "customer" || path == "usage_events")
 
     request = case method
               when "GET"
@@ -97,8 +97,17 @@ class Mantle::MantleClient
     mantle_request(path: "subscriptions", method: "PUT", body: { id: id, capped_amount: capped_amount })
   end
 
-  def send_usage_event(event_id: nil, event_name:, customer_id:, properties: {})
-    mantle_request(path: "usage_events", method: "POST", body: { event_id: event_id, event_name: event_name, customer_id: customer_id, properties: properties })
+  def send_usage_event(event_name:, event_id:, customer_id:, properties: {})
+    mantle_request(
+      path: "usage_events",
+      method: "POST",
+      body: {
+        eventName: event_name,
+        eventId: event_id,
+        customerId: customer_id,
+        properties: properties,
+      }
+    )
   end
 
   def send_usage_events(events:)

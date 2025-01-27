@@ -3,9 +3,16 @@
 class CreatePayment < ApplicationService
   attr_accessor :error
 
+  LEGACY_SUBSCRIBERS = [
+    "zcoil.myshopify.com",
+    "jordanjack.myshopify.com",
+    "styleboxie.myshopify.com"
+  ].freeze
+
   def initialize(order_id)
     super()
     @order = Order.find(order_id)
+    @shop = Shop.find_by(id: @order.shop_id)
     @payment = nil
     @error = nil
     session = ShopifyAPI::Context.active_session
@@ -31,6 +38,8 @@ class CreatePayment < ApplicationService
 
       # Don't touch the order again after payment
       @order.ignore! if @order.ignored_at.nil?
+
+      send_mantle_usage_event unless LEGACY_SUBSCRIBERS.include?(@shop.shopify_domain) || @shop.mantle_api_token.blank?
     end
   end
 
@@ -91,5 +100,31 @@ class CreatePayment < ApplicationService
 
   def schedule_update
     FetchPaymentStatusJob.set(wait: 2.minutes).perform_later(@payment.id)
+  end
+
+  def send_mantle_usage_event
+    Rails.logger.info("[CreatePayment id=#{@order.id}]: Tracking payment with Mantle")
+
+    mantle_client = Mantle::MantleClient.new(
+      app_id: ENV["MANTLE_APP_ID"],
+      api_key: ENV["MANTLE_APP_KEY"],
+      customer_api_token: nil,
+      api_url: 'https://appapi.heymantle.com/v1/'
+    )
+
+    mantle_client.set_customer_api_token(customer_api_token: @shop.mantle_api_token)
+
+    transactions = Transaction.where(order_id: @order.id, kind: 5)
+
+    transactions.each do |transaction|
+      mantle_client.send_usage_event(
+        event_name: 'order_captured',
+        customer_id: @order.shop_id,
+        event_id: @order.id,
+        properties: {
+          order_amount: transaction.amount,
+        }
+      )
+    end
   end
 end

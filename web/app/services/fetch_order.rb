@@ -4,70 +4,68 @@ class FetchOrder < ApplicationService
   attr_accessor :error
 
   FETCH_ORDER_QUERY = <<~QUERY
-    query fetchOrder($id: ID!, $after: String) {
+    query {
       order(id: $id) {
-        ...on Order {
+        id
+        createdAt
+        updatedAt
+        closedAt
+        cancelledAt
+        clientIp
+        name
+        displayFinancialStatus
+        displayFulfillmentStatus
+        customer {
+          email
+        }
+        note
+        tags
+        fullyPaid
+        totalOutstandingSet {
+          shopMoney {
+            amount
+          }
+        }
+        paymentTerms {
           id
-          createdAt
-          updatedAt
-          closedAt
-          cancelledAt
-          clientIp
-          name
-          displayFinancialStatus
-          displayFulfillmentStatus
-          customer {
-            email
-          }
-          note
-          tags
-          fullyPaid
-          totalOutstandingSet {
-            shopMoney {
-              amount
-            }
-          }
-          paymentTerms {
-            id
-            paymentSchedules(first: 1) {
-              edges {
-                node {
-                  dueAt
-                }
-              }
-            }
-          }
-          paymentCollectionDetails {
-            vaultedPaymentMethods {
-              id
-            }
-          }
-          lineItems(first: 10, after: $after) {
+          paymentSchedules(first: 1) {
             edges {
               node {
-                id
-                image {
-                  url
-                }
-                quantity
-                restockable
-                unfulfilledQuantity
-                title
-                variantTitle
-                sellingPlan {
-                  sellingPlanId
-                }
+                dueAt
               }
             }
-            pageInfo {
-              hasNextPage
-              endCursor
+          }
+        }
+        paymentCollectionDetails {
+          vaultedPaymentMethods {
+            id
+          }
+        }
+        lineItems(first: 10, after: $after) {
+          edges {
+            node {
+              id
+              image {
+                url
+              }
+              quantity
+              restockable
+              unfulfilledQuantity
+              title
+              variantTitle
+              sellingPlan {
+                sellingPlanId
+              }
             }
           }
-          totalPriceSet {
-            shopMoney {
-              amount
-            }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+        totalPriceSet {
+          shopMoney {
+            amount
           }
         }
       }
@@ -84,8 +82,7 @@ class FetchOrder < ApplicationService
 
   def call
     variables = {
-      id: @id,
-      after: @after,
+      id: @id
     }
 
     response = @client.query(query: FETCH_ORDER_QUERY, variables:)
