@@ -48,12 +48,11 @@
   - Use background jobs (e.g., Sidekiq) for time-consuming tasks.
   
   Testing
-  - Write comprehensive tests using RSpec or Minitest.
+  - Write comprehensive tests using RSpec.
   - Follow TDD/BDD practices.
   - Use factories (FactoryBot) for test data generation.
   
   Security
-  - Implement proper authentication and authorization (e.g., Devise, Pundit).
   - Use strong parameters in controllers.
   - Protect against common web vulnerabilities (XSS, CSRF, SQL injection).
   
