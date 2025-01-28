@@ -4,7 +4,7 @@ class FetchOrder < ApplicationService
   attr_accessor :error
 
   FETCH_ORDER_QUERY = <<~QUERY
-    query ($id: ID!) {
+    query ($id: ID!, $after: String) {
       order(id: $id) {
         id
         createdAt
@@ -82,7 +82,8 @@ class FetchOrder < ApplicationService
 
   def call
     variables = {
-      id: @id
+      id: @id,
+      after: @after
     }
 
     response = @client.query(query: FETCH_ORDER_QUERY, variables:)
