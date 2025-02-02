@@ -6,7 +6,7 @@ class CreatePayment < ApplicationService
   LEGACY_SUBSCRIBERS = [
     "zcoil.myshopify.com",
     "jordanjack.myshopify.com",
-    "styleboxie.myshopify.com"
+    "styleboxie.myshopify.com",
   ].freeze
 
   def initialize(order_id)
@@ -88,6 +88,8 @@ class CreatePayment < ApplicationService
   end
 
   def update_order
+    Rails.logger.info("[CreatePayment id=#{@order.id}]: Updating order for shop #{@shop.id}")
+
     graphql_order = FetchOrder.call(id: @order.shopify_id)
 
     raise "Failed to fetch order #{@order.id}" and return unless graphql_order.body.dig("data", "order")
@@ -109,7 +111,7 @@ class CreatePayment < ApplicationService
       app_id: ENV["MANTLE_APP_ID"],
       api_key: ENV["MANTLE_APP_KEY"],
       customer_api_token: nil,
-      api_url: 'https://appapi.heymantle.com/v1/'
+      api_url: "https://appapi.heymantle.com/v1/"
     )
 
     mantle_client.set_customer_api_token(customer_api_token: @shop.mantle_api_token)
@@ -118,7 +120,7 @@ class CreatePayment < ApplicationService
 
     transactions.each do |transaction|
       mantle_client.send_usage_event(
-        event_name: 'order_captured',
+        event_name: "order_captured",
         customer_id: @order.shop_id,
         event_id: @order.id,
         properties: {
