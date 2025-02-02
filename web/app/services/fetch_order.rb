@@ -4,7 +4,7 @@ class FetchOrder < ApplicationService
   attr_accessor :error
 
   FETCH_ORDER_QUERY = <<~QUERY
-    query ($id: ID!, $after: String) {
+    query fetchOrder($id: ID!, $after: String) {
       order(id: $id) {
         id
         createdAt
