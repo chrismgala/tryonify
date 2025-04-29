@@ -25,6 +25,8 @@ class OrderAuthorize < ApplicationService
     if @authorization
       Rails.logger.info("[OrderAuthorize id=#{@order.id}]: Order successfully authorized")
       schedule_update
+    else
+      Rails.logger.error("[OrderAuthorize id=#{@order.id}]: Failed to authorize")
     end
   end
 
