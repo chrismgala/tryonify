@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_23_073116) do
+ActiveRecord::Schema[7.0].define(version: 2025_05_27_061619) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -37,23 +37,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_23_073116) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["shop_id"], name: "index_checkouts_on_shop_id"
-  end
-
-  create_table "enabled_flags", force: :cascade do |t|
-    t.bigint "shops_id"
-    t.bigint "feature_flags_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["feature_flags_id"], name: "index_enabled_flags_on_feature_flags_id"
-    t.index ["shops_id"], name: "index_enabled_flags_on_shops_id"
-  end
-
-  create_table "feature_flags", force: :cascade do |t|
-    t.string "name", null: false
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["name"], name: "unique_names", unique: true
   end
 
   create_table "jobs", force: :cascade do |t|
@@ -123,7 +106,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_23_073116) do
     t.datetime "ignored_at"
     t.string "payment_terms_id"
     t.datetime "max_due_date"
-    t.string "aasm_state"
     t.index ["shop_id"], name: "index_orders_on_shop_id"
     t.index ["shopify_id"], name: "index_orders_on_shopify_id", unique: true
   end
@@ -138,6 +120,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_23_073116) do
     t.datetime "updated_at", null: false
     t.bigint "parent_transaction_id"
     t.integer "kind"
+    t.datetime "enqueued_at"
     t.index ["idempotency_key"], name: "index_payments_on_idempotency_key", unique: true
     t.index ["order_id"], name: "index_payments_on_order_id"
     t.index ["parent_transaction_id"], name: "index_payments_on_parent_transaction_id"
@@ -282,18 +265,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_23_073116) do
     t.string "gateway"
     t.index ["order_id"], name: "index_transactions_on_order_id"
     t.index ["parent_transaction_id"], name: "index_transactions_on_parent_transaction_id"
-  end
-
-  create_table "users", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   create_table "validations", force: :cascade do |t|

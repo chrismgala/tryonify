@@ -94,7 +94,7 @@ class FetchOrder < ApplicationService
 
     response
   rescue ActiveRecord::RecordInvalid, StandardError => e
-    Rails.logger.error("[FetchOrder Failed]: #{e.message}")
+    Rails.logger.error("[FetchOrder Failed id=#{@id}]: #{e.message}")
     @error = e.message
     raise e
   end
