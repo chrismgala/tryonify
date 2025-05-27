@@ -66,7 +66,7 @@ class FetchPaymentStatus
     if AUTHORIZED_STATUS.include?(@status)
       # Check for changes in previous payment status
       @payment.order.payments.where(status: "AUTHORIZED").each do |payment|
-        FetchPaymentStatusJob.perform_later(payment.id) if payment.id != @payment.id
+        FetchPaymentStatusJob.perform_later(payment.id) if payment.id != @payment.id && payment.enqueued_at.nil?
       end
     end
 
