@@ -48,7 +48,7 @@ class FetchPaymentStatus
 
     if RETRY_STATUS.include?(@status)
       Rails.logger("[FetchPaymentStatus]: Retrying payment #{@payment.id}")
-      FetchPaymentStatusJob.set(wait: 2.minutes).perform_later(@payment.id)
+      FetchPaymentStatusJob.set(wait: 30.minutes).perform_later(@payment.id)
     end
 
     if FAILED_STATUS.include?(@status)
@@ -66,7 +66,7 @@ class FetchPaymentStatus
     if AUTHORIZED_STATUS.include?(@status)
       # Check for changes in previous payment status
       @payment.order.payments.where(status: "AUTHORIZED").each do |payment|
-        FetchPaymentStatusJob.perform_later(payment.id) if payment.id != @payment.id && payment.enqueued_at.nil?
+        FetchPaymentStatusJob.set(wait: 60.minutes).perform_later(payment.id) if payment.id != @payment.id && payment.enqueued_at.nil?
       end
     end
 
