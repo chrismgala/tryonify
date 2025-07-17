@@ -4,7 +4,7 @@ class HomeController < ApplicationController
   include ShopifyApp::EmbeddedApp
   include ShopifyApp::EnsureInstalled
   include ShopifyApp::ShopAccessScopesVerification
-  # include EnsureBilling
+  include EnsureBilling
 
   DEV_INDEX_PATH = Rails.root.join("frontend")
   PROD_INDEX_PATH = Rails.public_path.join("dist")
