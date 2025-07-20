@@ -3,12 +3,6 @@
 class CreatePayment < ApplicationService
   attr_accessor :error
 
-  LEGACY_SUBSCRIBERS = [
-    "zcoil.myshopify.com",
-    "jordanjack.myshopify.com",
-    "styleboxie.myshopify.com",
-  ].freeze
-
   def initialize(order_id)
     super()
     @order = Order.find(order_id)
@@ -38,8 +32,6 @@ class CreatePayment < ApplicationService
 
       # Don't touch the order again after payment
       @order.ignore! if @order.ignored_at.nil?
-
-      # send_mantle_usage_event unless LEGACY_SUBSCRIBERS.include?(@shop.shopify_domain) || @shop.mantle_api_token.blank?
     end
   end
 
