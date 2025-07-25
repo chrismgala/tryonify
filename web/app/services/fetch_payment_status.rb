@@ -44,7 +44,7 @@ class FetchPaymentStatus
 
     raise FetchPaymentStatus::InvalidRequest, "No payment status found" and return unless @status
 
-    @payment.update!(status: @status, error: @error)
+    @payment.update!(status: @status, error: @error, enqueued_at: Time.current)
 
     if RETRY_STATUS.include?(@status)
       Rails.logger("[FetchPaymentStatus]: Retrying payment #{@payment.id}")
