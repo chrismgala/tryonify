@@ -22,7 +22,7 @@ class OrdersCreateJob < ApplicationJob
       return unless graphql_order
 
       due_at = graphql_order.body.dig("data", "order", "paymentTerms", "paymentSchedules", "edges", 0, "node", "dueAt")
-      logger.info("#{self.class} incoming order for '#{shop_domain}' with due date '#{due_at}'")
+      puts "#{self.class} incoming order for '#{shop_domain}' with due date '#{due_at}'"
       order = OrderBuild.call(shop_id: shop.id, data: graphql_order.body.dig("data", "order"))
       OrderCreate.call(order)
     end
