@@ -58,7 +58,7 @@ export default function Settings() {
     }
   );
   const redirectHost = process.env.HOST;
-  const themeExtensionId = import.meta.env.SHOPIFY_TRYONIFY_THEME_ID;
+  const themeExtensionId = import.meta.env.VITE_THEME_EXTENSION_ID;
 
   const onSubmit = useCallback(async (values, { resetForm }) => {
     await saveMutation.mutate(values);
@@ -101,7 +101,7 @@ export default function Settings() {
             <Layout>
               <Layout.AnnotatedSection
                   title="Installation"
-                  description="Add the TryOnify to your store's theme."
+                  description="Add TryOnify to your store's theme."
               >
                 <Card sectioned>
                   <Button external url={`https://${data?.shop?.shopifyDomain}/admin/themes/current/editor?template=product&addAppBlockId=${themeExtensionId}`}>Add to theme</Button>
