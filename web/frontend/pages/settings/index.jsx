@@ -100,14 +100,6 @@ export default function Settings() {
             <SaveBar dirty={dirty} submitForm={submitForm} resetForm={resetForm} />
             <Layout>
               <Layout.AnnotatedSection
-                  title="Installation"
-                  description="Add TryOnify to your store's theme."
-              >
-                <Card sectioned>
-                  <Button external url={`https://${data?.shop?.shopifyDomain}/admin/themes/current/editor?template=product&addAppBlockId=${themeExtensionId}`}>Add to theme</Button>
-                </Card>
-              </Layout.AnnotatedSection>
-              <Layout.AnnotatedSection
                 title="Rules"
                 description="Add rules for your trial program."
               >
