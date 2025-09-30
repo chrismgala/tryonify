@@ -58,6 +58,7 @@ export default function Settings() {
     }
   );
   const redirectHost = process.env.HOST;
+  const themeExtensionId = import.meta.env.SHOPIFY_TRYONIFY_THEME_ID;
 
   const onSubmit = useCallback(async (values, { resetForm }) => {
     await saveMutation.mutate(values);
@@ -103,7 +104,7 @@ export default function Settings() {
                   description="Add the TryOnify to your store's theme."
               >
                 <Card sectioned>
-                  <a href={`https://${data?.shop?.shopifyDomain}/admin/themes/current/editor?template=product&addAppBlockId=${process.env.SHOPIFY_TRYONIFY_THEME_ID}`}>Add to theme</a>
+                  <Button external url={`https://${data?.shop?.shopifyDomain}/admin/themes/current/editor?template=product&addAppBlockId=${themeExtensionId}`}>Add to theme</Button>
                 </Card>
               </Layout.AnnotatedSection>
               <Layout.AnnotatedSection
