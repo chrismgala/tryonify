@@ -24,7 +24,7 @@ ShopifyApp.configure do |config|
   # Consult this page for more scope options: https://shopify.dev/api/usage/access-scopes
   config.embedded_app = true
   config.after_authenticate_job = { job: "AfterAuthenticateJob" }
-  config.api_version = "2024-01"
+  config.api_version = "2025-04"
   config.shop_session_repository = "Shop"
 
   config.reauth_on_access_scope_changes = true

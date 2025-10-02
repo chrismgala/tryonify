@@ -17,11 +17,14 @@ class Shopify::Returns::Create < Shopify::Base
           returnLineItems(first: 20) {
             edges {
               node {
-                id
-                fulfillmentLineItem {
+                ... on ReturnLineItem {
                   id
-                  lineItem {
+                  quantity
+                  fulfillmentLineItem {
                     id
+                    lineItem {
+                      id
+                    }
                   }
                 }
               }
