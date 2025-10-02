@@ -1,0 +1,33 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "eaf955909864a101d588b085c0893d75"
+name = "TryOnify"
+application_url = "https://web-qla9.onrender.com/"
+embedded = true
+handle = "tryonify"
+
+[webhooks]
+api_version = "2025-04"
+
+  [[webhooks.subscriptions]]
+  uri = "/api/webhooks/customers_data_request"
+  compliance_topics = [ "customers/data_request" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/api/webhooks/customers_redact"
+  compliance_topics = [ "customers/redact" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/api/webhooks/shop_redact"
+  compliance_topics = [ "shop/redact" ]
+
+[auth]
+redirect_urls = [ "https://web-qla9.onrender.com/api/auth/callback" ]
+
+[app_proxy]
+url = "https://web-qla9.onrender.com/app_proxy"
+subpath = "trial"
+prefix = "a"
+
+[pos]
+embedded = false

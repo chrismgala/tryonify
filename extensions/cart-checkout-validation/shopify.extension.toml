@@ -1,9 +1,10 @@
-api_version = "2024-01"
+api_version = "2025-04"
 
 [[extensions]]
 handle = "cart-checkout-validation"
 name = "Trial Validation"
 description = "t:description"
+uid = "9beb9559-a34a-eca2-aa94-2cf3baa77d52afcba76e"
 type = "function"
 
   [[extensions.targeting]]
