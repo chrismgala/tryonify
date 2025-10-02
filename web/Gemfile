@@ -85,7 +85,7 @@ group :test do
   gem "webdrivers"
 end
 
-gem "shopify_app", "~> 21.10"
+gem "shopify_app", "~> 22.2"
 gem 'sidekiq', '~> 6.5', '>= 6.5.1'
 
 # Klaviyo integration
