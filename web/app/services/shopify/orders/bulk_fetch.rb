@@ -31,12 +31,14 @@ class Shopify::Orders::BulkFetch < Shopify::Base
               returnLineItems {
                 edges {
                   node {
-                    id
-                    quantity
-                    fulfillmentLineItem {
+                    ... on ReturnLineItem {
                       id
-                      lineItem {
+                      quantity
+                      fulfillmentLineItem {
                         id
+                        lineItem {
+                          id
+                        }
                       }
                     }
                   }
