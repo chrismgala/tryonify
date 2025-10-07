@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   Card,
   Page,
@@ -7,8 +7,21 @@ import {
   TextField
 } from '@shopify/polaris';
 import OrderList from '../components/order-list';
+import { useAppQuery } from '../hooks';
+import initializeCrisp from '../lib/crisp';
 
 export default function Home() {
+
+  const { isLoading, error, data } = useAppQuery({
+    url: "/api/v1/shop"
+  });
+
+  useEffect(() => {
+    if (data?.shop) {
+      initializeCrisp(data.shop);
+    }
+  }, [data]);
+
   const [selected, setSelected] = useState(0);
   const [query, setQuery] = useState('')
 
