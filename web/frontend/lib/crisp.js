@@ -7,7 +7,7 @@ const initializeCrisp = (shop) => {
 
     Crisp.user.setEmail(shop.email);
     Crisp.user.setCompany(shop.email, {
-        url: `https://${shopify.config.shop}`
+        url: `https://${shop.shopify_domain}`
     });
 
     Crisp.session.setData([
