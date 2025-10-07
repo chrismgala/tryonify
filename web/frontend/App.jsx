@@ -21,13 +21,11 @@ export default function App() {
     url: "/api/v1/shop"
   });
 
-  const shopify = useAppBridge();
-
   useEffect(() => {
     if (data?.shop) {
-      initializeCrisp(data.shop, shopify);
+      initializeCrisp(data.shop);
     }
-  }, [data, shopify]);
+  }, [data]);
 
   return (
     <PolarisProvider>

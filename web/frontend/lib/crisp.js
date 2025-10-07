@@ -1,11 +1,10 @@
 import { Crisp } from "crisp-sdk-web";
 
-const initializeCrisp = (shop, shopify) => {
+const initializeCrisp = (shop) => {
     Crisp.configure('05a5de57-8698-4812-9982-58a143a2ef07');
 
     Crisp.setSafeMode(true);
 
-    Crisp.user.setNickname(shopify.config.shop);
     Crisp.user.setEmail(shop.email);
     Crisp.user.setCompany(shop.email, {
         url: `https://${shopify.config.shop}`
