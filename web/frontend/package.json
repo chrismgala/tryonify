@@ -19,6 +19,7 @@
     "@shopify/polaris-icons": "^6.5.0",
     "@shopify/react-i18n": "^7.5.1",
     "@vitejs/plugin-react": "1.2.0",
+    "crisp-sdk-web": "^1.0.25",
     "formik": "^2.2.9",
     "iso8601-duration": "^2.1.1",
     "lodash": "^4.17.21",
