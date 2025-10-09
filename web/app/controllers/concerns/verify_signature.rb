@@ -3,14 +3,15 @@
 module VerifySignature
   extend ActiveSupport::Concern
 
+  # Hookdeck webhook secret from environment
+  HOOKDECK_WEBHOOK_SECRET = ENV['HOOKDECK_WEBHOOK_SECRET']
+
   included do
     before_action :verify_signature
   end
 end
 
 def verify_signature
-  # Hookdeck webhook secret from environment
-  HOOKDECK_WEBHOOK_SECRET = ENV['HOOKDECK_WEBHOOK_SECRET']
   return false if HOOKDECK_WEBHOOK_SECRET.blank?
 
   # Get raw payload for signature verification
