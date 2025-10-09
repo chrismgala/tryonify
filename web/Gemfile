@@ -116,3 +116,7 @@ gem 'pg_search', '~> 2.3', '>= 2.3.6'
 
 # Stream JSONL files for bulk operations
 gem 'open-uri', '~> 0.3.0'
+
+gem "openssl", "~> 3.3"
+
+gem "base64", "~> 0.3.0"

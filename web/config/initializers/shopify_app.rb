@@ -1,27 +1,8 @@
 # frozen_string_literal: true
 
 ShopifyApp.configure do |config|
-  config.webhooks = [
-    # After a store owner uninstalls your app, Shopify invokes the APP_UNINSTALLED webhook
-    # to let your app know.
-    { topic: "app/uninstalled", path: "api/webhooks/app_uninstalled" },
-    { topic: "orders/create", path: "api/webhooks/orders_create" },
-    { topic: "orders/updated", path: "api/webhooks/orders_updated" },
-    { topic: "orders/edited", path: "api/webhooks/orders_edited" },
-    { topic: "payment_terms/update", path: "api/webhooks/payment_terms_update" },
-    { topic: "returns/request", path: "api/webhooks/returns_request" },
-    { topic: "returns/approve", path: "api/webhooks/returns_approve" },
-    { topic: "returns/reopen", path: "api/webhooks/returns_reopen" },
-    { topic: "returns/decline", path: "api/webhooks/returns_decline" },
-    { topic: "returns/close", path: "api/webhooks/returns_close" },
-    { topic: "returns/cancel", path: "api/webhooks/returns_cancel" },
-    { topic: "shop/update", path: "api/webhooks/shop_update" },
-    { topic: "bulk_operations/finish", path: "api/webhooks/bulk_operations_finish"}
-  ]
   config.application_name = "TryOnify"
   config.old_secret = ""
-  config.scope = ENV.fetch("SCOPES", "write_products") # See shopify.app.toml for scopes
-  # Consult this page for more scope options: https://shopify.dev/api/usage/access-scopes
   config.embedded_app = true
   config.after_authenticate_job = { job: "AfterAuthenticateJob" }
   config.api_version = "2025-04"
@@ -33,19 +14,6 @@ ShopifyApp.configure do |config|
   config.login_url = "/api/auth"
   config.login_callback_url = "/api/auth/callback"
   config.embedded_redirect_url = "/ExitIframe"
-
-  # You may want to charge merchants for using your app. Setting the billing configuration will cause the Authenticated
-  # controller concern to check that the session is for a merchant that has an active one-time payment or subscription.
-  # If no payment is found, it starts off the process and sends the merchant to a confirmation URL so that they can
-  # approve the purchase.
-  #
-  # Learn more about billing in our documentation: https://shopify.dev/apps/billing
-  # config.billing = ShopifyApp::BillingConfiguration.new(
-  #   charge_name: "My app billing charge",
-  #   amount: 5,
-  #   interval: ShopifyApp::BillingConfiguration::INTERVAL_ANNUAL,
-  #   currency_code: "USD", # Only supports USD for now
-  # )
 
   config.api_key = ENV.fetch("SHOPIFY_API_KEY", "").presence
   config.secret = ENV.fetch("SHOPIFY_API_SECRET", "").presence
@@ -70,36 +38,5 @@ Rails.application.config.after_initialize do
       private_shop: ENV.fetch("SHOPIFY_APP_PRIVATE_SHOP", nil),
       user_agent_prefix: "ShopifyApp/#{ShopifyApp::VERSION}"
     )
-
-    # add_gdpr_webhooks
-    ShopifyApp::WebhooksManager.add_registrations
-  end
-end
-
-def add_gdpr_webhooks
-  gdpr_webhooks = [
-    # NOTE: To register the URLs for the three GDPR topics that follow, please set the appropriate
-    # webhook endpoint in the 'GDPR mandatory webhooks' section of 'App setup' in the Partners Dashboard.
-    # The code that processes these webhooks is located in the `app/jobs` directory.
-    #
-    # 48 hours after a store owner uninstalls your app, Shopify invokes this SHOP_REDACT webhook.
-    # https://shopify.dev/apps/webhooks/configuration/mandatory-webhooks#shop-redact
-    { topic: "shop/redact", path: "api/webhooks/shop_redact" },
-
-    # Store owners can request that data is deleted on behalf of a customer. When this happens,
-    # Shopify invokes this CUSTOMERS_REDACT webhook to let your app know.
-    # https://shopify.dev/apps/webhooks/configuration/mandatory-webhooks#customers-redact
-    { topic: "customers/redact", path: "api/webhooks/customers_redact" },
-
-    # Customers can request their data from a store owner. When this happens, Shopify invokes
-    # this CUSTOMERS_DATA_REQUEST webhook to let your app know.
-    # https://shopify.dev/apps/webhooks/configuration/mandatory-webhooks#customers-data_request
-    { topic: "customers/data_request", path: "api/webhooks/customers_data_request" },
-  ]
-
-  ShopifyApp.configuration.webhooks = if ShopifyApp.configuration.has_webhooks?
-    ShopifyApp.configuration.webhooks.concat(gdpr_webhooks)
-  else
-    gdpr_webhooks
   end
 end
