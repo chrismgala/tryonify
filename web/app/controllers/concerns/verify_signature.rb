@@ -31,7 +31,7 @@ def verify_signature
     @shopify_event = JSON.parse(payload)
     event_type = request.env['HTTP_X_SHOPIFY_TOPIC']
     
-    puts "Received #{event_type} event: #{shopify_event}"
+    puts "Received #{event_type} event: #{@shopify_event}"
     
     { success: true }.to_json
   else
