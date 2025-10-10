@@ -51,6 +51,25 @@ Rails.application.routes.draw do
 
       get "/slack", to: "slack#index"
     end
+
+    namespace :webhooks do
+      post "/app_uninstalled", to: "app_uninstalled#receive"
+      post "/bulk_operations_finish", to: "bulk_operations_finish#receive"
+      post "/orders_create", to: "orders_create#receive"
+      post "/orders_updated", to: "orders_updated#receive"
+      post "/orders_edited", to: "orders_edited#receive"
+      post "/payment_terms_update", to: "payment_terms_update#receive"
+      post "/returns_request", to: "returns_request#receive"
+      post "/returns_approve", to: "returns_approve#receive"
+      post "/returns_reopen", to: "returns_reopen#receive"
+      post "/returns_decline", to: "returns_decline#receive"
+      post "/returns_close", to: "returns_close#receive"
+      post "/returns_cancel", to: "returns_cancel#receive"
+      post "/shop_update", to: "shop_update#receive"
+      post "/customers_data_request", to: "customers_data_request#receive"
+      post "/customers_redact", to: "customers_redact#receive"
+      post "/shop_redact", to: "shop_redact#receive"
+    end
   end
 
   namespace :app_proxy do

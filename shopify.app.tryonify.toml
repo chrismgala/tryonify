@@ -10,6 +10,24 @@ handle = "tryonify"
 api_version = "2025-04"
 
   [[webhooks.subscriptions]]
+  uri = "https://hkdk.events/g1x7mimhhn4tyh"
+  topics = [
+    "app/uninstalled",
+    "bulk_operations/finish",
+    "orders/create",
+    "orders/updated",
+    "orders/edited",
+    "payment_terms/update",
+    "returns/request",
+    "returns/approve",
+    "returns/reopen",
+    "returns/decline",
+    "returns/close",
+    "returns/cancel",
+    "shop/update"
+  ]
+
+  [[webhooks.subscriptions]]
   uri = "/api/webhooks/customers_data_request"
   compliance_topics = [ "customers/data_request" ]
 
