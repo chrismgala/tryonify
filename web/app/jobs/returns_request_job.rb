@@ -1,13 +1,5 @@
 class ReturnsRequestJob < ActiveJob::Base
-  extend ShopifyAPI::Webhooks::Handler
-
-  class << self
-    def handle(topic:, shop:, body:)
-      perform_later(topic:, shop_domain: shop, webhook: body)
-    end
-  end
-
-  def perform(topic:, shop_domain:, webhook:)
+  def perform(shop_domain:, webhook:)
     order = Order.find_by(shopify_id: webhook.dig('order', 'admin_graphql_api_id'))
     
     if order.nil?

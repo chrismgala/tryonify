@@ -1,15 +1,7 @@
 class ShopUpdateJob < ActiveJob::Base
-  extend ShopifyAPI::Webhooks::Handler
-
   discard_on ActiveRecord::RecordNotFound
 
-  class << self
-    def handle(topic:, shop:, body:)
-      perform_later(topic:, shop_domain: shop, webhook: body)
-    end
-  end
-
-  def perform(topic:, shop_domain:, webhook:)
+  def perform(shop_domain:, webhook:)
     shop = Shop.find_by(shopify_domain: shop_domain)
 
     if shop.nil?
