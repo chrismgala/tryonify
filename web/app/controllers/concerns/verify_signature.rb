@@ -3,16 +3,14 @@
 module VerifySignature
   extend ActiveSupport::Concern
 
-  # Hookdeck webhook secret from environment
-  HOOKDECK_WEBHOOK_SECRET = ENV['HOOKDECK_WEBHOOK_SECRET']
-
   included do
     before_action :verify_signature
   end
 end
 
 def verify_signature
-  return false if HOOKDECK_WEBHOOK_SECRET.blank?
+  hookdeck_webhook_secret = ENV['HOOKDECK_WEBHOOK_SECRET']
+  return false if hookdeck_webhook_secret.blank?
 
   # Get raw payload for signature verification
   payload = request.raw_post
@@ -22,7 +20,7 @@ def verify_signature
   signature2 = request.env['HTTP_X_HOOKDECK_SIGNATURE_2']
   
   hash = Base64.encode64(
-    OpenSSL::HMAC.digest('sha256', HOOKDECK_WEBHOOK_SECRET, payload)
+    OpenSSL::HMAC.digest('sha256', hookdeck_webhook_secret, payload)
   ).strip
 
   # Compare the created hash with the value of the x-hookdeck-signature and x-hookdeck-signature-2 headers
