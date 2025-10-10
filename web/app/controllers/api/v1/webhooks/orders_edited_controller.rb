@@ -3,7 +3,7 @@
 module Api
   module V1
     module Webhooks
-      class OrdersEditedController < ApplicationController
+      class OrdersEditedController < BaseWebhookController
         include VerifySignature
 
         def receive

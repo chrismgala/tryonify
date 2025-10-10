@@ -3,7 +3,7 @@
 module Api
   module V1
     module Webhooks
-      class ReturnsCloseController < ApplicationController
+      class ReturnsCloseController < BaseWebhookController
         include VerifySignature
 
         def receive
