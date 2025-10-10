@@ -3,7 +3,7 @@
 module Api
   module V1
     module Webhooks
-      class BulkOperationsFinishController < ApplicationController
+      class BulkOperationsFinishController < BaseWebhookController
         include VerifySignature
 
         def receive

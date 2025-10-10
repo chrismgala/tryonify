@@ -3,7 +3,7 @@
 module Api
   module V1
     module Webhooks
-      class AppUninstalledController < ApplicationController
+      class AppUninstalledController < BaseWebhookController
         include VerifySignature
 
         def receive
