@@ -4,11 +4,12 @@ module Api
   module V1
     module Webhooks
       class PaymentTermsUpdateController < ApplicationController
-      include VerifySignature
+        include VerifySignature
 
-      def receive
-        PaymentTermsUpdateJob.perform_later(shop_domain: @shopify_event.dig("shop"), webhook: @shopify_event)
-        head(:no_content)
+        def receive
+          PaymentTermsUpdateJob.perform_later(shop_domain: @shopify_event.dig("shop"), webhook: @shopify_event)
+          head(:no_content)
+        end
       end
     end
   end
