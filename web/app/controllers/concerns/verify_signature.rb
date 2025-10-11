@@ -30,9 +30,6 @@ def verify_signature
     # Parse webhook data
     @shopify_event = JSON.parse(payload)
     event_type = request.env['HTTP_X_SHOPIFY_TOPIC']
-    
-    puts "Received #{event_type} event: #{@shopify_event}"
-    
     { success: true }.to_json
   else
     puts "Signature is invalid, rejected"
