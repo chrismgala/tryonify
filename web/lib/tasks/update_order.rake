@@ -12,7 +12,7 @@ task :update_order, [:id] => :environment do |_task, args|
   order.shop.with_shopify_session do
     graphql_order = FetchOrder.call(id: order.shopify_id)
 
-    puts "GraphQL order: #{graphql_order}"
+    puts "GraphQL order: #{graphql_order.inspect}"
 
     built_order = OrderBuild.call(shop_id: order.shop_id, data: graphql_order.body.dig("data", "order"))
     OrderUpdate.call(order_attributes: built_order, order: order)
