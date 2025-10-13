@@ -11,7 +11,7 @@ class DraftOrdersFetch < ApplicationService
             createdAt
             customer {
               id
-              email
+              defaultEmailAddress
             }
           }
         }

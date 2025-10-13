@@ -65,7 +65,7 @@ class Shopify::Orders::BulkFetch < Shopify::Base
               displayFulfillmentStatus
               clientIp
               customer {
-                email
+                defaultEmailAddress
               }
               note
               tags

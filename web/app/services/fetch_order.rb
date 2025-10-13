@@ -16,7 +16,7 @@ class FetchOrder < ApplicationService
         displayFinancialStatus
         displayFulfillmentStatus
         customer {
-          email
+          defaultEmailAddress
         }
         note
         tags
