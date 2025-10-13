@@ -1,26 +1,23 @@
 # frozen_string_literal: true
 
-desc "Updating orders"
-task :update_order, [:ids] => :environment do |_task, args|
-  puts "Updating orders..."
+desc "Updating order"
+task :update_order, [:id] => :environment do |_task, args|
+  puts "Updating order..."
 
-  order_ids = args[:ids]
+  order_id = args[:id]
 
-  order_ids.each do |order_id|
-    puts "Updating order #{order_id}..."
+  puts "Updating order #{order_id}..."
 
-    order = Order.find(order_id)
-    order.shop.with_shopify_session do
+  order = Order.find(order_id)
+  order.shop.with_shopify_session do
     graphql_order = FetchOrder.call(id: order.shopify_id)
 
     puts "GraphQL order: #{graphql_order}"
 
     built_order = OrderBuild.call(shop_id: order.shop_id, data: graphql_order.body.dig("data", "order"))
     OrderUpdate.call(order_attributes: built_order, order: order)
-
-    rescue StandardError => e
-      puts "Error updating order #{order_id}: #{e.message}"
-    end
+  rescue StandardError => e
+    puts "Error updating order #{order_id}: #{e.message}"
   end
 
   puts "done."
