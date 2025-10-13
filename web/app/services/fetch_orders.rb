@@ -19,7 +19,7 @@ class FetchOrders < ApplicationService
             displayFulfillmentStatus
             clientIp
             customer {
-              email
+              defaultEmailAddress
             }
             note
             tags
@@ -37,6 +37,11 @@ class FetchOrders < ApplicationService
                     dueAt
                   }
                 }
+              }
+            }
+            paymentCollectionDetails {
+              vaultedPaymentMethods {
+                id
               }
             }
             lineItems(first: 10) {
@@ -88,6 +93,11 @@ class FetchOrders < ApplicationService
                 nodes {
                   dueAt
                 }
+              }
+            }
+            paymentCollectionDetails {
+              vaultedPaymentMethods {
+                id
               }
             }
           }
