@@ -43,7 +43,7 @@ api_version = "2025-04"
 redirect_urls = [ "https://web-qla9.onrender.com/api/auth/callback" ]
 
 [access_scopes]
-scopes = "read_all_orders,read_customers,read_draft_orders,read_orders,read_payment_mandate,read_payment_terms,read_products,read_purchase_options,read_validations,read_returns,write_orders,write_payment_mandate,write_products,write_purchase_options,write_returns"
+scopes = "read_all_orders,read_customers,read_draft_orders,read_orders,read_payment_mandate,read_payment_terms,read_products,read_purchase_options,read_validations,read_returns,write_orders,write_payment_terms,write_payment_mandate,write_products,write_purchase_options,write_returns"
 
 [app_proxy]
 url = "https://web-qla9.onrender.com/app_proxy"
