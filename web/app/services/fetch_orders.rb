@@ -19,7 +19,9 @@ class FetchOrders < ApplicationService
             displayFulfillmentStatus
             clientIp
             customer {
-              defaultEmailAddress
+              defaultEmailAddress {
+                emailAddress
+              }
             }
             note
             tags

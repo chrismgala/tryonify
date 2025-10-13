@@ -25,7 +25,7 @@ class OrderBuild < ApplicationService
       due_date: @data.dig("paymentTerms", "paymentSchedules", "edges", 0, "node", "dueAt"),
       name: @data.dig("name"),
       financial_status: @data.dig("displayFinancialStatus"),
-      email: @data.dig("customer", "email"),
+      email: @data.dig("customer", "defaultEmailAddress", "emailAddress"),
       shopify_created_at: @data.dig("createdAt"),
       shopify_updated_at: @data.dig("updatedAt"),
       mandate_id: @data.dig("paymentCollectionDetails", "vaultedPaymentMethods", 0, "id"),

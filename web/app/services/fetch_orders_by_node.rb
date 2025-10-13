@@ -20,7 +20,9 @@ class FetchOrdersByNode
           displayFulfillmentStatus
           clientIp
           customer {
-            defaultEmailAddress
+            defaultEmailAddress {
+              emailAddress
+            }
           }
           note
           tags

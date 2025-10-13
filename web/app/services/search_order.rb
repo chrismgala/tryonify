@@ -26,7 +26,9 @@ class SearchOrder
               displayFinancialStatus
               displayFulfillmentStatus
               customer {
-                defaultEmailAddress
+                defaultEmailAddress {
+                  emailAddress
+                }
               }
               paymentTerms {
                 overdue
