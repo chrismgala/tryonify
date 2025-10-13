@@ -7,7 +7,7 @@ module Api
         include VerifySignature
 
         def receive
-          ShopRedactJob.perform_later(shop_domain: @shopify_event.dig("shop"), webhook: @shopify_event)
+          ShopRedactJob.perform_later(shop_domain: @shop_domain, webhook: @shopify_event)
           head(:no_content)
         end
       end

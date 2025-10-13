@@ -29,6 +29,7 @@ def verify_signature
     
     # Parse webhook data
     @shopify_event = JSON.parse(payload)
+    @shop_domain = request.env['HTTP_X_SHOPIFY_SHOP_DOMAIN']
     event_type = request.env['HTTP_X_SHOPIFY_TOPIC']
     { success: true }.to_json
   else
