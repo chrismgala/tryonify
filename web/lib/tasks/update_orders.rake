@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 desc "Update orders by ids"
-task :update_orders, [:ids] => :environment do |_task, args|
+task update_orders: :environment do |_task, _args|
   puts "Updating orders..."
 
-  order_ids = args[:ids]&.split(',') || []
+  order_ids = _args.extras
 
   if order_ids.empty?
     puts "No order IDs provided. Please provide comma-separated order IDs."
-    puts "Usage: rake update_orders['1,2,3']"
+    puts "Usage: rake update_orders[1,2,3]"
     return
   end
 
