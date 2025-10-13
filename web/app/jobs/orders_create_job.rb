@@ -13,8 +13,6 @@ class OrdersCreateJob < ApplicationJob
       graphql_order = FetchOrder.call(id: "gid://shopify/Order/#{webhook["id"]}")
       return unless graphql_order
 
-      due_at = graphql_order.body.dig("data", "order", "paymentTerms", "paymentSchedules", "edges", 0, "node", "dueAt")
-      puts "#{self.class} incoming order for '#{shop_domain}' with due date '#{due_at}'"
       order = OrderBuild.call(shop_id: shop.id, data: graphql_order.body.dig("data", "order"))
       OrderCreate.call(order)
     end
