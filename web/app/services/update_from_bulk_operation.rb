@@ -50,7 +50,6 @@ class UpdateFromBulkOperation < ApplicationService
   end
 
   def build_order(order_line)
-    puts "Building order #{order_line['name']} with mandate id #{order_line.dig('paymentCollectionDetails', 'vaultedPaymentMethods', 0, 'id')}"
     @current_order = {
       shop_id: @bulk_operation.shop.id,
       shopify_id: order_line['id'],

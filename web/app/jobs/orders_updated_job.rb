@@ -17,7 +17,7 @@ class OrdersUpdatedJob < ApplicationJob
           name: webhook.dig("name"),
           email: webhook.dig("customer", "email"),
           payment_terms_id: "gid://shopify/PaymentTerms/#{webhook.dig("payment_terms", "id")}",
-          due_date: webhook.dig("payment_terms", "payment_schedules", 0, "due_at"),
+          due_date: webhook.dig("payment_terms", "payment_schedules", -1, "due_at"),
           shopify_updated_at: webhook.dig("updated_at"),
           closed_at: webhook.dig("closed_at"),
           cancelled_at: webhook.dig("cancelled_at"),
