@@ -18,7 +18,6 @@ class OrderBuild < ApplicationService
   private
 
   def build_order
-    puts "Building order #{@data.dig("name")} with mandate id #{@data.dig("paymentCollectionDetails", "vaultedPaymentMethods", 0, "id")}"
     order = {
       shop_id: @shop_id,
       shopify_id: @data.dig("id"),
