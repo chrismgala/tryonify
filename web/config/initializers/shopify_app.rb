@@ -3,6 +3,7 @@
 ShopifyApp.configure do |config|
   config.application_name = "TryOnify"
   config.old_secret = ""
+  config.scope = ENV.fetch("SCOPES")
   config.embedded_app = true
   config.after_authenticate_job = { job: "AfterAuthenticateJob" }
   config.api_version = "2025-04"
