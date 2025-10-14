@@ -21,7 +21,7 @@ class OrderBuild < ApplicationService
     order = {
       shop_id: @shop_id,
       shopify_id: @data.dig("id"),
-      due_date: @data.dig("paymentTerms", "paymentSchedules", "edges", 0, "node", "dueAt"),
+      due_date: @data.dig("paymentTerms", "paymentSchedules", "edges", -1, "node", "dueAt"),
       name: @data.dig("name"),
       financial_status: @data.dig("displayFinancialStatus"),
       email: @data.dig("customer", "defaultEmailAddress", "emailAddress"),
