@@ -3,7 +3,7 @@
 ShopifyApp.configure do |config|
   config.application_name = "TryOnify"
   config.old_secret = ""
-  config.scope = ENV.fetch("SCOPES")
+  config.scope = "read_all_orders,read_customers,read_draft_orders,read_orders,read_payment_mandate,read_payment_terms,read_products,read_purchase_options,read_validations,read_returns,write_orders,write_payment_terms,write_payment_mandate,write_products,write_purchase_options,write_returns"
   config.embedded_app = true
   config.after_authenticate_job = { job: "AfterAuthenticateJob" }
   config.api_version = "2025-04"
